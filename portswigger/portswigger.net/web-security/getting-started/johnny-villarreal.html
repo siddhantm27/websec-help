@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/getting-started/johnny-villarreal by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:04:48 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Interview with Johnny Villarreal - Hall of Fame high flyer | Web Security Academy - PortSwigger</title>
+    <meta name="description" content="PortSwigger&#x27;s Web Security Academy provides free online cybersecurity training. We spoke with hall of fame high flyer Johnny Villarreal to get his advice.">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="johnny-villarreal.html"/>
+<link rel="icon" href="../../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../../content/images/logos/apple-touch-icon.png">
+    <link href="../../content/psgenerictheme.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-nomainsection">
+
+
+<script nonce="Nmx+HJoXQq9tDxP2+6KFz3eBW15wBVpf">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "Nmx+HJoXQq9tDxP2+6KFz3eBW15wBVpf";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+
+
+
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="../dashboard.html">Dashboard</a></li>
+                    <li><a href="../learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../request-smuggling.html">Request smuggling</a>
+                            <a href="../web-cache-deception.html">Web cache deception</a>
+                            <a href="../llm-attacks.html">Web LLM attacks</a>
+                            <a href="../api-testing.html">API testing</a>
+                            <a href="../nosql-injection.html">NoSQL injection</a>
+                            <a href="../all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../all-labs.html">All labs</a>
+                            <a href="../all-topics.html">All topics</a>
+                            <a href="../mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../hall-of-fame.html">Leaderboard</a>
+                            <a href="kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="../getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="../certification.html">Get certified</a>
+                             <a href="../certification/how-to-prepare.html">How to prepare</a>
+                             <a href="../certification/how-it-works.html">How it works</a>
+                             <a href="../certification/practice-exam.html">Practice exam</a>
+                             <a href="../certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="../certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="../certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="../certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+
+
+<div no-keyword-injection="" class="wrapper" id="academy-started">
+
+        <div class="hero theme-white">
+            <div class="container-columns-centered-image">
+                <div>
+                    <h2 cms-ignore-validation="DUPLICATE_HEADINGS" id="web-security-academy">Web Security Academy</h2>
+                    <h1 cms-ignore-validation="HEADING_CAPITALIZATION" id="johnny-villarreal" class="heading-2">Johnny Villarreal</h1>
+                    <h3 cms-ignore-validation="HEADING_CAPITALIZATION,DUPLICATE_HEADINGS">High flyers in the Hall of Fame</h3>
+                </div>
+                <img cms-ignore-validation="UNIQUE_IMG_ALT_TEXT" alt="Interviewing the Web Security Academy high flyers" src="images/wsa-hall-of-fame-interviews-smaller.jpg">
+            </div>
+        </div>
+
+        <div class="hero theme-white spacer">
+            <div class="container-columns-66-percent-left">
+                <div class="text-left">
+                    <p>You could say that Johnny has something of an interest in cybersecurity. When he's not red-teaming with Synack as an offensive security researcher, or working as a freelance penetration tester,
+                        he's an instructor of cybersecurity at the University of California, Irvine. As it turns out, Johnny's "interest" in cybersecurity is more like an all-encompassing passion.
+                    </p>
+                    <p><strong>"I'm an avid user of Burp Suite Professional and as soon as I saw the Web Security Academy, especially with a big industry name like <a href="https://portswigger.net/research/james-kettle">
+                        James Kettle</a> involved, I just knew I had to jump
+                        on it."</strong>
+                    </p>
+                </div>
+
+                <div>
+                    <img cms-ignore-validation="UNIQUE_IMG_ALT_TEXT" alt="A high flyer in the Web Security Academy Hall of Fame" src="images/johnny-villarreal.jpg">
+                </div>
+            </div>
+        </div>
+
+        <div class="sticky-side-menu-white">
+            <div>
+                <aside>
+                    <h4 cms-ignore-validation="HEADING_CAPITALIZATION">Getting to the top of the Hall of Fame</h4>
+                    <a class="sticky-menu-link" href="johnny-villarreal.html#emma-s-portswigger-so-what-was-the-first-lab-you-completed-on-the-web-security-academy">Starting out</a>
+                    <a class="sticky-menu-link" href="johnny-villarreal.html#es-are-there-any-topics-on-the-web-security-academy-that-you-ve-revisited-after-completing-the-labs">Training</a>
+                    <a class="sticky-menu-link" href="johnny-villarreal.html#es-if-you-had-to-pick-one-thing-what-would-you-say-is-your-favorite-thing-about-the-web-security-academy">Favorites</a>
+                    <a class="sticky-menu-link" href="johnny-villarreal.html#es-has-training-on-the-web-security-academy-enabled-you-to-do-anything-you-couldn-t-do-before">Advice</a>
+
+                </aside>
+                <span>
+
+                    <div class="section theme-community-6 spacer">
+                        <p>Having worked through all manner of training, including OSCP and various other certifications, he found himself interested in trying to up his game in the field of web application security.</p>
+                        <p>He spent the first few months of the COVID-19 lockdown meticulously working his way through each and every one of the topics on the Web Security Academy, working for hours every day until he
+                            had completed them all. Ranked in 4th place in our <a href="../hall-of-fame.html">Hall of Fame</a> (at the time of this interview), we wanted to find out how
+                            the <a href="https://portswigger.net/web-security">Web Security Academy</a> helped Johnny to further his knowledge of web application security.</p>
+                    </div>
+
+                    <div class="section theme-community-6 spacer">
+                        <h3 cms-ignore-validation="HEADING_TOO_LONG,HEADING_CAPITALIZATION" id="emma-s-portswigger-so-what-was-the-first-lab-you-completed-on-the-web-security-academy">Emma S (PortSwigger): So what was the first
+                            lab you completed on the Web Security Academy?</h3>
+                        <p>Johnny Villarreal: <a href="../ssrf.html">Server-side request forgery</a>, that's where I started. For a lot of us bug bounty hunters, it's a pretty hot topic. There are a lot of
+                            people who walk off with $10k bounties from these programs and it's always "SSRF", "SSRF", "remote code execution", "SSRF" ...
+                        </p>
+                        <p><strong>"To find a place that had all of that information in one location, with a consistently high quality of labs, especially being free, it's a no-brainer. Why wouldn't you dive right into
+                            it?!"</strong>
+                        </p>
+                    </div>
+
+                    <div class="section theme-community-6 spacer">
+                        <h3 cms-ignore-validation="HEADING_CAPITALIZATION,HEADING_TOO_LONG">ES: A new topic release would be a pretty exciting day for you then! How do you find out about the launch?</h3>
+                        <p>JV: I actually have an alert set up, so I get buzzed whenever there are any updates from the Web Security Academy on <a href="https://twitter.com/WebSecAcademy">Twitter</a>. I absolutely love the labs, so
+                            I have to know straight away when there's a new challenge for me to try and beat!
+                        </p>
+                    </div>
+
+                    <div class="section theme-white">
+                        <blockquote class="callout-quote-white">
+                            <div>
+                                <img cms-ignore-validation="UNIQUE_IMG_ALT_TEXT" alt="Blockquote" src="images/ps-quote-left-orange.svg">
+                                <p>New topics being released without a schedule, I kinda like it. You guys release them when you release them, and then it's just a fight to the end until you figure it out. Regular and cosy
+                                    schedules make it all a bit boring I think. We're all attackers after all, we like a bit of chaos.
+                                </p>
+                            </div>
+                            <cite>
+                                <span>
+                                    <p><strong>Johnny Villarreal</strong></p>
+                                </span>
+                            </cite>
+                        </blockquote>
+                    </div>
+
+                    <div class="section theme-community-6 spacer">
+                        <h3 cms-ignore-validation="HEADING_TOO_LONG,HEADING_CAPITALIZATION">ES: And do you have any favorite topics on the Web Security Academy?</h3>
+                        <p>JV: <a href="../host-header.html">HTTP host header attacks</a>, without a doubt, that whole topic blew my mind. The host header attack class is the focus, but it's also
+                            relative to server-side request forgery. This one was really interesting to me because it's one of the weird, interesting quirks that I run into on real applications all of the time.
+                        </p>
+                        <p><strong>"I run into this so much that I've actually made a scanner for SSRF. I'm not calling it an SSRF scanner, but it kind of is ... It uses some of the things that I learned with that whole
+                            vulnerability class where I could basically throw a few hundred URLs in, walk away, grab a beer, come back and have a bunch of callbacks to my C2 server."</strong>
+                        </p>
+                    </div>
+
+                    <div class="section theme-community-6 spacer">
+                        <h3 cms-ignore-validation="HEADING_TOO_LONG,HEADING_CAPITALIZATION" id="es-are-there-any-topics-on-the-web-security-academy-that-you-ve-revisited-after-completing-the-labs">ES: Are
+                            there any topics on the Web Security Academy that you've revisited after completing the labs?</h3>
+                        <p>JV: The ones I like to go back to are usually the topics that have multiple vulnerability classes in them. In one of the <a href="../deserialization.html">
+                            deserialization</a> labs for example, you had to achieve <a href="../sql-injection.html">SQLi</a>.  That was mind blowing because you're doing
+                            deserialization, so you're expecting remote code execution right off the bat to some degree, but it just didn't happen that way. This particular lab reminded me that while
+                            certain restrictions in an application's environment will limit one path to exploitation, you can definitely still maximize impact by taking another exploit chain path such as
+                            deserialization to SQLi.
+                        </p>
+                    </div>
+
+                    <div class="section theme-community-6 spacer">
+                        <h3 cms-ignore-validation="HEADING_TOO_LONG,HEADING_CAPITALIZATION">ES: Do you ever use the Web Security Academy to train other people? </h3>
+                        <p>JV: Every time I run into newcomers, whether that's in the industry, students, or just friends, even when I'm hosting my workshops for people, I always recommend it. Within the
+                            Synack Red Team, we have roughly 1500 researchers assessing assets every day. Whenever some of my fellow researchers figure out how to really push or chain certain vulnerabilities
+                            they discover or just train in a certain vulnerability class, I often point them straight to you guys and the Web Security Academy. It's a great resource.
+                        </p>
+                    </div>
+
+                    <div class="section theme-white">
+                        <blockquote class="callout-quote-white">
+                            <div>
+                                <img cms-ignore-validation="UNIQUE_IMG_ALT_TEXT" alt="Blockquote" src="images/ps-quote-left-orange.svg">
+                                <p>The Web Security Academy is one of the most realistic representations of some of the vulnerabilities and findings that we discover, in real life at real companies.</p>
+                            </div>
+                            <cite>
+                                <span>
+                                    <p><strong>Johnny Villarreal</strong></p>
+                                </span>
+                            </cite>
+                        </blockquote>
+                    </div>
+
+                    <div class="section theme-community-6 spacer">
+                        <h3 cms-ignore-validation="HEADING_TOO_LONG,HEADING_CAPITALIZATION">ES: Is Burp Suite essential to you, and your use of the Web Security Academy?</h3>
+                        <p>JV: I think having <a href="https://portswigger.net/burp/pro">Burp Suite Pro</a> is extremely convenient, because the features are all there. If I'm bruteforcing multi-factor
+                            authentication, something like <a href="https://portswigger.net/burp/documentation/desktop/options/sessions/macro-editor">Burp Suite macros</a> makes it ten times
+                            easier to accomplish that goal. You technically have everything you need to do it without Burp Suite, it just depends whether or not you want to rip your own hair out ...
+                        </p>
+                    </div>
+
+                    <div class="section theme-community-6 spacer">
+                        <h3 cms-ignore-validation="HEADING_TOO_LONG,HEADING_CAPITALIZATION" id="es-if-you-had-to-pick-one-thing-what-would-you-say-is-your-favorite-thing-about-the-web-security-academy">ES:
+                            If you had to pick one thing, what would you say is your favorite thing about the Web Security Academy?</h3>
+                        <p>JV: There are so many good things, but a really unspoken benefit for me is having an exploit server provided. I've ruined my own exploit server a whole load of times so it's brilliant
+                            to have one there to work with. You can carry out <a href="https://portswigger.net/research/hunting-asynchronous-vulnerabilities">out-of-band exploitation</a>, or attacks that would
+                            normally require you to have some sort of infrastructure of your own, so I really liked that it was provided for you.
+                        </p>
+                    </div>
+
+                    <div class="section theme-community-6 spacer">
+                        <h3 cms-ignore-validation="HEADING_TOO_LONG,HEADING_CAPITALIZATION">ES: Are there any topics you'd really love to see on the Web Security Academy in the future?</h3>
+                        <p>JV: I loved the <a href="../logic-flaws/examples/lab-logic-flaws-authentication-bypass-via-encryption-oracle.html">business logic vulnerabilities lab with
+                            the encryption oracle</a>, that was properly fascinating. I literally spent days doing the mental equivalent of running into a brick wall trying to solve that one. I'd love to see
+                            more stuff on that, but maybe with some tutorials or at a level more suited to beginners.
+                        </p>
+                        <p><strong>"When I finally solved that business logic vulnerabilities lab I got such an adrenaline rush - we need more content on that so that more people get to enjoy that feeling!"</strong></p>
+                    </div>
+
+                    <div class="section theme-white">
+                        <blockquote class="callout-quote-white">
+                            <div>
+                                <img cms-ignore-validation="UNIQUE_IMG_ALT_TEXT" alt="Blockquote" src="images/ps-quote-left-orange.svg">
+                                <p>I think the Web Security Academy is a really great thing, it's almost a gift to the community in a lot of ways. From doing some of the labs, I even feel like I have enough knowledge to start
+                                    doing my own research, or write my own tools.
+                                </p>
+                            </div>
+                            <cite>
+                                <span>
+                                    <p><strong>Johnny Villarreal</strong></p>
+                                </span>
+                            </cite>
+                        </blockquote>
+                    </div>
+
+                    <div class="section theme-community-6 spacer">
+                        <h3 cms-ignore-validation="HEADING_TOO_LONG,HEADING_CAPITALIZATION" id="es-has-training-on-the-web-security-academy-enabled-you-to-do-anything-you-couldn-t-do-before">ES: Has training on the Web Security
+                            Academy enabled you to do anything you couldn't do before?</h3>
+                        <p>JV: I feel much more confident in my knowledge on how certain vulnerability classes work now. It's been such a huge benefit for me, and none of that would ever have been possible if I hadn't had those
+                            <a href="../all-labs.html">labs</a> and <a href="../all-materials.html">learning materials</a> available to me.
+                        </p>
+                    </div>
+
+                    <div class="section theme-community-6 spacer">
+                        <h3 cms-ignore-validation="HEADING_CAPITALIZATION,HEADING_TOO_LONG">ES: And finally, do you have any advice for people just starting out on the Web Security Academy?</h3>
+                        <p>JV: I would tell people that they should always start with <a href="../os-command-injection.html">command injection</a>, because they'd start seeing the impact of being able to
+                            run commands on somebody else's server - that just makes it a lot more realistic in their perspective.
+                        </p>
+                    </div>
+
+                    <div class="section theme-white">
+                        <blockquote class="callout-quote-white">
+                            <div>
+                                <img cms-ignore-validation="UNIQUE_IMG_ALT_TEXT" alt="Blockquote" src="images/ps-quote-left-orange.svg">
+                                <p>Sitting there on the Web Security Academy, doing this crazy brain puzzle with no solution, there's no better way in my opinion to spend your time. Sometimes I even crack open a beer or two.</p>
+                            </div>
+                            <cite>
+                                <span>
+                                    <p><strong>Johnny Villarreal</strong></p>
+                                </span>
+                            </cite>
+                        </blockquote>
+                    </div>
+
+                </span>
+            </div>
+        </div>
+
+        <div class="section-full-width theme-grey-5 text-center">
+            <h3 cms-ignore-validation="HEADING_TOO_LONG,HEADING_CAPITALIZATION">Follow in Johnny's footsteps and get stuck into the Web Security Academy</h3>
+            <div class="container-cards-white-medium-space-between">
+                <a href="../all-topics.html">
+                    <h3>Learning path for topics</h3>
+                    <p>Not sure where to begin? We've laid it all out step by step for you.</p>
+                    <div class="chevron-after">Read more</div>
+                </a>
+                <a href="../dashboard.html">
+                    <h3>User dashboard</h3>
+                    <p>Can't remember where you got to? Track your progress here.</p>
+                    <div class="chevron-after">Read more</div>
+                </a>
+                <a href="../hall-of-fame.html">
+                    <h3>Hall of Fame</h3>
+                    <p>Want to feel inspired? Check out the leaderboard high-flyers.</p>
+                    <div class="chevron-after">Read more</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="../../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="Nmx&#x2B;HJoXQq9tDxP2&#x2B;6KFz3eBW15wBVpf"></script>
+
+<section class="prefootercontainer prefooter-default"></section>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="../cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="../sql-injection.html">SQL injection</a>
+            <a href="../csrf.html">Cross-site request forgery</a>
+            <a href="../xxe.html">XML external entity injection</a>
+            <a href="../file-path-traversal.html">Directory traversal</a>
+            <a href="../ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="Nmx+HJoXQq9tDxP2+6KFz3eBW15wBVpf" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/getting-started/johnny-villarreal by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:04:49 GMT -->
+</html>

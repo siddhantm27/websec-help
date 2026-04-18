@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/file-upload by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:06:31 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>File uploads | Web Security Academy</title>
+    <meta content="In this section, you&#x27;ll learn how simple file upload functions can be used as a powerful vector for a number of high-severity attacks. We&#x27;ll show you how to ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="file-upload.html"/>
+<link rel="icon" href="../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../content/images/logos/apple-touch-icon.png">
+    <link href="../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="kyy3nX/aSQrFvcy7JDlg65U+FNUwMlxS">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "kyy3nX/aSQrFvcy7JDlg65U+FNUwMlxS";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="request-smuggling.html">Request smuggling</a>
+                            <a href="web-cache-deception.html">Web cache deception</a>
+                            <a href="llm-attacks.html">Web LLM attacks</a>
+                            <a href="api-testing.html">API testing</a>
+                            <a href="nosql-injection.html">NoSQL injection</a>
+                            <a href="all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="all-labs.html">All labs</a>
+                            <a href="all-topics.html">All topics</a>
+                            <a href="mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="hall-of-fame.html">Leaderboard</a>
+                            <a href="getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="certification.html">Get certified</a>
+                             <a href="certification/how-to-prepare.html">How to prepare</a>
+                             <a href="certification/how-it-works.html">How it works</a>
+                             <a href="certification/practice-exam.html">Practice exam</a>
+                             <a href="certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="22">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>File upload vulnerabilities</h3>
+        <ul>
+            <li><a href="file-upload.html#what-are-file-upload-vulnerabilities">What are file upload vulnerabilities?</a></li>
+            <li><a href="file-upload.html#what-is-the-impact-of-file-upload-vulnerabilities">Impact</a></li>
+            <li><a href="file-upload.html#how-do-file-upload-vulnerabilities-arise">How do file upload vulnerabilities arise?</a></li>
+            <li><a href="file-upload.html#how-do-web-servers-handle-requests-for-static-files">How do web server handle requests for static files?</a></li>
+            <li><a href="file-upload.html#exploiting-unrestricted-file-uploads-to-deploy-a-web-shell">Exploiting unrestricted file uploads to deploy a web shell</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-5">
+                <label for="sub-nav-id-5">
+                    <a href="file-upload.html#exploiting-flawed-validation-of-file-uploads">Exploiting flawed validation of file uploads</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="file-upload.html#flawed-file-type-validation">Flawed file type validation</a></li>
+                    <li><a href="file-upload.html#preventing-file-execution-in-user-accessible-directories">Preventing file execution in user-accessible directories</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-2ndlevel-7">
+                        <label for="sub-nav-2ndlevel-7">
+                            <a href="file-upload.html#insufficient-blacklisting-of-dangerous-file-types">Insufficient blacklisting of dangerous file types</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li>
+                                <a href="file-upload.html#overriding-the-server-configuration">Overriding the server configuration</a>
+                            </li><li>
+                            <a href="file-upload.html#obfuscating-file-extensions">Obfuscating file extensions</a>
+                        </li>
+                        </ul>
+                    </li>
+                    <li><a href="file-upload.html#flawed-validation-of-the-file-s-contents">Flawed validation of the file's contents</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-2ndlevel-9">
+                        <label for="sub-nav-2ndlevel-9">
+                            <a href="file-upload.html#exploiting-file-upload-race-conditions">Exploiting file upload race conditions</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li>
+                                <a href="file-upload.html#race-conditions-in-url-based-file-uploads">Race conditions in URL-based file uploads</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-6">
+                <label for="sub-nav-id-6">
+                    <a href="file-upload.html#exploiting-file-upload-vulnerabilities-without-remote-code-execution">Exploiting file upload vulnerabilities without remote code execution</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="file-upload.html#uploading-malicious-client-side-scripts">Uploading malicious client-side scripts</a></li>
+                    <li><a href="file-upload.html#exploiting-vulnerabilities-in-the-parsing-of-uploaded-files">Exploiting vulnerabilities in parsing of uploaded files</a></li>
+                </ul>
+            </li>
+            <li><a href="file-upload.html#uploading-files-using-put">Uploading files using PUT</a></li>
+            <li><a href="file-upload.html#how-to-prevent-file-upload-vulnerabilities">Preventing</a></li>
+            <li><a href="all-labs.html#file-upload-vulnerabilities">View all file upload labs</a></li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="file-upload.html"><span itemprop="name">File upload vulnerabilities</span></a><meta itemprop="position" content="2" /></li></ul>    <div class="section theme-white">
+
+        <h1 class="heading-2">File upload vulnerabilities</h1><p>
+    In this section, you'll learn how simple file upload functions can be used as a powerful vector for a number of high-severity attacks. We'll show you how to bypass common defense mechanisms in order to upload a web shell, enabling you to take full control of a vulnerable web server. Given how common file upload functions are, knowing how to test them properly is essential knowledge.
+</p><img alt="File upload vulnerabilities" src="file-upload/images/file-upload-vulnerabilities.jpg"><div class="highlightedarea">
+    <h4>Labs</h4>
+    <p>
+        If you're already familiar with the basic concepts behind file upload vulnerabilities and just want to get practicing, you can access all of the labs in this topic from the link below.
+    </p>
+
+    <ul><li><a href="all-labs.html#file-upload-vulnerabilities">View all file upload labs</a></li></ul></div><h2 id="what-are-file-upload-vulnerabilities" chunk-id="D783559E359BB6EC29FA82A7191BC676">What are file upload vulnerabilities?</h2><p>
+    File upload vulnerabilities are when a web server allows users to upload files to its filesystem without sufficiently validating things like their name, type, contents, or size. Failing to properly enforce restrictions on these could mean that even a basic image upload function can be used to upload arbitrary and potentially dangerous files instead. This could even include server-side script files that enable remote code execution.
+</p><p>
+    In some cases, the act of uploading the file is in itself enough to cause damage. Other attacks may involve a follow-up HTTP request for the file, typically to trigger its execution by the server.
+</p><h2 id="what-is-the-impact-of-file-upload-vulnerabilities" chunk-id="62841245F6779C5621B971C7D57E1657">What is the impact of file upload vulnerabilities?</h2><p>
+    The impact of file upload vulnerabilities generally depends on two key factors:
+</p><ul>
+    <li>
+        Which aspect of the file the website fails to validate properly, whether that be its size, type, contents, and so on.
+    </li>
+    <li>
+        What restrictions are imposed on the file once it has been successfully uploaded.
+    </li>
+</ul><p>
+    In the worst case scenario, the file's type isn't validated properly, and the server configuration allows certain types of file (such as <code>.php</code> and <code>.jsp</code>) to be executed as code. In this case, an attacker could potentially upload a server-side code file that functions as a web shell, effectively granting them full control over the server.
+</p><p id="what-is-the-impact-of-file-upload-vulnerabilities-W3L9" chunk-id="991C06C0C236A63B57759BC7B7648D48">
+    If the filename isn't validated properly, this could allow an attacker to overwrite critical files simply by uploading a file with the same name. If the server is also vulnerable to directory traversal, this could mean attackers are even able to upload files to unanticipated locations.
+</p><p>
+    Failing to make sure that the size of the file falls within expected thresholds could also enable a form of denial-of-service (DoS) attack, whereby the attacker fills the available disk space.
+</p><h2 id="how-do-file-upload-vulnerabilities-arise" chunk-id="8CCC2F145F8B2A9E2B080817CBD7080E">How do file upload vulnerabilities arise?</h2><p>
+    Given the fairly obvious dangers, it's rare for websites in the wild to have no restrictions whatsoever on which files users are allowed to upload. More commonly, developers implement what they believe to be robust validation that is either inherently flawed or can be easily bypassed.
+</p><p>
+    For example, they may attempt to blacklist dangerous file types, but fail to account for parsing discrepancies when checking the file extensions. As with any blacklist, it's also easy to accidentally omit more obscure file types that may still be dangerous.
+</p><p>
+    In other cases, the website may attempt to check the file type by verifying properties that can be easily manipulated by an attacker using tools like Burp Proxy or Repeater.
+</p><p>
+    Ultimately, even robust validation measures may be applied inconsistently across the network of hosts and directories that form the website, resulting in discrepancies that can be exploited.
+</p><h2 id="how-do-web-servers-handle-requests-for-static-files" chunk-id="F54B880200EEAB15EEA5EDA0C1A8F181">How do web servers handle requests for static files?</h2><p>
+    Before we look at how to exploit file upload vulnerabilities, it's important that you have a basic understanding of how servers handle requests for static files.
+</p><p>
+    Historically, websites consisted almost entirely of static files that would be served to users when requested. As a result, the path of each request could be mapped 1:1 with the hierarchy of directories and files on the server's filesystem. Nowadays, websites are increasingly dynamic and the path of a request often has no direct relationship to the filesystem at all. Nevertheless, web servers still deal with requests for some static files, including stylesheets, images, and so on.
+</p><p id="how-do-web-servers-handle-requests-for-static-files-T3S3" chunk-id="663D37D960DC92DC099CE3667499ADB0">
+    The process for handling these static files is still largely the same. At some point, the server parses the path in the request to identify the file extension. It then uses this to determine the type of the file being requested, typically by comparing it to a list of preconfigured mappings between extensions and MIME types. What happens next depends on the file type and the server's configuration.
+</p><ul>
+    <li>
+        If this file type is non-executable, such as an image or a static HTML page, the server may just send the file's contents to the client in an HTTP response.
+    </li>
+    <li>
+        If the file type is executable, such as a PHP file, <strong>and</strong> the server is configured to execute files of this type, it will assign variables based on the headers and parameters in the HTTP request before running the script. The resulting output may then be sent to the client in an HTTP response.
+    </li>
+    <li>
+        If the file type is executable, but the server <strong>is not</strong> configured to execute files of this type, it will generally respond with an error. However, in some cases, the contents of the file may still be served to the client as plain text. Such misconfigurations can occasionally be exploited to leak source code and other sensitive information. You can see an <a href="information-disclosure/exploiting.html#source-code-disclosure-via-backup-files">example</a> of this in our information disclosure learning materials.
+    </li>
+</ul><div class="component-solution expandable-container">
+
+
+    <details><summary><h4><span></span> Tip</h4></summary><div class="content"><p>
+        The <code>Content-Type</code> response header may provide clues as to what kind of file the server thinks it has served. If this header hasn't been explicitly set by the application code, it normally contains the result of the file extension/MIME type mapping.
+    </p></div></details></div><p>
+    Now that you're familiar with the key concepts, let's look at how you can potentially exploit these kinds of vulnerabilities.
+</p><h2 id="exploiting-unrestricted-file-uploads-to-deploy-a-web-shell" chunk-id="66B642318E877C3E3F563B43C0894549">Exploiting unrestricted file uploads to deploy a web shell</h2><p>
+    From a security perspective, the worst possible scenario is when a website allows you to upload server-side scripts, such as PHP, Java, or Python files, and is also configured to execute them as code. This makes it trivial to create your own web shell on the server.
+</p><div class="highlightedarea">
+    <h4>Web shell</h4>
+    <p>
+        A web shell is a malicious script that enables an attacker to execute arbitrary commands on a remote web server simply by sending HTTP requests to the right endpoint.
+    </p>
+</div><p>
+    If you're able to successfully upload a web shell, you effectively have full control over the server. This means you can read and write arbitrary files, exfiltrate sensitive data, even use the server to pivot attacks against both internal infrastructure and other servers outside the network. For example, the following PHP one-liner could be used to read arbitrary files from the server's filesystem:
+</p><code class="code-scrollable">&lt;?php echo file_get_contents('/path/to/target/file'); ?&gt;</code><p>
+    Once uploaded, sending a request for this malicious file will return the target file's contents in the response.
+</p><div widget-id="academy-labstatus" widget-lab-id="535975A13E89837C0707C5CCEC5D576E69540E338E9AEE215D9BF8B0323A8919"></div><p>
+    A more versatile web shell may look something like this:
+</p><code class="code-scrollable">&lt;?php echo system($_GET['command']); ?&gt;</code><p>
+    This script enables you to pass an arbitrary system command via a query parameter as follows:
+</p><code class="code-scrollable">GET /example/exploit.php?command=id HTTP/1.1</code><h2 id="exploiting-flawed-validation-of-file-uploads" chunk-id="E29F4A098D669DBB83B56BA08C125DEB">Exploiting flawed validation of file uploads</h2><p>
+    In the wild, it's unlikely that you'll find a website that has no protection against file upload attacks like we saw in the previous lab. But just because defenses are in place, that doesn't mean that they're robust. You can sometimes still exploit flaws in these mechanisms to obtain a web shell for remote code execution.
+</p><h3 id="flawed-file-type-validation" chunk-id="A01E0AFF6DC3CC9BF7879AC58F4D3ADD">Flawed file type validation</h3><p>
+    When submitting HTML forms, the browser typically sends the provided data in a <code>POST</code> request with the content type <code>application/x-www-form-urlencoded</code>. This is fine for sending simple text like your name or address. However, it isn't suitable for sending large amounts of binary data, such as an entire image file or a PDF document. In this case, the content type <code>multipart/form-data</code> is preferred.
+</p><p id="flawed-file-type-validation-9Y92" chunk-id="D6317338D02D5CBC9EEE3C736EC9DD71">
+    Consider a form containing fields for uploading an image, providing a description of it, and entering your username. Submitting such a form might result in a request that looks something like this:
+</p><code class="code-scrollable">POST /images HTTP/1.1
+    Host: normal-website.com
+    Content-Length: 12345
+    Content-Type: multipart/form-data; boundary=---------------------------012345678901234567890123456
+
+    ---------------------------012345678901234567890123456
+    Content-Disposition: form-data; name="image"; filename="example.jpg"
+    Content-Type: image/jpeg
+
+    [...binary content of example.jpg...]
+
+    ---------------------------012345678901234567890123456
+    Content-Disposition: form-data; name="description"
+
+    This is an interesting description of my image.
+
+    ---------------------------012345678901234567890123456
+    Content-Disposition: form-data; name="username"
+
+    wiener
+    ---------------------------012345678901234567890123456--</code><p>
+    As you can see, the message body is split into separate parts for each of the form's inputs. Each part contains a <code>Content-Disposition</code> header, which provides some basic information about the input field it relates to. These individual parts may also contain their own <code>Content-Type</code> header, which tells the server the MIME type of the data that was submitted using this input.
+</p><p id="flawed-file-type-validation-2N3L" chunk-id="067C7A33210DC672848C27F2BBB2B99C">
+    One way that websites may attempt to validate file uploads is to check that this input-specific <code>Content-Type</code> header matches an expected MIME type. If the server is only expecting image files, for example, it may only allow types like <code>image/jpeg</code> and <code>image/png</code>. Problems can arise when the value of this header is implicitly trusted by the server. If no further validation is performed to check whether the contents of the file actually match the supposed MIME type, this defense can be easily bypassed using tools like Burp Repeater.
+</p><div widget-id="academy-labstatus" widget-lab-id="DFD0CCE82ACDA8DAE507A0FA7A1FB76029163A80E9B1889113D91A885337E9DD"></div><h3 id="preventing-file-execution-in-user-accessible-directories" chunk-id="DB322A7D7C46DEAE90AF9FB1588A595B">Preventing file execution in user-accessible directories</h3><p>
+    While it's clearly better to prevent dangerous file types being uploaded in the first place, the second line of defense is to stop the server from executing any scripts that do slip through the net.
+</p><p>
+    As a precaution, servers generally only run scripts whose MIME type they have been explicitly configured to execute. Otherwise, they may just return some kind of error message or, in some cases, serve the contents of the file as plain text instead:
+</p><code class="code-scrollable">GET /static/exploit.php?command=id HTTP/1.1
+    Host: normal-website.com
+
+
+    HTTP/1.1 200 OK
+    Content-Type: text/plain
+    Content-Length: 39
+
+    &lt;?php echo system($_GET['command']); ?&gt;</code><p id="preventing-file-execution-in-user-accessible-directories-L1K8" chunk-id="430EAC046168BFB26A0291F8ED97A20F">
+    This behavior is potentially interesting in its own right, as it may provide a way to leak source code, but it nullifies any attempt to create a web shell.
+</p><p>
+    This kind of configuration often differs between directories. A directory to which user-supplied files are uploaded will likely have much stricter controls than other locations on the filesystem that are assumed to be out of reach for end users. If you can find a way to upload a script to a different directory that's not supposed to contain user-supplied files, the server may execute your script after all.
+</p><div class="component-solution expandable-container">
+
+
+    <details><summary><h4><span></span> Tip</h4></summary><div class="content"><p>
+        Web servers often use the <code>filename</code> field in <code>multipart/form-data</code> requests to determine the name and location where the file should be saved.
+    </p></div></details></div><div widget-id="academy-labstatus" widget-lab-id="E39B4571E65AD58013BB6CF68240E2E7E59D087BFB1D58DD8673116F4BDF7135"></div><p>
+    You should also note that even though you may send all of your requests to the same domain name, this often points to a reverse proxy server of some kind, such as a load balancer. Your requests will often be handled by additional servers behind the scenes, which may also be configured differently.
+</p><h3 id="insufficient-blacklisting-of-dangerous-file-types" chunk-id="5BC9AF729720EC0F2E32D805A22FCB92">Insufficient blacklisting of dangerous file types</h3><p>
+    One of the more obvious ways of preventing users from uploading malicious scripts is to blacklist potentially dangerous file extensions like <code>.php</code>. The practice of blacklisting is inherently flawed as it's difficult to explicitly block every possible file extension that could be used to execute code. Such blacklists can sometimes be bypassed by using lesser known, alternative file extensions that may still be executable, such as <code>.php5</code>, <code>.shtml</code>, and so on.
+</p><h4 id="overriding-the-server-configuration" chunk-id="D807BCBF304CBF53C7A59AD84E4D8376">Overriding the server configuration</h4><p>
+    As we discussed in the previous section, servers typically won't execute files unless they have been configured to do so. For example, before an Apache server will execute PHP files requested by a client, developers might have to add the following directives to their <code>/etc/apache2/apache2.conf</code> file:
+</p><code class="code-scrollable">LoadModule php_module /usr/lib/apache2/modules/libphp.so
+    AddType application/x-httpd-php .php</code><p>
+    Many servers also allow developers to create special configuration files within individual directories in order to override or add to one or more of the global settings. Apache servers, for example, will load a directory-specific configuration from a file called <code>.htaccess</code> if one is present.
+</p><p id="overriding-the-server-configuration-D7C6" chunk-id="D3FDB93B8E6658078D23FF269DDD2250">
+    Similarly, developers can make directory-specific configuration on IIS servers using a <code>web.config</code> file. This might include directives such as the following, which in this case allows JSON files to be served to users:
+</p><code class="code-scrollable">&lt;staticContent&gt;
+    &lt;mimeMap fileExtension=".json" mimeType="application/json" /&gt;
+    &lt;/staticContent&gt;</code><p>
+    Web servers use these kinds of configuration files when present, but you're not normally allowed to access them using HTTP requests. However, you may occasionally find servers that fail to stop you from uploading your own malicious configuration file. In this case, even if the file extension you need is blacklisted, you may be able to trick the server into mapping an arbitrary, custom file extension to an executable MIME type.
+</p><div widget-id="academy-labstatus" widget-lab-id="23B377E90A4C2EB083EF9F02CB4800E763796995A1449F85714790D15C30B9FA"></div><h4 id="obfuscating-file-extensions" chunk-id="3150E192DCCEF4EDEA3A6710ED04A109">Obfuscating file extensions</h4><p>
+    Even the most exhaustive blacklists can potentially be bypassed using classic obfuscation techniques. Let's say the validation code is case sensitive and fails to recognize that <code>exploit.pHp</code> is in fact a <code>.php</code> file. If the code that subsequently maps the file extension to a MIME type is <strong>not</strong> case sensitive, this discrepancy allows you to sneak malicious PHP files past validation that may eventually be executed by the server.
+</p><p>
+    You can also achieve similar results using the following techniques:
+</p><ul>
+    <li>
+        Provide multiple extensions. Depending on the algorithm used to parse the filename, the following file may be interpreted as either a PHP file or JPG image: <code>exploit.php.jpg</code>
+    </li>
+    <li>
+        Add trailing characters. Some components will strip or ignore trailing whitespaces, dots, and suchlike: <code>exploit.php.</code>
+    </li>
+    <li>
+        Try using the URL encoding (or double URL encoding) for dots, forward slashes, and backward slashes. If the value isn't decoded when validating the file extension, but is later decoded server-side, this can also allow you to upload malicious files that would otherwise be blocked: <code>exploit%2Ephp</code>
+    </li>
+    <li>
+        Add semicolons or URL-encoded null byte characters before the file extension. If validation is written in a high-level language like PHP or Java, but the server processes the file using lower-level functions in C/C++, for example, this can cause discrepancies in what is treated as the end of the filename: <code>exploit.asp;.jpg</code> or <code>exploit.asp%00.jpg</code>
+    </li>
+    <li>
+        Try using multibyte unicode characters, which may be converted to null bytes and dots after unicode conversion or normalization. Sequences like <code>xC0 x2E</code>, <code>xC4 xAE</code> or <code>xC0 xAE</code> may be translated to <code>x2E</code> if the filename parsed as a UTF-8 string, but then converted to ASCII characters before being used in a path.
+    </li>
+</ul><p id="obfuscating-file-extensions-D7K2" chunk-id="AA6B4149FD8EEA1C316B6839B8E9B77E">
+    Other defenses involve stripping or replacing dangerous extensions to prevent the file from being executed. If this transformation isn't applied recursively, you can position the prohibited string in such a way that removing it still leaves behind a valid file extension. For example, consider what happens if you strip <code>.php</code> from the following filename:
+</p><code class="code-scrollable">exploit.p<span class="orange">.php</span>hp</code><p>
+    This is just a small selection of the many ways it's possible to obfuscate file extensions.
+</p><div widget-id="academy-labstatus" widget-lab-id="4ED109E9F6A1C61C6F344591BD7DB083CD04F596804F6BA9670CBD6A3FDCAFEB"></div><h3 id="flawed-validation-of-the-file-s-contents" chunk-id="82463A6AA2F6572151D79BA6F91A02D6">Flawed validation of the file's contents</h3><p>
+    Instead of implicitly trusting the <code>Content-Type</code> specified in a request, more secure servers try to verify that the contents of the file actually match what is expected.
+</p><p>
+    In the case of an image upload function, the server might try to verify certain intrinsic properties of an image, such as its dimensions. If you try uploading a PHP script, for example, it won't have any dimensions at all. Therefore, the server can deduce that it can't possibly be an image, and reject the upload accordingly.
+</p><p id="flawed-validation-of-the-file-s-contents-X3R0" chunk-id="2F171AA59CA5DE33758A971E629E224E">
+    Similarly, certain file types may always contain a specific sequence of bytes in their header or footer. These can be used like a fingerprint or signature to determine whether the contents match the expected type. For example, JPEG files always begin with the bytes <code>FF D8 FF</code>.
+</p><p>
+    This is a much more robust way of validating the file type, but even this isn't foolproof. Using special tools, such as ExifTool, it can be trivial to create a polyglot JPEG file containing malicious code within its metadata.
+</p><div widget-id="academy-labstatus" widget-lab-id="328D640F4802F5285275092D76357CA4AA12C2B12FDD0FBFB606D7952C7114EC"></div><h3 id="exploiting-file-upload-race-conditions" chunk-id="87BD0A6DE2D43163A3B6577349AC94DB">Exploiting file upload race conditions</h3><p>
+    Modern frameworks are more battle-hardened against these kinds of attacks. They generally don't upload files directly to their intended destination on the filesystem. Instead, they take precautions like uploading to a temporary, sandboxed directory first and randomizing the name to avoid overwriting existing files. They then perform validation on this temporary file and only transfer it to its destination once it is deemed safe to do so.
+</p><p>
+    That said, developers sometimes implement their own processing of file uploads independently of any framework. Not only is this fairly complex to do well, it can also introduce dangerous race conditions that enable an attacker to completely bypass even the most robust validation.
+</p><p id="exploiting-file-upload-race-conditions-S2P5" chunk-id="D6C0341F2E3CAD9B9DA30B18A8E5A19F">
+    For example, some websites upload the file directly to the main filesystem and then remove it again if it doesn't pass validation. This kind of behavior is typical in websites that rely on anti-virus software and the like to check for malware. This may only take a few milliseconds, but for the short time that the file exists on the server, the attacker can potentially still execute it.
+</p><p>
+            These vulnerabilities are often extremely subtle, making them difficult to detect during blackbox testing unless you can find a way to leak the relevant source code.
+        </p><div widget-id="academy-labstatus" widget-lab-id="E7C14C1093F823154152C9CE425959EF67D62C9BB7C65EB02F6A8A597AB993E8"></div><h4 id="race-conditions-in-url-based-file-uploads" chunk-id="507863EAAE37BA137C58B323FAAE0E62">Race conditions in URL-based file uploads</h4><p>
+            Similar race conditions can occur in functions that allow you to upload a file by providing a URL. In this case, the server has to fetch the file over the internet and create a local copy before it can perform any validation.
+        </p><p>
+            As the file is loaded using HTTP, developers are unable to use their framework's built-in mechanisms for securely validating files. Instead, they may manually create their own processes for temporarily storing and validating the file, which may not be quite as secure.
+        </p><p id="race-conditions-in-url-based-file-uploads-L2S2" chunk-id="5AE612E1BE26B6C54A7AB705C68B433C">
+            For example, if the file is loaded into a temporary directory with a randomized name, in theory, it should be impossible for an attacker to exploit any race conditions. If they don't know the name of the directory, they will be unable to request the file in order to trigger its execution. On the other hand, if the randomized directory name is generated using pseudo-random functions like PHP's <code>uniqid()</code>, it can potentially be brute-forced.
+        </p><p>
+            To make attacks like this easier, you can try to extend the amount of time taken to process the file, thereby lengthening the window for brute-forcing the directory name. One way of doing this is by uploading a larger file. If it is processed in chunks, you can potentially take advantage of this by creating a malicious file with the payload at the start, followed by a large number of arbitrary padding bytes.
+        </p><h2 id="exploiting-file-upload-vulnerabilities-without-remote-code-execution" chunk-id="29F92CCD5297D82BDBBED84BE5EA6EEC">Exploiting file upload vulnerabilities without remote code execution</h2><p>
+            In the examples we've looked at so far, we've been able to upload server-side scripts for remote code execution. This is the most serious consequence of an insecure file upload function, but these vulnerabilities can still be exploited in other ways.
+        </p><h3 id="uploading-malicious-client-side-scripts" chunk-id="4395805D76F07F0A6FE423D1B33593F7">Uploading malicious client-side scripts</h3><p>
+            Although you might not be able to execute scripts on the server, you may still be able to upload scripts for client-side attacks. For example, if you can upload HTML files or SVG images, you can potentially use <code>&lt;script&gt;</code> tags to create stored XSS payloads.
+        </p><p>
+            If the uploaded file then appears on a page that is visited by other users, their browser will execute the script when it tries to render the page. Note that due to same-origin policy restrictions, these kinds of attacks will only work if the uploaded file is served from the same origin to which you upload it.
+        </p><h3 id="exploiting-vulnerabilities-in-the-parsing-of-uploaded-files" chunk-id="EB470055BC3F633DE6850375DCF663FD">Exploiting vulnerabilities in the parsing of uploaded files</h3><p>
+            If the uploaded file seems to be both stored and served securely, the last resort is to try exploiting vulnerabilities specific to the parsing or processing of different file formats. For example, you know that the server parses XML-based files, such as Microsoft Office <code>.doc</code> or <code>.xls</code> files, this may be a potential vector for XXE injection attacks.
+        </p><h2 id="uploading-files-using-put" chunk-id="A6DAC0553300674E258D243344345519" cms-ignore-validation="HEADING_CAPITALIZATION">Uploading files using PUT</h2><p>
+            It's worth noting that some web servers may be configured to support <code>PUT</code> requests. If appropriate defenses aren't in place, this can provide an alternative means of uploading malicious files, even when an upload function isn't available via the web interface.
+        </p><code class="code-scrollable">PUT /images/exploit.php HTTP/1.1
+Host: vulnerable-website.com
+Content-Type: application/x-httpd-php
+Content-Length: 49
+
+&lt;?php echo file_get_contents('/path/to/file'); ?&gt;</code><div class="component-labinstructions">
+            <h4>Tip</h4>
+            <p>
+                You can try sending <code>OPTIONS</code> requests to different endpoints to test for any that advertise support for the <code>PUT</code> method.
+            </p>
+        </div><h2 id="how-to-prevent-file-upload-vulnerabilities" chunk-id="0AA08676D925F26537645F190D0AB807">How to prevent file upload vulnerabilities</h2><p>
+            Allowing users to upload files is commonplace and doesn't have to be dangerous as long as you take the right precautions. In general, the most effective way to protect your own websites from these vulnerabilities is to implement all of the following practices:
+        </p><ul>
+            <li>
+                Check the file extension against a whitelist of permitted extensions rather than a blacklist of prohibited ones. It's much easier to guess which extensions you might want to allow than it is to guess which ones an attacker might try to upload.
+            </li>
+            <li>
+                Make sure the filename doesn't contain any substrings that may be interpreted as a directory or a traversal sequence (<code>../</code>).
+            </li>
+            <li>
+                Rename uploaded files to avoid collisions that may cause existing files to be overwritten.
+            </li>
+            <li>
+                Do not upload files to the server's permanent filesystem until they have been fully validated.
+            </li>
+            <li>
+                As much as possible, use an established framework for preprocessing file uploads rather than attempting to write your own validation mechanisms.
+            </li>
+        </ul>
+        
+        <div widget-id="academy-registration-footer"></div>
+    
+    </div>
+
+
+    <script src="../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="kyy3nX/aSQrFvcy7JDlg65U&#x2B;FNUwMlxS"></script>
+    <script src="../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="kyy3nX/aSQrFvcy7JDlg65U&#x2B;FNUwMlxS"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../content/images/logos/burp-suite-icon.svg">
+                <h4>Find file upload vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="sql-injection.html">SQL injection</a>
+            <a href="csrf.html">Cross-site request forgery</a>
+            <a href="xxe.html">XML external entity injection</a>
+            <a href="file-path-traversal.html">Directory traversal</a>
+            <a href="ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="kyy3nX/aSQrFvcy7JDlg65U+FNUwMlxS" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/file-upload by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:06:32 GMT -->
+</html>

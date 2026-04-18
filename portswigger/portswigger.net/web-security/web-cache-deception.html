@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/web-cache-deception by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:04:24 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Web cache deception | Web Security Academy</title>
+    <meta content="Web cache deception is a vulnerability that enables an attacker to trick a web cache into storing sensitive, dynamic content. It&#x27;s caused by discrepancies ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="web-cache-deception.html"/>
+<link rel="icon" href="../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../content/images/logos/apple-touch-icon.png">
+    <link href="../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="S7rv70daVLUgt02TezavtJ/UPO7pkLR6">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "S7rv70daVLUgt02TezavtJ/UPO7pkLR6";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="request-smuggling.html">Request smuggling</a>
+                            <a href="web-cache-deception.html">Web cache deception</a>
+                            <a href="llm-attacks.html">Web LLM attacks</a>
+                            <a href="api-testing.html">API testing</a>
+                            <a href="nosql-injection.html">NoSQL injection</a>
+                            <a href="all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="all-labs.html">All labs</a>
+                            <a href="all-topics.html">All topics</a>
+                            <a href="mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="hall-of-fame.html">Leaderboard</a>
+                            <a href="getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="certification.html">Get certified</a>
+                             <a href="certification/how-to-prepare.html">How to prepare</a>
+                             <a href="certification/how-it-works.html">How it works</a>
+                             <a href="certification/practice-exam.html">Practice exam</a>
+                             <a href="certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="38">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>Web cache deception</h3>
+        <ul>
+            <li><a href="web-cache-deception.html">Overview</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-1">
+                <label for="sub-nav-id-1">
+                    <a href="web-cache-deception.html#web-caches">Web caches</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="web-cache-deception.html#cache-keys">Cache keys</a></li>
+                    <li><a href="web-cache-deception.html#cache-rules">Cache rules</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-2">
+                <label for="sub-nav-id-2">
+                    <a href="web-cache-deception.html#constructing-a-web-cache-deception-attack">Constructing an attack</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="web-cache-deception.html#using-a-cache-buster">Using a cache buster</a></li>
+                    <li><a href="web-cache-deception.html#detecting-cached-responses">Detecting cached responses</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-3">
+                <label for="sub-nav-id-3">
+                    <a href="web-cache-deception.html#exploiting-static-extension-cache-rules">Exploiting static extension cache rules</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="web-cache-deception.html#path-mapping-discrepancies">Path mapping discrepancies</a></li>
+                    <li><a href="web-cache-deception.html#exploiting-path-mapping-discrepancies">Exploiting path mapping discrepancies</a></li>
+                    <li><a href="web-cache-deception.html#delimiter-discrepancies">Delimiter discrepancies</a></li>
+                    <li><a href="web-cache-deception.html#exploiting-delimiter-discrepancies">Exploiting delimiter discrepancies</a></li>
+                    <li><a href="web-cache-deception.html#delimiter-decoding-discrepancies">Delimiter decoding discrepancies</a></li>
+                    <li><a href="web-cache-deception.html#exploiting-delimiter-decoding-discrepancies">Exploiting delimiter decoding discrepancies</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-4">
+                <label for="sub-nav-id-4">
+                    <a href="web-cache-deception.html#exploiting-static-directory-cache-rules">Exploiting static directory cache rules</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="web-cache-deception.html#normalization-discrepancies">Normalization discrepancies</a></li>
+                    <li><a href="web-cache-deception.html#detecting-normalization-by-the-origin-server">Detecting normalization by the origin server</a></li>
+                    <li><a href="web-cache-deception.html#detecting-normalization-by-the-cache-server">Detecting normalization by the cache server</a></li>
+                    <li><a href="web-cache-deception.html#exploiting-normalization-by-the-origin-server">Exploiting normalization by the origin server</a></li>
+                    <li><a href="web-cache-deception.html#exploiting-normalization-by-the-cache-server">Exploiting normalization by the cache server</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-5">
+                <label for="sub-nav-id-5">
+                    <a href="web-cache-deception.html#exploiting-file-name-cache-rules">Exploiting file name cache rules</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="web-cache-deception.html#detecting-normalization-discrepancies">Detecting normalization discrepancies</a></li>
+                    <li><a href="web-cache-deception.html#exploiting-normalization-discrepancies">Exploiting normalization discrepancies</a></li>
+                </ul>
+            </li>
+            <li><a href="web-cache-deception.html#preventing-web-cache-deception-vulnerabilities">Preventing vulnerabilities</a></li>
+            <li><a href="web-cache-deception.html#portswigger-research">Research</a></li>
+            <li><a href="all-labs.html#web-cache-deception">View all web cache deception labs</a></li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="web-cache-deception.html"><span itemprop="name">Web cache deception</span></a><meta itemprop="position" content="2" /></li></ul>    <div class="section theme-white">
+
+        <h1 class="heading-2">Web cache deception</h1><p>
+    Web cache deception is a vulnerability that enables an attacker to trick a web cache into storing sensitive, dynamic content. It's caused by discrepancies between how the cache server and origin server handle requests.
+</p><p>
+    In a web cache deception attack, an attacker persuades a victim to visit a malicious URL, inducing the victim's browser to make an ambiguous request for sensitive content. The cache misinterprets this as a request for a static resource and stores the response. The attacker can then request the same URL to access the cached response, gaining unauthorized access to private information.
+</p><img alt="Web cache deception example" src="web-cache-deception/images/wcd-image-1.png"><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        It's important to distinguish web cache deception from web cache poisoning. While both exploit caching mechanisms, they do so in different ways:
+    </p>
+    <ul>
+        <li>
+            Web cache poisoning manipulates cache keys to inject malicious content into a cached response, which is then served to other users.
+        </li>
+        <li>
+            Web cache deception exploits cache rules to trick the cache into storing sensitive or private content, which the attacker can then access.
+        </li>
+    </ul>
+    <p>
+        For more detailed information on web cache poisoning, refer to our <a href="web-cache-poisoning.html">Web cache poisoning</a> Academy topic.
+    </p>
+</div><h2 class="heading-3" id="portswigger-research">PortSwigger research</h2><p>
+    PortSwigger has developed several deliberately vulnerable labs that you can use to safely practice what you've learned against realistic targets. Many of these labs are based on original research first presented at Black Hat USA 2024.
+</p><p>
+    For more details, please refer to the accompanying whitepaper: <a href="https://portswigger.net/research/gotta-cache-em-all">Gotta Cache 'em all: bending the rules of web cache exploitation</a>.
+</p><h2 id="web-caches" chunk-id="548AA4625E33ED8BA66A88916800C402">Web caches</h2><p>
+    A web cache is a system that sits between the origin server and the user. When a client requests a static resource, the request is first directed to the cache. If the cache doesn't contain a copy of the resource (known as a cache miss), the request is forwarded to the origin server, which processes and responds to the request. The response is then sent to the cache before being sent to the user. The cache uses a preconfigured set of rules to determine whether to store the response.
+</p><p>
+    When a request for the same static resource is made in the future, the cache serves the stored copy of the response directly to the user (known as a cache hit).
+</p><img alt="Cache behavior web cache deception" src="images/caching.svg"><p>
+    Caching has become a common and crucial aspect of delivering web content, particularly with the widespread use of Content Delivery Networks (CDNs), which use caching to store copies of content on distributed servers all over the world. CDNs speed up delivery by serving content from the server closest to the user, reducing load times by minimizing the distance data travels.
+</p><h3 id="cache-keys" chunk-id="A85301B8ED005651BF7902EAB5701817">Cache keys</h3><p>
+    When the cache receives an HTTP request, it must decide whether there is a cached response that it can serve directly, or whether it has to forward the request to the origin server. The cache makes this decision by generating a 'cache key' from elements of the HTTP request. Typically, this includes the URL path and query parameters, but it can also include a variety of other elements like headers and content type.
+</p><p>
+    If the incoming request's cache key matches that of a previous request, the cache considers them to be equivalent and serves a copy of the cached response.
+</p><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        To learn how to manipulate cache keys to inject malicious content into the cache, see our <a href="web-cache-poisoning.html">Web cache poisoning</a> Academy topic.
+    </p>
+</div><h3 id="cache-rules" chunk-id="78D54E2AC025FDEB622429E4030C6B62">Cache rules</h3><p>
+    Cache rules determine what can be cached and for how long. Cache rules are often set up to store static resources, which generally don't change frequently and are reused across multiple pages. Dynamic content is not cached as it's more likely to contain sensitive information, ensuring users get the latest data directly from the server.
+</p><p>
+    Web cache deception attacks exploit how cache rules are applied, so it's important to know about some different types of rules, particularly those based on defined strings in the URL path of the request. For example:
+</p><ul>
+    <li>Static file extension rules - These rules match the file extension of the requested resource, for example <code>.css</code> for stylesheets or <code>.js</code> for JavaScript files.</li>
+    <li>Static directory rules - These rules match all URL paths that start with a specific prefix. These are often used to target specific directories that contain only static resources, for example <code>/static</code> or <code>/assets</code>.</li>
+    <li>File name rules - These rules match specific file names to target files that are universally required for web operations and change rarely, such as <code>robots.txt</code> and <code>favicon.ico</code>.</li>
+</ul><p>
+    Caches may also implement custom rules based on other criteria, such as URL parameters or dynamic analysis.
+</p><h2 id="constructing-a-web-cache-deception-attack" chunk-id="1B12B97A3DC0863B655CCD8131805763">Constructing a web cache deception attack</h2><p>
+    Generally speaking, constructing a basic web cache deception attack involves the following steps:
+</p><ol>
+    <li>Identify a target endpoint that returns a dynamic response containing sensitive information. Review responses in Burp, as some sensitive information may not be visible on the rendered page. Focus on endpoints that support the <code>GET</code>, <code>HEAD</code>, or <code>OPTIONS</code> methods as requests that alter the origin server's state are generally not cached.</li>
+    <li>
+        <p>Identify a discrepancy in how the cache and origin server parse the URL path. This could be a discrepancy in how they:</p>
+        <ul>
+            <li>Map URLs to resources.</li>
+            <li>Process delimiter characters.</li>
+            <li>Normalize paths.</li>
+        </ul>
+    </li>
+    <li>Craft a malicious URL that uses the discrepancy to trick the cache into storing a dynamic response. When the victim accesses the URL, their response is stored in the cache. Using Burp, you can then send a request to the same URL to fetch the cached response containing the victim's data. Avoid doing this directly in the browser as some applications redirect users without a session or invalidate local data, which could hide a vulnerability.</li>
+</ol><p>
+    We'll explore some different approaches for constructing a web cache deception attack.
+</p><h3 id="using-a-cache-buster" chunk-id="0FF12FEA1E936DB06CDA349B6E7AF356">Using a cache buster</h3><p>
+    While testing for discrepancies and crafting a web cache deception exploit, make sure that each request you send has a different cache key. Otherwise, you may be served cached responses, which will impact your test results.
+</p><p>
+    As both URL path and any query parameters are typically included in the cache key, you can change the key by adding a query string to the path and changing it each time you send a request. Automate this process using the Param Miner extension. To do this, once you've installed the extension, click on the top-level <strong>Param miner &gt; Settings</strong> menu, then select <strong>Add dynamic cachebuster</strong>. Burp now adds a unique query string to every request that you make. You can view the added query strings in the <strong>Logger</strong> tab.
+</p><h3 id="detecting-cached-responses" chunk-id="F33925F01E7684C689DD161195B65147">Detecting cached responses</h3><p>
+    During testing, it's crucial that you're able to identify cached responses. To do so, look at response headers and response times.
+</p><p>
+    Various response headers may indicate that it is cached. For example:
+</p><ul>
+    <li>The <code>X-Cache</code> header provides information about whether a response was served from the cache. Typical values include:
+        <ul>
+            <li><code>X-Cache: hit</code> - The response was served from the cache.</li>
+            <li><code>X-Cache: miss</code> - The cache did not contain a response for the request's key, so it was fetched from the origin server. In most cases, the response is then cached. To confirm this, send the request again to see whether the value updates to hit.</li>
+            <li><code>X-Cache: dynamic</code> - The origin server dynamically generated the content. Generally this means the response is not suitable for caching.</li>
+            <li><code>X-Cache: refresh</code> - The cached content was outdated and needed to be refreshed or revalidated.</li>
+        </ul>
+    </li>
+    <li>The <code>Cache-Control</code> header may include a directive that indicates caching, like <code>public</code> with a <code>max-age</code> higher than <code>0</code>. Note that this only suggests that the resource is cacheable. It isn't always indicative of caching, as the cache may sometimes override this header.</li>
+</ul><p>
+    If you notice a big difference in response time for the same request, this may also indicate that the faster response is served from the cache.
+</p><h2 id="exploiting-static-extension-cache-rules" chunk-id="691CB3050A7940858786374C24AAA421">Exploiting static extension cache rules</h2><p>
+    Cache rules often target static resources by matching common file extensions like <code>.css</code> or <code>.js</code>. This is the default behavior in most CDNs.
+</p><p>
+    If there are discrepancies in how the cache and origin server map the URL path to resources or use delimiters, an attacker may be able to craft a request for a dynamic resource with a static extension that is ignored by the origin server but viewed by the cache.
+</p><h3 id="path-mapping-discrepancies" chunk-id="3861ACE8843F2F3413822EDCC7CDEA07">Path mapping discrepancies</h3><p>
+    URL path mapping is the process of associating URL paths with resources on a server, such as files, scripts, or command executions. There are a range of different mapping styles used by different frameworks and technologies. Two common styles are traditional URL mapping and RESTful URL mapping.
+</p><p>
+    Traditional URL mapping represents a direct path to a resource located on the file system. Here's a typical example:
+</p><p>
+    <code>http://example.com/path/in/filesystem/resource.html</code>
+</p><ul>
+    <li><code>http://example.com</code> points to the server.</li>
+    <li><code>/path/in/filesystem/</code> represents the directory path in the server's file system.</li>
+    <li><code>resource.html</code> is the specific file being accessed.</li>
+</ul><p>
+    In contrast, REST-style URLs don't directly match the physical file structure. They abstract file paths into logical parts of the API:
+</p><p>
+    <code>http://example.com/path/resource/param1/param2</code>
+</p><ul>
+    <li><code>http://example.com</code> points to the server.</li>
+    <li><code>/path/resource/</code> is an endpoint representing a resource.</li>
+    <li><code>param1</code> and <code>param2</code> are path parameters used by the server to process the request.</li>
+</ul><p id="path-mapping-discrepancies-E1E2" chunk-id="CF209E87CA9423A2CC1BA8BA7ABB231A">
+    Discrepancies in how the cache and origin server map the URL path to resources can result in web cache deception vulnerabilities. Consider the following example:
+</p><p>
+    <code>http://example.com/user/123/profile/wcd.css</code>
+</p><ul>
+    <li>An origin server using REST-style URL mapping may interpret this as a request for the <code>/user/123/profile</code> endpoint and returns the profile information for user <code>123</code>, ignoring <code>wcd.css</code> as a non-significant parameter.</li>
+    <li>A cache that uses traditional URL mapping may view this as a request for a file named <code>wcd.css</code> located in the <code>/profile</code> directory under <code>/user/123</code>. It interprets the URL path as <code>/user/123/profile/wcd.css</code>. If the cache is configured to store responses for requests where the path ends in <code>.css</code>, it would cache and serve the profile information as if it were a CSS file.</li>
+</ul><h3 id="exploiting-path-mapping-discrepancies" chunk-id="93C2AD42B2C71320867BE07DD002B198">Exploiting path mapping discrepancies</h3><p>
+    To test how the origin server maps the URL path to resources, add an arbitrary path segment to the URL of your target endpoint. If the response still contains the same sensitive data as the base response, it indicates that the origin server abstracts the URL path and ignores the added segment. For example, this is the case if modifying <code>/api/orders/123</code> to <code>/api/orders/123/foo</code> still returns order information.
+</p><p>
+    To test how the cache maps the URL path to resources, you'll need to modify the path to attempt to match a cache rule by adding a static extension. For example, update <code>/api/orders/123/foo</code> to <code>/api/orders/123/foo.js</code>. If the response is cached, this indicates:
+</p><ul>
+    <li>That the cache interprets the full URL path with the static extension.</li>
+    <li>That there is a cache rule to store responses for requests ending in <code>.js</code>.</li>
+</ul><p>
+    Caches may have rules based on specific static extensions. Try a range of extensions, including <code>.css</code>, <code>.ico</code>, and <code>.exe</code>.
+</p><p>
+    You can then craft a URL that returns a dynamic response that is stored in the cache. Note that this attack is limited to the specific endpoint that you tested, as the origin server often has different abstraction rules for different endpoints.
+</p><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        Burp Scanner automatically detects web cache deception vulnerabilities that are caused by path mapping discrepancies during audits. You can also use the <a href="https://portswigger.net/bappstore/7c1ca94a61474d9e897d307c858d52f0">Web Cache Deception Scanner</a> BApp to detect misconfigured web caches.
+    </p>
+</div><div widget-id="academy-labstatus" widget-lab-id="7E1D5BEFA5A46838A8C5416C70E5A41374A9709AB774F18059501BEEB902525D"></div><h3 id="delimiter-discrepancies" chunk-id="1D06737D2479773B68CA3619904F36AD">Delimiter discrepancies</h3><p>
+    Delimiters specify boundaries between different elements in URLs. The use of characters and strings as delimiters is generally standardized. For example, <code>?</code> is generally used to separate the URL path from the query string. However, as the URI RFC is quite permissive, variations still occur between different frameworks or technologies.
+</p><p>
+    Discrepancies in how the cache and origin server use characters and strings as delimiters can result in web cache deception vulnerabilities. Consider the example <code>/profile;foo.css</code>:
+</p><ul>
+    <li>
+        The Java Spring framework uses the <code>;</code> character to add parameters known as matrix variables. An origin server that uses Java Spring would therefore interpret <code>;</code> as a delimiter. It truncates the path after <code>/profile</code> and returns profile information.
+    </li>
+    <li>
+        Most other frameworks don't use <code>;</code> as a delimiter. Therefore, a cache that doesn't use Java Spring is likely to interpret <code>;</code> and everything after it as part of the path. If the cache has a rule to store responses for requests ending in <code>.css</code>, it might cache and serve the profile information as if it were a CSS file.
+    </li>
+</ul><p id="delimiter-discrepancies-LFJ0" chunk-id="318C3A6406AE91D806592CFA98AD2E41">
+    The same is true for other characters that are used inconsistently between frameworks or technologies. Consider these requests to an origin server running the Ruby on Rails framework, which uses <code>.</code> as a delimiter to specify the response format:
+</p><ul>
+    <li><code>/profile</code> - This request is processed by the default HTML formatter, which returns the user profile information.</li>
+    <li><code>/profile.css</code> - This request is recognized as a CSS extension. There isn't a CSS formatter, so the request isn't accepted and an error is returned.</li>
+    <li><code>/profile.ico</code> - This request uses the <code>.ico</code> extension, which isn't recognized by Ruby on Rails. The default HTML formatter handles the request and returns the user profile information. In this situation, if the cache is configured to store responses for requests ending in <code>.ico</code>, it would cache and serve the profile information as if it were a static file.</li>
+</ul><p id="delimiter-discrepancies-L1FF" chunk-id="CD822C5501FD2B073504B61076B5700C">
+    Encoded characters may also sometimes be used as delimiters. For example, consider the request
+    <code>/profile%00foo.js</code>:
+</p><ul>
+    <li>
+        The OpenLiteSpeed server uses the encoded null <code>%00</code> character as a delimiter. An origin server that uses OpenLiteSpeed would therefore interpret the path as
+        <code>/profile</code>.
+    </li>
+    <li>
+        Most other frameworks respond with an error if <code>%00</code> is in the URL. However, if the cache uses Akamai or Fastly, it would interpret <code>%00</code> and everything after it as the path.
+    </li>
+</ul><h3 id="exploiting-delimiter-discrepancies" chunk-id="C14C10858A7E9CEEE153E7E4FAD538E9">Exploiting delimiter discrepancies</h3><p>
+    You may be able to use a delimiter discrepancy to add a static extension to the path that is viewed by the cache, but not the origin server. To do this, you'll need to identify a character that is used as a delimiter by the origin server but not the cache.
+</p><p>
+    Firstly, find characters that are used as delimiters by the origin server. Start this process by adding an arbitrary string to the URL of your target endpoint. For example, modify <code>/settings/users/list</code> to <code>/settings/users/listaaa</code>. You'll use this response as a reference when you start testing delimiter characters.
+</p><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        If the response is identical to the original response, this indicates that the request is being redirected. You'll need to choose a different endpoint to test.
+    </p>
+</div><p>
+    Next, add a possible delimiter character between the original path and the arbitrary string, for example <code>/settings/users/list;aaa</code>:
+</p><ul>
+    <li>If the response is identical to the base response, this indicates that the <code>;</code> character is used as a
+        delimiter and the origin server interprets the path as <code>/settings/users/list</code>. </li>
+    <li>If it matches the response to the path with the arbitrary string, this indicates that the <code>;</code>
+        character isn't used as a delimiter and the origin server interprets the path as
+        <code>/settings/users/list;aaa</code>.</li>
+</ul><p id="exploiting-delimiter-discrepancies-JJJP" chunk-id="3AA1AB72266269848D41B132D6067328">
+    Once you've identified delimiters that are used by the origin server, test whether they're also used by the cache. To do this, add a static extension to the end of the path. If the response is cached, this indicates:
+</p><ul>
+    <li>That the cache doesn't use the delimiter and interprets the full URL path with the static extension.</li>
+    <li>That there is a cache rule to store responses for requests ending in <code>.js</code>.</li>
+</ul><p>
+    Make sure to test all ASCII characters and a range of common extensions, including <code>.css</code>, <code>.ico</code>, and <code>.exe</code>. We've provided a list of potential delimiter characters to get you started in the labs, see the
+    <a href="web-cache-deception/wcd-lab-delimiter-list.html">Web cache deception lab delimiter list</a>. Use Burp Intruder to quickly test these characters. To prevent Burp Intruder from encoding the delimiter characters, turn off Burp Intruder's automated character encoding under <strong>Payload encoding</strong> in the <strong>Payloads</strong> side panel.
+</p><p id="exploiting-delimiter-discrepancies-RRL9" chunk-id="55FBE34C34E1F80CF523EF9BF92FAD6C">
+    You can then construct an exploit that triggers the static extension cache rule. For example, consider the payload <code>/settings/users/list;aaa.js</code>. The origin server uses <code>;</code> as a delimiter:
+</p><ul>
+    <li>The cache interprets the path as: <code>/settings/users/list;aaa.js</code></li>
+    <li>The origin server interprets the path as: <code>/settings/users/list</code></li>
+</ul><p>
+    The origin server returns the dynamic profile information, which is stored in the cache.
+</p><p>
+    Because delimiters are generally used consistently within each server, you can often use this attack on many different endpoints.
+</p><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        Some delimiter characters may be processed by the victim's browser before it forwards the request to the cache. This means that some delimiters can't be used in an exploit. For example, browsers URL-encode characters like <code>{</code>, <code>}</code>, <code>&lt;</code>, and <code>&gt;</code>, and use <code>#</code> to truncate the path.
+    </p>
+    <p>
+        If the cache or origin server decodes these characters, it may be possible to use an encoded version in an exploit.
+    </p>
+</div><div widget-id="academy-labstatus" widget-lab-id="0C221A151722D2C5972EECAE320718FCCCC5D98A38B52914A5099C3837335F2F"></div><h3 id="delimiter-decoding-discrepancies" chunk-id="CB86F13FF6DB84F0E151986C7807FED0">Delimiter decoding discrepancies</h3><p>
+    Websites sometimes need to send data in the URL that contains characters that have a special meaning within URLs, such as delimiters. To ensure these characters are interpreted as data, they are usually encoded. However, some parsers decode certain characters before processing the URL. If a delimiter character is decoded, it may then be treated as a delimiter, truncating the URL path.
+</p><p>
+    Differences in which delimiter characters are decoded by the cache and origin server can result in discrepancies in how they interpret the URL path, even if they both use the same characters as delimiters. Consider the example <code>/profile%23wcd.css</code>, which uses the URL-encoded <code>#</code> character:
+</p><ul>
+    <li>
+        The origin server decodes <code>%23</code> to <code>#</code>. It uses <code>#</code> as a delimiter, so it interprets the path as <code>/profile</code> and returns profile information.
+    </li>
+    <li>
+        The cache also uses the <code>#</code> character as a delimiter, but doesn't decode <code>%23</code>. It interprets the path as <code>/profile%23wcd.css</code>. If there is a cache rule for the <code>.css</code> extension it will store the response.
+    </li>
+</ul><p id="delimiter-decoding-discrepancies-YRHD" chunk-id="A74A808F3335248AAF517886EE96CAFC">
+    In addition, some cache servers may decode the URL and then forward the request with the decoded characters. Others first apply cache rules based on the encoded URL, then decode the URL and forward it to the next server. These behaviors can also result in discrepancies in the way cache and origin server interpret the URL path. Consider the example <code>/myaccount%3fwcd.css</code>:
+</p><ul>
+    <li>
+        The cache server applies the cache rules based on the encoded path <code>/myaccount%3fwcd.css</code> and decides to store the response as there is a cache rule for the <code>.css</code> extension. It then decodes <code>%3f</code> to <code>?</code> and forwards the rewritten request to the origin server.
+    </li>
+    <li>
+        The origin server receives the request <code>/myaccount?wcd.css</code>. It uses the <code>?</code> character as a delimiter, so it interprets the path as <code>/myaccount</code>.
+    </li>
+</ul><h3 id="exploiting-delimiter-decoding-discrepancies" chunk-id="D902416323C9A437C46E4E00F5E92D93">Exploiting delimiter decoding discrepancies</h3><p>
+    You may be able to exploit a decoding discrepancy by using an encoded delimiter to add a static extension to the path that is viewed by the cache, but not the origin server.
+</p><p>
+    Use the same testing methodology you used to identify and exploit delimiter discrepancies, but use a range of encoded characters. Make sure that you also test encoded non-printable characters, particularly <code>%00</code>, <code>%0A</code> and <code>%09</code>. If these characters are decoded they can also truncate the URL path.
+</p><h2 id="exploiting-static-directory-cache-rules" chunk-id="1EB16FC1CCF6A36E5864AAAAF6D6E5B4">Exploiting static directory cache rules</h2><p>
+    It's common practice for web servers to store static resources in specific directories. Cache rules often target these directories by matching specific URL path prefixes, like <code>/static</code>, <code>/assets</code>, <code>/scripts</code>, or <code>/images</code>. These rules can also be vulnerable to web cache deception.
+</p><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        To exploit static directory cache rules, you'll need to understand the basics of path traversal attacks. For more information, see our <a href="file-path-traversal.html">Path traversal</a> Academy topic.
+    </p>
+</div><h3 id="normalization-discrepancies" chunk-id="474A0228DFB0999F13A6DB9B666DD8F9">Normalization discrepancies</h3><p>
+    Normalization involves converting various representations of URL paths into a standardized format. This sometimes includes decoding encoded characters and resolving dot-segments, but this varies significantly from parser to parser.
+</p><p>
+    Discrepancies in how the cache and origin server normalize the URL can enable an attacker to construct a path traversal payload that is interpreted differently by each parser. Consider the example <code>/static/..%2fprofile</code>:
+</p><ul>
+    <li>
+        An origin server that decodes slash characters and resolves dot-segments would normalize the path to <code>/profile</code> and return profile information.
+    </li>
+    <li>
+        A cache that doesn't resolve dot-segments or decode slashes would interpret the path as <code>/static/..%2fprofile</code>. If the cache stores responses for requests with the <code>/static</code> prefix, it would cache and serve the profile information.
+    </li>
+</ul><p>
+    As shown in the above example, each dot-segment in the path traversal sequence needs to be encoded. Otherwise, the victim's browser will resolve it before forwarding the request to the cache. Therefore, an exploitable normalization discrepancy requires that either the cache or origin server decodes characters in the path traversal sequence as well as resolving dot-segments.
+</p><h3 id="detecting-normalization-by-the-origin-server" chunk-id="7A2B467016CE3DD21EFB9739EBA200DD">Detecting normalization by the origin server</h3><p>
+    To test how the origin server normalizes the URL path, send a request to a non-cacheable resource with a path traversal sequence and an arbitrary directory at the start of the path. To choose a non-cacheable resource, look for a non-idempotent method like <code>POST</code>. For example, modify <code>/profile</code> to <code>/aaa/..%2fprofile</code>:
+</p><ul>
+    <li>If the response matches the base response and returns the profile information, this indicates that the path has been interpreted as <code>/profile</code>. The origin server decodes the slash and resolves the dot-segment.</li>
+    <li>If the response doesn't match the base response, for example returning a <code>404</code> error message, this indicates that the path has been interpreted as <code>/aaa/..%2fprofile</code>. The origin server either doesn't decode the slash or resolve the dot-segment.</li>
+</ul><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        When testing for normalization, start by encoding only the second slash in the dot-segment. This is important because some CDNs match the slash following the static directory prefix.
+    </p>
+    <p>
+        You can also try encoding the full path traversal sequence, or encoding a dot instead of the slash. This can sometimes impact whether the parser decodes the sequence.
+    </p>
+</div><h3 id="detecting-normalization-by-the-cache-server" chunk-id="52D84F2D82548CF05C6107FEC55A8959">Detecting normalization by the cache server</h3><p>
+    You can use a few different methods to test how the cache normalizes the path. Start by identifying potential static directories. In <strong>Proxy &gt; HTTP history</strong>, look for requests with common static directory prefixes and cached responses. Focus on static resources by setting the HTTP history filter to only show messages with 2xx responses and script, images, and CSS MIME types.
+</p><p>
+    You can then choose a request with a cached response and resend the request with a path traversal sequence and an arbitrary directory at the start of the static path. Choose a request with a response that contains evidence of being cached. For example, <code>/aaa/..%2fassets/js/stockCheck.js</code>:
+</p><ul>
+    <li>If the response is no longer cached, this indicates that the cache isn't normalizing the path before mapping it to the endpoint. It shows that there is a cache rule based on the <code>/assets</code> prefix.</li>
+    <li>If the response is still cached, this may indicate that the cache has normalized the path to <code>/assets/js/stockCheck.js</code>.</li>
+</ul><p id="detecting-normalization-by-the-cache-server-TTT7" chunk-id="3CA645B4908AB51F96913DA67F26FB1F">
+    You can also add a path traversal sequence after the directory prefix. For example, modify <code>/assets/js/stockCheck.js</code> to <code>/assets/..%2fjs/stockCheck.js</code>:
+</p><ul>
+    <li>If the response is no longer cached, this indicates that the cache decodes the slash and resolves the dot-segment during normalization, interpreting the path as <code>/js/stockCheck.js</code>. It shows that there is a cache rule based on the <code>/assets</code> prefix.</li>
+    <li>If the response is still cached, this may indicate that the cache hasn't decoded the slash or resolved the dot-segment, interpreting the path as <code>/assets/..%2fjs/stockCheck.js</code>.</li>
+</ul><p id="detecting-normalization-by-the-cache-server-E4H7" chunk-id="133B76924D2D874288C8106A672714F0">
+    Note that in both cases, the response may be cached due to another cache rule, such as one based on the file extension. To confirm that the cache rule is based on the static directory, replace the path after the directory prefix with an arbitrary string. For example, <code>/assets/aaa</code>. If the response is still cached, this confirms the cache rule is based on the <code>/assets</code> prefix. Note that if the response doesn't appear to be cached, this doesn't necessarily rule out a static directory cache rule as sometimes <code>404</code> responses aren't cached.
+</p><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        It's possible that you may not be able to definitively determine whether the cache decodes dot-segments and decodes the URL path without attempting an exploit.
+    </p>
+</div><h3 id="exploiting-normalization-by-the-origin-server" chunk-id="E05D3C20794F53EBB528634A28214588">Exploiting normalization by the origin server</h3><p>
+    If the origin server resolves encoded dot-segments, but the cache doesn't, you can attempt to exploit the discrepancy by constructing a payload according to the following structure:</p><code class="code-scrollable">/&lt;static-directory-prefix&gt;/..%2f&lt;dynamic-path&gt;</code><p>
+    For example, consider the payload <code>/assets/..%2fprofile</code>:
+</p><ul>
+    <li>The cache interprets the path as: <code>/assets/..%2fprofile</code></li>
+    <li>The origin server interprets the path as: <code>/profile</code></li>
+</ul><p>
+    The origin server returns the dynamic profile information, which is stored in the cache.
+</p><div widget-id="academy-labstatus" widget-lab-id="3C315AC6A411798FEA7DD926A886C9943732DC14B1DE47567BAFCE994F37D818"></div><h3 id="exploiting-normalization-by-the-cache-server" chunk-id="B4F8D7A75FD6B97CDC3BC4AFBEC42536">Exploiting normalization by the cache server</h3><p>
+    If the cache server resolves encoded dot-segments but the origin server doesn't, you can attempt to exploit the discrepancy by constructing a payload according to the following structure:
+</p><code>/&lt;dynamic-path&gt;%2f%2e%2e%2f&lt;static-directory-prefix&gt;</code><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        When exploiting normalization by the cache server, encode all characters in the path traversal sequence. Using encoded characters helps avoid unexpected behavior when using delimiters, and there's no need to have an unencoded slash following the static directory prefix since the cache will handle the decoding.
+    </p>
+</div><p>
+    In this situation, path traversal alone isn't sufficient for an exploit. For example, consider how the cache and origin server interpret the payload <code>/profile%2f%2e%2e%2fstatic</code>:
+</p><ul>
+    <li>The cache interprets the path as: <code>/static</code></li>
+    <li>The origin server interprets the path as: <code>/profile%2f%2e%2e%2fstatic</code></li>
+</ul><p>
+    The origin server is likely to return an error message instead of profile information.
+</p><p id="exploiting-normalization-by-the-cache-server-VBNE" chunk-id="1C336457C8B0DAA36D6D58050F2E4C78">
+    To exploit this discrepancy, you'll need to also identify a delimiter that is used by the origin server but not the cache. Test possible delimiters by adding them to the payload after the dynamic path:
+</p><ul>
+    <li>If the origin server uses a delimiter, it will truncate the URL path and return the dynamic information.</li>
+    <li>If the cache doesn't use the delimiter, it will resolve the path and cache the response.</li>
+</ul><p>
+    For example, consider the payload <code>/profile;%2f%2e%2e%2fstatic</code>. The origin server uses <code>;</code> as a delimiter:
+</p><ul>
+    <li>The cache interprets the path as: <code>/static</code></li>
+    <li>The origin server interprets the path as: <code>/profile</code></li>
+</ul><p>
+    The origin server returns the dynamic profile information, which is stored in the cache. You can therefore use this payload for an exploit.
+</p><div widget-id="academy-labstatus" widget-lab-id="8154D34B0B2F71EB7F02A610AF2CF34F8BD1BFFB9583B7C5B75BBE6AB66C201B"></div><h2 id="exploiting-file-name-cache-rules" chunk-id="F410E2C565F2358FEBF735DC5E85EE92">Exploiting file name cache rules</h2><p>
+    Certain files such as <code>robots.txt</code>, <code>index.html</code>, and <code>favicon.ico</code> are common files found on web servers. They're often cached due to their infrequent changes. Cache rules target these files by matching the exact file name string.
+</p><p>
+    To identify whether there is a file name cache rule, send a <code>GET</code> request for a possible file and see if the response is cached.
+</p><h3 id="detecting-normalization-discrepancies" chunk-id="D09EEC98A83360513EE90E313555CC4B">Detecting normalization discrepancies</h3><p>
+    To test how the origin server normalizes the URL path, use the same method that you used for static directory cache rules. For more information, see <a href="web-cache-deception.html#detecting-normalization-by-the-origin-server">Detecting normalization by the origin server</a>.
+</p><p>
+    To test how the cache normalizes the URL path, send a request with a path traversal sequence and an arbitrary directory before the file name. For example, <code>/profile%2f%2e%2e%2findex.html</code>:
+</p><ul>
+    <li>If the response is cached, this indicates that the cache normalizes the path to <code>/index.html</code>.</li>
+    <li>If the response isn't cached, this indicates that the cache doesn't decode the slash and resolve the dot-segment, interpreting the path as <code>/profile%2f%2e%2e%2findex.html</code>.</li>
+</ul><h3 id="exploiting-normalization-discrepancies" chunk-id="5999AF07036F22620BEEDC588C73E3E2">Exploiting normalization discrepancies</h3><p>
+    Because the response is only cached if the request matches the exact file name, you can only exploit a discrepancy where the cache server resolves encoded dot-segments, but the origin server doesn't. Use the same method as for static directory cache rules - simply replace the static directory prefix with the file name. For more information, see <a href="web-cache-deception.html#exploiting-normalization-by-the-cache-server">Exploiting normalization by the cache server</a>.
+</p><div widget-id="academy-labstatus" widget-lab-id="988579F4180D533B4CA2E244A488D7D252F5B1AEF28508EA8C5284936740D9AC"></div><h2 id="preventing-web-cache-deception-vulnerabilities" chunk-id="55E978FD69BCAD027E36ECC3DA8856F5">Preventing web cache deception vulnerabilities</h2><p>
+    You can take a range of steps to prevent web cache deception vulnerabilities:
+</p><ul>
+    <li>Always use <code>Cache-Control</code> headers to mark dynamic resources, set with the directives <code>no-store</code> and <code>private</code>.</li>
+    <li>Configure your CDN settings so that your caching rules don't override the <code>Cache-Control</code> header.</li>
+    <li>Activate any protection that your CDN has against web cache deception attacks. Many CDNs enable you to set a cache rule that verifies that the response <code>Content-Type</code> matches the request's URL file extension. For example, Cloudflare's Cache Deception Armor.</li>
+    <li>Verify that there aren't any discrepancies between how the origin server and the cache interpret URL paths.</li>
+</ul>
+        
+        <div widget-id="academy-registration-footer"></div>
+    
+    </div>
+
+
+    <script src="../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="S7rv70daVLUgt02TezavtJ/UPO7pkLR6"></script>
+    <script src="../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="S7rv70daVLUgt02TezavtJ/UPO7pkLR6"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../content/images/logos/burp-suite-icon.svg">
+                <h4>Find web cache deception vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="sql-injection.html">SQL injection</a>
+            <a href="csrf.html">Cross-site request forgery</a>
+            <a href="xxe.html">XML external entity injection</a>
+            <a href="file-path-traversal.html">Directory traversal</a>
+            <a href="ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="S7rv70daVLUgt02TezavtJ/UPO7pkLR6" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/web-cache-deception by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:04:27 GMT -->
+</html>

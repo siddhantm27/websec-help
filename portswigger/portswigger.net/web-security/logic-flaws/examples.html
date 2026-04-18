@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/logic-flaws/examples by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:06:26 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Examples of business logic vulnerabilities | Web Security Academy</title>
+    <meta content="Business logic vulnerabilities are relatively specific to the context in which they occur. However, although individual instances of logic flaws differ ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="examples.html"/>
+<link rel="icon" href="../../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../../content/images/logos/apple-touch-icon.png">
+    <link href="../../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="iHHGxEm6tFIMidoPrdO5nNqhqSBW+a1t">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "iHHGxEm6tFIMidoPrdO5nNqhqSBW+a1t";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="../dashboard.html">Dashboard</a></li>
+                    <li><a href="../learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../request-smuggling.html">Request smuggling</a>
+                            <a href="../web-cache-deception.html">Web cache deception</a>
+                            <a href="../llm-attacks.html">Web LLM attacks</a>
+                            <a href="../api-testing.html">API testing</a>
+                            <a href="../nosql-injection.html">NoSQL injection</a>
+                            <a href="../all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../all-labs.html">All labs</a>
+                            <a href="../all-topics.html">All topics</a>
+                            <a href="../mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../hall-of-fame.html">Leaderboard</a>
+                            <a href="../getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="../getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="../getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="../getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="../certification.html">Get certified</a>
+                             <a href="../certification/how-to-prepare.html">How to prepare</a>
+                             <a href="../certification/how-it-works.html">How it works</a>
+                             <a href="../certification/practice-exam.html">Practice exam</a>
+                             <a href="../certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="../certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="../certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="../certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="28">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="../all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>Business logic vulnerabilities</h3>
+        <ul>
+            <li><a href="../logic-flaws.html#what-are-business-logic-vulnerabilities">What are business logic vulnerabilities?</a></li>
+            <li><a href="../logic-flaws.html#how-do-business-logic-vulnerabilities-arise">How do business logic vulnerabilities arise?</a></li>
+            <li><a href="../logic-flaws.html#what-is-the-impact-of-business-logic-vulnerabilities">Impact</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-3">
+                <label for="sub-nav-id-3">
+                    <a href="examples.html">Examples</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="examples.html#excessive-trust-in-client-side-controls">Excessive trust in client-side controls</a></li>
+                    <li><a href="examples.html#failing-to-handle-unconventional-input">Failing to handle unconventional input</a></li>
+                    <li><a href="examples.html#making-flawed-assumptions-about-user-behavior">Making flawed assumptions about user behavior</a></li>
+                    <li><a href="examples.html#domain-specific-flaws">Domain-specific flaws</a></li>
+                    <li><a href="examples.html#providing-an-encryption-oracle">Providing an encryption oracle</a></li>
+                    <li><a href="examples.html#email-address-parser-discrepancies">Email address parser discrepancies</a></li>
+                </ul>
+            </li>
+            <li><a href="../logic-flaws.html#how-to-prevent-business-logic-vulnerabilities">Preventing</a></li>
+            <li><a href="../all-labs.html#business-logic-vulnerabilities">View all business logic labs</a></li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="../logic-flaws.html"><span itemprop="name">Business logic vulnerabilities</span></a><meta itemprop="position" content="2" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="examples.html"><span itemprop="name">Examples</span></a><meta itemprop="position" content="3" /></li></ul>    <div class="section theme-white">
+
+        <h1 class="heading-2">Examples of business logic vulnerabilities</h1><p>
+            Business logic vulnerabilities are relatively specific to the context in which they occur. However, although individual instances of logic flaws differ hugely, they can share many common themes. In particular, they can be loosely grouped based on the initial mistakes that introduced the vulnerability in the first place.
+        </p><p>
+            In this section, we'll look at examples of some typical mistakes that design and development teams make and show you how they can directly lead to business logic flaws. Whether you're developing your own applications, or auditing existing ones, you can take the lessons learned from these examples and apply the same critical thinking to other applications that you encounter.
+        </p><p>
+            Examples of logic flaws include:
+        </p><ul>
+			<li>
+				<a href="examples.html#excessive-trust-in-client-side-controls">Excessive trust in client-side controls</a> <span class="label-light-green-small">LABS</span>
+			</li>
+			<li>
+				<a href="examples.html#failing-to-handle-unconventional-input">Failing to handle unconventional input</a> <span class="label-light-green-small">LABS</span>
+			</li>
+			<li>
+				<a href="examples.html#making-flawed-assumptions-about-user-behavior">Making flawed assumptions about user behavior</a> <span class="label-light-green-small">LABS</span>
+			</li>
+			<li>
+				<a href="examples.html#domain-specific-flaws">Domain-specific flaws</a> <span class="label-light-green-small">LABS</span>
+			</li>
+			<li>
+				<a href="examples.html#providing-an-encryption-oracle">Providing an encryption oracle</a> <span class="label-light-green-small">LABS</span>
+			</li>
+            <li>
+                <a href="examples.html#email-address-parser-discrepancies">Email address parser discrepancies</a> <span class="label-light-green-small">LABS</span>
+            </li>
+		</ul><h2 id="excessive-trust-in-client-side-controls">Excessive trust in client-side controls</h2><p>
+            A fundamentally flawed assumption is that users will only interact with the application via the provided web interface. This is especially dangerous because it leads to the further assumption that client-side validation will prevent users from supplying malicious input. However, an attacker can simply use tools such as Burp Proxy to tamper with the data after it has been sent by the browser but before it is passed into the server-side logic. This effectively renders the client-side controls useless.
+        </p><p>
+            Accepting data at face value, without performing proper integrity checks and server-side validation, can allow an attacker to do all kinds of damage with relatively minimal effort. Exactly what they are able to achieve is dependent on the functionality and what it is doing with the controllable data. In the right context, this kind of flaw can have devastating consequences for both business-related functionality and the security of the website itself.
+        </p><div widget-id="academy-labstatus" widget-lab-id="CA187B1FB490DEDDCE4034D443CB9AFBF5B8279422A765B7D48040C50F327E9B"></div><div widget-id="academy-labstatus" widget-lab-id="CE4838D79961E13680EBEC4EC6B7F31FB30B57FF632815E0712C399F5D054B82"></div><h2 id="failing-to-handle-unconventional-input">Failing to handle unconventional input</h2><p>
+            One aim of the application logic is to restrict user input to values that adhere to the business rules. For example, the application may be designed to accept arbitrary values of a certain data type, but the logic determines whether or not this value is acceptable from the perspective of the business. Many applications incorporate numeric limits into their logic. This might include limits designed to manage inventory, apply budgetary restrictions, trigger phases of the supply chain, and so on.
+        </p><p>
+            Let's take the simple example of an online shop. When ordering products, users typically specify the quantity that they want to order. Although any integer is theoretically a valid input, the business logic might prevent users from ordering more units than are currently in stock, for example.
+        </p><p>
+            To implement rules like this, developers need to anticipate all possible scenarios and incorporate ways to handle them into the application logic. In other words, they need to tell the application whether it should allow a given input and how it should react based on various conditions. If there is no explicit logic for handling a given case, this can lead to unexpected and potentially exploitable behavior.
+        </p><p>
+            For example, a numeric data type might accept negative values. Depending on the related functionality, it may not make sense for the business logic to allow this. However, if the application doesn't perform adequate server-side validation and reject this input, an attacker may be able to pass in a negative value and induce unwanted behavior.
+        </p><p>
+            Consider a funds transfer between two bank accounts. This functionality will almost certainly check whether the sender has sufficient funds before completing the transfer:
+        </p><code class="code-scrollable">$transferAmount = $_POST['amount'];
+$currentBalance = $user-&gt;getBalance();
+
+if ($transferAmount &lt;= $currentBalance) {
+    // Complete the transfer
+} else {
+    // Block the transfer: insufficient funds
+}</code><p>
+            But if the logic doesn't sufficiently prevent users from supplying a negative value in the <code>amount</code> parameter, this could be exploited by an attacker to both bypass the balance check and transfer funds in the &quot;wrong&quot; direction. If the attacker sent -$1000 to the victim's account, this might result in them receiving $1000 from the victim instead. The logic would always evaluate that -1000 is less than the current balance and approve the transfer.
+        </p><p>
+            Simple logic flaws like this can be devastating if they occur in the right functionality. They are also easy to miss during both development and testing, especially given that such inputs may be blocked by client-side controls on the web interface.
+        </p><p>
+            When auditing an application, you should use tools such as Burp Proxy and Repeater to try submitting unconventional values. In particular, try input in ranges that legitimate users are unlikely to ever enter. This includes exceptionally high or exceptionally low numeric inputs and abnormally long strings for text-based fields. You can even try unexpected data types. By observing the application's response, you should try and answer the following questions:
+        </p><ul>
+			<li>
+				Are there any limits that are imposed on the data?
+			</li>
+			<li>
+				What happens when you reach those limits?
+			</li>
+			<li>
+				Is any transformation or normalization being performed on your input?
+			</li>
+		</ul><p>
+            This may expose weak input validation that allows you to manipulate the application in unusual ways. Keep in mind that if you find one form on the target website that fails to safely handle unconventional input, it's likely that other forms will have the same issues.
+        </p><div widget-id="academy-labstatus" widget-lab-id="8593E55B788D1C4403CCAD45020972079A8E89C5669ECF6D9BE2CD5C69C77877"></div><div widget-id="academy-labstatus" widget-lab-id="7D3EBE9916B96A36642A8BD0179888FBCDDEF63A401C684A077D9877A0966AA4"></div><div widget-id="academy-labstatus" widget-lab-id="2CFDDD3FAE848E161277E28CC5CC7782F2B4BAA2CBEFBD2A3DCE178FE656AD17"></div><h2 id="making-flawed-assumptions-about-user-behavior">Making flawed assumptions about user behavior</h2><p>
+            One of the most common root causes of logic vulnerabilities is making flawed assumptions about user behavior. This can lead to a wide range of issues where developers have not considered potentially dangerous scenarios that violate these assumptions. In this section, we'll provide some cautionary examples of common assumptions that should be avoided and demonstrate how they can lead to dangerous logic flaws.
+        </p><h3 id="trusted-users-won-t-always-remain-trustworthy">Trusted users won't always remain trustworthy</h3><p>
+            Applications may appear to be secure because they implement seemingly robust measures to enforce the business rules. Unfortunately, some applications make the mistake of assuming that, having passed these strict controls initially, the user and their data can be trusted indefinitely. This can result in relatively lax enforcement of the same controls from that point on.
+        </p><p>
+            If business rules and security measures are not applied consistently throughout the application, this can lead to potentially dangerous loopholes that may be exploited by an attacker.
+        </p><div widget-id="academy-labstatus" widget-lab-id="07B14E865F15E49F0856AB8DB29AB190045ABF578EFF9EE7A794692EB305A391"></div><h3 id="users-won-t-always-supply-mandatory-input">Users won't always supply mandatory input</h3><p>
+            One misconception is that users will always supply values for mandatory input fields. Browsers may prevent ordinary users from submitting a form without a required input, but as we know, attackers can tamper with parameters in transit. This even extends to removing parameters entirely.
+        </p><p>
+            This is a particular issue in cases where multiple functions are implemented within the same server-side script. In this case, the presence or absence of a particular parameter may determine which code is executed. Removing parameter values may allow an attacker to access code paths that are supposed to be out of reach.
+        </p><p>
+            When probing for logic flaws, you should try removing each parameter in turn and observing what effect this has on the response. You should make sure to:
+        </p><ul>
+			<li>
+				Only remove one parameter at a time to ensure all relevant code paths are reached.
+			</li>
+			<li>
+				Try deleting the name of the parameter as well as the value. The server will typically handle both cases differently.
+			</li>
+			<li>
+				Follow multi-stage processes through to completion. Sometimes tampering with a parameter in one step will have an effect on another step further along in the workflow.
+			</li>
+		</ul><p>
+            This applies to both URL and <code>POST</code> parameters, but don't forget to check the cookies too. This simple process can reveal some bizarre application behavior that may be exploitable.
+        </p><div widget-id="academy-labstatus" widget-lab-id="05A619F04B486230A3144985ADE21E739B2D88052BB72E902CD033C906B991E3"></div><div widget-id="academy-labstatus" widget-lab-id="A2AA25C63138601F68030A53721C7E4E4F97843EE4D4FFF8C485BCE7F03EA087"></div><h3 id="users-won-t-always-follow-the-intended-sequence">Users won't always follow the intended sequence</h3><p>
+            Many transactions rely on predefined workflows consisting of a sequence of steps. The web interface will typically guide users through this process, taking them to the next step of the workflow each time they complete the current one. However, attackers won't necessarily adhere to this intended sequence. Failing to account for this possibility can lead to dangerous flaws that may be relatively simple to exploit.
+        </p><p>
+            For example, many websites that implement two-factor authentication (2FA) require users to log in on one page before entering a verification code on a separate page. Assuming that users will always follow this process through to completion and, as a result, not verifying that they do, may allow attackers to bypass the 2FA step entirely.
+        </p><div widget-id="academy-labstatus" widget-lab-id="55A6F6D2DE02362486D2C507F3191ADB99FB573CD1583E7A69246D62445ED703"></div><p>
+            Making assumptions about the sequence of events can lead to a wide range of issues even within the same workflow or functionality. Using tools like Burp Proxy and Repeater, once an attacker has seen a request, they can replay it at will and use forced browsing to perform any interactions with the server in any order they want. This allows them to complete different actions while the application is in an unexpected state.
+        </p><p>
+            To identify these kinds of flaws, you should use forced browsing to submit requests in an unintended sequence. For example, you might skip certain steps, access a single step more than once, return to earlier steps, and so on. Take note of how different steps are accessed. Although you often just submit a <code>GET</code> or <code>POST</code> request to a specific URL, sometimes you can access steps by submitting different sets of parameters to the same URL. As with all logic flaws, try to identify what assumptions the developers have made and where the attack surface lies. You can then look for ways of violating these assumptions.
+        </p><p>
+            Note that this kind of testing will often cause exceptions because expected variables have null or uninitialized values. Arriving at a location in a partly defined or inconsistent state is also likely to cause the application to complain. In this case, be sure to pay close attention to any error messages or debug information that you encounter. These can be a valuable source of information disclosure, which can help you fine-tune your attack and understand key details about the back-end behavior.
+        </p><div widget-id="academy-labstatus" widget-lab-id="B20989C23AE664EF4D1F4D060455E20D6C019AE17819049DFAD91790A7C55765"></div><div widget-id="academy-labstatus" widget-lab-id="F009E13156910CF7897BC7ED85B32662E8B2753196347950C3B3C51D86B9C3C5"></div><h2 id="domain-specific-flaws">Domain-specific flaws</h2><p>
+            In many cases, you will encounter logic flaws that are specific to the business domain or the purpose of the site.
+        </p><p>
+            The discounting functionality of online shops is a classic attack surface when hunting for logic flaws. This can be a potential gold mine for an attacker, with all kinds of basic logic flaws occurring in the way discounts are applied.
+        </p><p>
+            For example, consider an online shop that offers a 10% discount on orders over $1000. This could be vulnerable to abuse if the business logic fails to check whether the order was changed after the discount is applied. In this case, an attacker could simply add items to their cart until they hit the $1000 threshold, then remove the items they don't want before placing the order. They would then receive the discount on their order even though it no longer satisfies the intended criteria.
+        </p><p>
+            You should pay particular attention to any situation where prices or other sensitive values are adjusted based on criteria determined by user actions. Try to understand what algorithms the application uses to make these adjustments and at what point these adjustments are made. This often involves manipulating the application so that it is in a state where the applied adjustments do not correspond to the original criteria intended by the developers.
+        </p><p>
+            To identify these vulnerabilities, you need to think carefully about what objectives an attacker might have and try to find different ways of achieving this using the provided functionality. This may require a certain level of domain-specific knowledge in order to understand what might be advantageous in a given context. To use a simple example, you need to understand social media to understand the benefits of forcing a large number of users to follow you.
+        </p><p>
+            Without this knowledge of the domain, you may dismiss dangerous behavior because you simply aren't aware of its potential knock-on effects. Likewise, you may struggle to join the dots and notice how two functions can be combined in a harmful way. For simplicity, the examples used in this topic are specific to a domain that all users will already be familiar with, namely an online shop. However, whether you're bug bounty hunting, pentesting, or even just a developer trying to write more secure code, you may at some point encounter applications from less familiar domains. In this case, you should read as much documentation as possible and, where available, talk to subject-matter experts from the domain to get their insight. This may sound like a lot of work, but the more obscure the domain is, the more likely other testers will have missed plenty of bugs.
+        </p><div widget-id="academy-labstatus" widget-lab-id="CE7411A23DDAD977FDC192A1A252B8737D674481920A71BC5FD307BB5A53AA77"></div><div widget-id="academy-labstatus" widget-lab-id="4481D16F7BD443604BF74CEF06DA6DF4B6DA2B010F6F5A6B33358551D560C9D0"></div><h2 id="providing-an-encryption-oracle">Providing an encryption oracle</h2><p>
+            Dangerous scenarios can occur when user-controllable input is encrypted and the resulting ciphertext is then made available to the user in some way. This kind of input is sometimes known as an &quot;encryption oracle&quot;. An attacker can use this input to encrypt arbitrary data using the correct algorithm and asymmetric key.
+        </p><p>
+            This becomes dangerous when there are other user-controllable inputs in the application that expect data encrypted with the same algorithm. In this case, an attacker could potentially use the encryption oracle to generate valid, encrypted input and then pass it into other sensitive functions.
+        </p><p>
+            This issue can be compounded if there is another user-controllable input on the site that provides the reverse function. This would enable the attacker to decrypt other data to identify the expected structure. This saves them some of the work involved in creating their malicious data but is not necessarily required to craft a successful exploit.
+        </p><p>
+            The severity of an encryption oracle depends on what functionality also uses the same algorithm as the oracle.
+        </p><div widget-id="academy-labstatus" widget-lab-id="6595C840A41181221C4F4F7C250580D7D9D5F9FA1B3D7AA1C9761ECDD2F33DF5"></div><h2 id="email-address-parser-discrepancies">Email address parser discrepancies</h2><p>
+            Some websites parse email addresses to extract the domain and determine which organization the email owner belongs to. While this process may initially seem straightforward, it is actually very complex, even for valid RFC-compliant addresses.
+        </p><p>
+            Discrepancies in how email addresses are parsed can undermine this logic. These discrepancies arise when different parts of the application handle email addresses differently.
+        </p><p>
+            An attacker can exploit these discrepancies using encoding techniques to disguise parts of the email address. This enables the attacker to create email addresses that pass initial validation checks but are interpreted differently by the server's parsing logic.
+        </p><p>
+            The main impact of email address parser discrepancies is unauthorized access. Attackers can register accounts using seemingly valid email addresses from restricted domains. This enables them to gain access to sensitive areas of the application, such as admin panels or restricted user functions.
+        </p><div class="highlightedarea">
+            <h4>More information</h4>
+            <p>
+                For detailed information on email parsing discrepancies, including how they can be exploited, see the <a href="https://portswigger.net/research/splitting-the-email-atom">Splitting the Email Atom: Exploiting Parsers to Bypass Access Controls</a> whitepaper by Gareth Heyes of the PortSwigger Research team.
+            </p>
+        </div><div widget-id="academy-labstatus" widget-lab-id="07B1444427CE26A6AD6A4EAFDD9A2500CABAEF214AA99C6332F8D7F4BDF1E885"></div>
+        
+        <div widget-id="academy-registration-footer"></div>
+    
+    </div>
+
+
+    <script src="../../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="iHHGxEm6tFIMidoPrdO5nNqhqSBW&#x2B;a1t"></script>
+    <script src="../../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="iHHGxEm6tFIMidoPrdO5nNqhqSBW&#x2B;a1t"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../../content/images/logos/burp-suite-icon.svg">
+                <h4>Find business logic vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="../cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="../sql-injection.html">SQL injection</a>
+            <a href="../csrf.html">Cross-site request forgery</a>
+            <a href="../xxe.html">XML external entity injection</a>
+            <a href="../file-path-traversal.html">Directory traversal</a>
+            <a href="../ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="iHHGxEm6tFIMidoPrdO5nNqhqSBW+a1t" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/logic-flaws/examples by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:06:26 GMT -->
+</html>

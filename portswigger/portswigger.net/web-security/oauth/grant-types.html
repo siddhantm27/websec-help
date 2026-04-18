@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/oauth/grant-types by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:06:23 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>OAuth grant types | Web Security Academy</title>
+    <meta content="In this section, we&#x27;ll cover the basics of the two most common OAuth grant types. If you&#x27;re completely new to OAuth, we recommend reading this section ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="grant-types.html"/>
+<link rel="icon" href="../../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../../content/images/logos/apple-touch-icon.png">
+    <link href="../../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="CG83DTi15h23DStS0Q9+rFhk+luH8NMR">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "CG83DTi15h23DStS0Q9+rFhk+luH8NMR";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="../dashboard.html">Dashboard</a></li>
+                    <li><a href="../learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../request-smuggling.html">Request smuggling</a>
+                            <a href="../web-cache-deception.html">Web cache deception</a>
+                            <a href="../llm-attacks.html">Web LLM attacks</a>
+                            <a href="../api-testing.html">API testing</a>
+                            <a href="../nosql-injection.html">NoSQL injection</a>
+                            <a href="../all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../all-labs.html">All labs</a>
+                            <a href="../all-topics.html">All topics</a>
+                            <a href="../mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../hall-of-fame.html">Leaderboard</a>
+                            <a href="../getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="../getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="../getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="../getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="../certification.html">Get certified</a>
+                             <a href="../certification/how-to-prepare.html">How to prepare</a>
+                             <a href="../certification/how-it-works.html">How it works</a>
+                             <a href="../certification/practice-exam.html">Practice exam</a>
+                             <a href="../certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="../certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="../certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="../certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="30">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="../all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>OAuth 2.0 authentication vulnerabilities</h3>
+        <ul>
+            <li><a href="../oauth.html#what-is-oauth">What is OAuth?</a></li>
+            <li><a href="../oauth.html#how-does-oauth-2-0-work">How does OAuth 2.0 work?</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-2">
+                <label for="sub-nav-id-2">
+                    <a href="grant-types.html">OAuth grant types</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="grant-types.html#oauth-scopes">OAuth scopes</a></li>
+                    <li><a href="grant-types.html#authorization-code-grant-type">Authorization code grant type</a></li>
+                    <li><a href="grant-types.html#implicit-grant-type">Implicit grant type</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-3">
+                <label for="sub-nav-id-3">
+                    <a href="../oauth.html#oauth-authentication">OAuth authentication</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="../oauth.html#identifying-oauth-authentication">Identifying</a></li>
+                    <li><a href="../oauth.html#recon">Recon of the OAuth service</a></li>
+                </ul>
+            </li>
+            <li><a href="../oauth.html#how-do-oauth-authentication-vulnerabilities-arise">How vulnerabilities arise</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-4">
+                <label for="sub-nav-id-4">
+                    <a href="../oauth.html#exploiting-oauth-authentication-vulnerabilities">Exploiting vulnerabilities</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="../oauth.html#improper-implementation-of-the-implicit-grant-type">Improper implementation of the implicit grant type</a></li>
+                    <li><a href="../oauth.html#flawed-csrf-protection">Flawed CSRF protection</a></li>
+                    <li><a href="../oauth.html#leaking-authorization-codes-and-access-tokens">Leaking authorization codes and access tokens</a></li>
+                    <li><a href="../oauth.html#flawed-scope-validation">Flawed scope validation</a></li>
+                    <li><a href="../oauth.html#unverified-user-registration">Unverified user registration</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-5">
+                <label for="sub-nav-id-5">
+                    <a href="openid.html">OpenID Connect</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-6">
+                        <label for="sub-nav-id-6">
+                            <a href="openid.html#how-does-openid-connect-work">How does OpenID Connect work?</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="openid.html#openid-connect-roles">Roles</a></li>
+                            <li><a href="openid.html#openid-connect-claims-and-scopes">Claims and scopes</a></li>
+                            <li><a href="openid.html#id-token">ID token</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="openid.html#identifying-openid-connect">Identifying OpenID Connect</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-7">
+                        <label for="sub-nav-id-7">
+                            <a href="openid.html#openid-connect-vulnerabilities">Vulnerabilities</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="openid.html#unprotected-dynamic-client-registration">Unprotected dynamic client registration</a></li>
+                            <li><a href="openid.html#allowing-authorization-requests-by-reference">Allowing authorization requests by reference</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-8">
+                <label for="sub-nav-id-8">
+                    <a href="preventing.html">Preventing vulnerabilities</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="preventing.html#for-oauth-service-providers">Service providers</a></li>
+                    <li><a href="preventing.html#for-oauth-client-applications">Client applications</a></li>
+                </ul>
+            </li>
+            <li><a href="../all-labs.html#oauth-authentication">View all OAuth authentication labs</a></li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="../oauth.html"><span itemprop="name">OAuth authentication</span></a><meta itemprop="position" content="2" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="grant-types.html"><span itemprop="name">OAuth grant types</span></a><meta itemprop="position" content="3" /></li></ul>    <div class="section theme-white">
+
+        <h1 class="heading-2">OAuth grant types</h1><p>
+            In this section, we'll cover the basics of the two most common OAuth grant types. If you're completely new to OAuth, we recommend reading this section before attempting to complete our <a href="../oauth.html">OAuth authentication</a> labs.
+        </p><h2 id="what-is-an-oauth-grant-type">What is an OAuth grant type?</h2><p>
+            The OAuth grant type determines the exact sequence of steps that are involved in the OAuth process. The grant type also affects how the client application communicates with the OAuth service at each stage, including how the access token itself is sent. For this reason, grant types are often referred to as &quot;OAuth flows&quot;.
+        </p><p>
+            An OAuth service must be configured to support a particular grant type before a client application can initiate the corresponding flow. The client application specifies which grant type it wants to use in the initial authorization request it sends to the OAuth service.
+        </p><p>
+            There are several different grant types, each with varying levels of complexity and security considerations. We'll focus on the &quot;authorization code&quot; and &quot;implicit&quot; grant types as these are by far the most common.
+        </p><h2 id="oauth-scopes">OAuth scopes</h2><p>
+            For any OAuth grant type, the client application has to specify which data it wants to access and what kind of operations it wants to perform. It does this using the <code>scope</code> parameter of the authorization request it sends to the OAuth service.
+        </p><p>
+            For basic OAuth, the scopes for which a client application can request access are unique to each OAuth service. As the name of the scope is just an arbitrary text string, the format can vary dramatically between providers. Some even use a full URI as the scope name, similar to a REST API endpoint. For example, when requesting read access to a user's contact list, the scope name might take any of the following forms depending on the OAuth service being used:
+        </p><code class="code-scrollable">scope=contacts
+scope=contacts.read
+scope=contact-list-r
+scope=https://oauth-authorization-server.com/auth/scopes/user/contacts.readonly</code><p>
+            When OAuth is used for authentication, however, the standardized OpenID Connect scopes are often used instead. For example, the scope <code>openid profile</code> will grant the client application read access to a predefined set of basic information about the user, such as their email address, username, and so on. We'll talk more about <a href="openid.html">OpenID Connect</a> later.
+        </p><h2 id="authorization-code-grant-type">Authorization code grant type</h2><p>
+            The authorization code grant type initially looks quite complicated, but it's actually simpler than you think once you're familiar with a few basics.
+        </p><p>
+            In short, the client application and OAuth service first use redirects to exchange a series of browser-based HTTP requests that initiate the flow. The user is asked whether they consent to the requested access. If they accept, the client application is granted an &quot;authorization code&quot;. The client application then exchanges this code with the OAuth service to receive an &quot;access token&quot;, which they can use to make API calls to fetch the relevant user data.
+        </p><p>
+            All communication that takes place from the code/token exchange onward is sent server-to-server over a secure, preconfigured back-channel and is, therefore, invisible to the end user. This secure channel is established when the client application first registers with the OAuth service. At this time, a <code>client_secret</code> is also generated, which the client application must use to authenticate itself when sending these server-to-server requests.
+        </p><p>
+            As the most sensitive data (the access token and user data) is not sent via the browser, this grant type is arguably the most secure. Server-side applications should ideally always use this grant type if possible.
+        </p><img alt="Flow for the OAuth authorization code grant type" src="../images/oauth-authorization-code-flow.jpg"><h4>1. Authorization request</h4><p>
+            The client application sends a request to the OAuth service's <code>/authorization</code> endpoint asking for permission to access specific user data. Note that the endpoint mapping may vary between providers - our labs use the endpoint <code>/auth</code> for this purpose. However, you should always be able to identify the endpoint based on the parameters used in the request.
+        </p><code class="code-scrollable">GET /authorization?client_id=12345&amp;redirect_uri=https://client-app.com/callback&amp;response_type=code&amp;scope=openid%20profile&amp;state=ae13d489bd00e3c24 HTTP/1.1
+Host: oauth-authorization-server.com</code><p>
+            This request contains the following noteworthy parameters, usually provided in the query string:
+        </p><ul>
+            <li>
+                <code class="code-scrollable">client_id</code>
+                <p>
+                    Mandatory parameter containing the unique identifier of the client application. This value is generated when the client application registers with the OAuth service.
+                </p>
+            </li>
+            <li>
+                <code class="code-scrollable">redirect_uri</code>
+                <p>
+                    The URI to which the user's browser should be redirected when sending the authorization code to the client application. This is also known as the &quot;callback URI&quot; or &quot;callback endpoint&quot;. Many OAuth attacks are based on exploiting flaws in the validation of this parameter.
+                </p>
+            </li>
+            <li>
+                <code class="code-scrollable">response_type</code>
+                <p>
+                    Determines which kind of response the client application is expecting and, therefore, which flow it wants to initiate. For the authorization code grant type, the value should be <code>code</code>.
+                </p>
+            </li>
+            <li>
+                <code class="code-scrollable">scope</code>
+                <p>
+                    Used to specify which subset of the user's data the client application wants to access. Note that these may be custom scopes set by the OAuth provider or standardized scopes defined by the OpenID Connect specification. We'll cover <a href="openid.html">OpenID Connect</a> in more detail later.
+                </p>
+            </li>
+            <li>
+                <code class="code-scrollable">state</code>
+                <p>
+                    Stores a unique, unguessable value that is tied to the current session on the client application. The OAuth service should return this exact value in the response, along with the authorization code. This parameter serves as a form of CSRF token for the client application by making sure that the request to its <code>/callback</code> endpoint is from the same person who initiated the OAuth flow.
+                </p>
+            </li>
+        </ul><h4>2. User login and consent</h4><p>
+            When the authorization server receives the initial request, it will redirect the user to a login page, where they will be prompted to log in to their account with the OAuth provider. For example, this is often their social media account.
+        </p><p>
+            They will then be presented with a list of data that the client application wants to access. This is based on the scopes defined in the authorization request. The user can choose whether or not to consent to this access.
+        </p><p>
+            It is important to note that once the user has approved a given scope for a client application, this step will be completed automatically as long as the user still has a valid session with the OAuth service. In other words, the first time the user selects &quot;Log in with social media&quot;, they will need to manually log in and give their consent, but if they revisit the client application later, they will often be able to log back in with a single click.
+        </p><h4>3. Authorization code grant</h4><p>
+            If the user consents to the requested access, their browser will be redirected to the <code>/callback</code> endpoint that was specified in the <code>redirect_uri</code> parameter of the authorization request. The resulting <code>GET</code> request will contain the authorization code as a query parameter. Depending on the configuration, it may also send the <code>state</code> parameter with the same value as in the authorization request.
+        </p><code class="code-scrollable">GET /callback?code=a1b2c3d4e5f6g7h8&amp;state=ae13d489bd00e3c24 HTTP/1.1
+Host: client-app.com</code><h4>4. Access token request</h4><p>
+            Once the client application receives the authorization code, it needs to exchange it for an access token. To do this, it sends a server-to-server <code>POST</code> request to the OAuth service's <code>/token</code> endpoint. All communication from this point on takes place in a secure back-channel and, therefore, cannot usually be observed or controlled by an attacker.
+        </p><code class="code-scrollable">POST /token HTTP/1.1
+Host: oauth-authorization-server.com
+&#8230;
+client_id=12345&amp;client_secret=SECRET&amp;redirect_uri=https://client-app.com/callback&amp;grant_type=authorization_code&amp;code=a1b2c3d4e5f6g7h8</code><p>
+            In addition to the <code>client_id</code> and authorization <code>code</code>, you will notice the following new parameters:
+        </p><ul>
+            <li>
+                <code class="code-scrollable">client_secret</code>
+                <p>
+                    The client application must authenticate itself by including the secret key that it was assigned when registering with the OAuth service.
+                </p>
+            </li>
+            <li>
+                <code class="code-scrollable">grant_type</code>
+                <p>
+                    Used to make sure the new endpoint knows which grant type the client application wants to use. In this case, this should be set to <code>authorization_code</code>.
+                </p>
+            </li>
+        </ul><h4>5. Access token grant</h4><p>
+            The OAuth service will validate the access token request. If everything is as expected, the server responds by granting the client application an access token with the requested scope.
+        </p><code class="code-scrollable">{
+    &quot;access_token&quot;: &quot;z0y9x8w7v6u5&quot;,
+    &quot;token_type&quot;: &quot;Bearer&quot;,
+    &quot;expires_in&quot;: 3600,
+    &quot;scope&quot;: &quot;openid profile&quot;,
+    &#8230;
+}</code><h4>6. API call</h4><p>
+            Now the client application has the access code, it can finally fetch the user's data from the resource server. To do this, it makes an API call to the OAuth service's <code>/userinfo</code> endpoint. The access token is submitted in the <code>Authorization: Bearer</code> header to prove that the client application has permission to access this data.
+        </p><code class="code-scrollable">GET /userinfo HTTP/1.1
+Host: oauth-resource-server.com
+Authorization: Bearer z0y9x8w7v6u5</code><h4>7. Resource grant</h4><p>
+            The resource server should verify that the token is valid and that it belongs to the current client application. If so, it will respond by sending the requested resource i.e. the user's data based on the scope of the access token.
+        </p><code class="code-scrollable">{
+    &quot;username&quot;:&quot;carlos&quot;,
+    &quot;email&quot;:&quot;carlos@carlos-montoya.net&quot;,
+    &#8230;
+}</code><p>
+            The client application can finally use this data for its intended purpose. In the case of OAuth authentication, it will typically be used as an ID to grant the user an authenticated session, effectively logging them in.
+        </p><h2 id="implicit-grant-type">Implicit grant type</h2><p>
+            The implicit grant type is much simpler. Rather than first obtaining an authorization code and then exchanging it for an access token, the client application receives the access token immediately after the user gives their consent.
+        </p><p>
+            You may be wondering why client applications don't always use the implicit grant type. The answer is relatively simple - it is far less secure. When using the implicit grant type, all communication happens via browser redirects - there is no secure back-channel like in the authorization code flow. This means that the sensitive access token and the user's data are more exposed to potential attacks.
+        </p><p>
+            The implicit grant type is more suited to single-page applications and native desktop applications, which cannot easily store the <code>client_secret</code> on the back-end, and therefore, don't benefit as much from using the authorization code grant type.
+        </p><img alt="Flow for the OAuth implicit grant type" src="../images/oauth-implicit-flow.jpg"><h4>1. Authorization request</h4><p>
+            The implicit flow starts in much the same way as the authorization code flow. The only major difference is that the <code>response_type</code> parameter must be set to <code>token</code>.
+        </p><code class="code-scrollable">GET /authorization?client_id=12345&amp;redirect_uri=https://client-app.com/callback&amp;response_type=token&amp;scope=openid%20profile&amp;state=ae13d489bd00e3c24 HTTP/1.1
+Host: oauth-authorization-server.com</code><h4>2. User login and consent</h4><p>
+            The user logs in and decides whether to consent to the requested permissions or not. This process is exactly the same as for the authorization code flow.
+        </p><h4>3. Access token grant</h4><p>
+            If the user gives their consent to the requested access, this is where things start to differ. The OAuth service will redirect the user's browser to the <code>redirect_uri</code> specified in the authorization request. However, instead of sending a query parameter containing an authorization code, it will send the access token and other token-specific data as a URL fragment.
+        </p><code class="code-scrollable">GET /callback#access_token=z0y9x8w7v6u5&amp;token_type=Bearer&amp;expires_in=5000&amp;scope=openid%20profile&amp;state=ae13d489bd00e3c24 HTTP/1.1
+Host: client-app.com</code><p>
+            As the access token is sent in a URL fragment, it is never sent directly to the client application. Instead, the client application must use a suitable script to extract the fragment and store it.
+        </p><h4>4. API call</h4><p>
+            Once the client application has successfully extracted the access token from the URL fragment, it can use it to make API calls to the OAuth service's <code>/userinfo</code> endpoint. Unlike in the authorization code flow, this also happens via the browser.
+        </p><code class="code-scrollable">GET /userinfo HTTP/1.1
+Host: oauth-resource-server.com
+Authorization: Bearer z0y9x8w7v6u5</code><h4>5. Resource grant</h4><p>
+            The resource server should verify that the token is valid and that it belongs to the current client application. If so, it will respond by sending the requested resource i.e. the user's data based on the scope associated with the access token.
+        </p><code class="code-scrollable">{
+    &quot;username&quot;:&quot;carlos&quot;,
+    &quot;email&quot;:&quot;carlos@carlos-montoya.net&quot;
+}</code><p>
+            The client application can finally use this data for its intended purpose. In the case of OAuth authentication, it will typically be used as an ID to grant the user an authenticated session, effectively logging them in.
+        </p><div class="highlightedarea">
+            <h4>Read more</h4>
+            <p>
+                Now that you know a bit more about how the different flows work, you should be able to follow our learning materials on how to exploit vulnerabilities in OAuth-based authentication mechanisms.
+            </p>
+            <p>
+                <a href="../oauth.html">OAuth authentication vulnerabilities</a>
+            </p>
+        </div>
+        
+        <div widget-id="academy-registration-footer"></div>
+    
+    </div>
+
+
+    <script src="../../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="CG83DTi15h23DStS0Q9&#x2B;rFhk&#x2B;luH8NMR"></script>
+    <script src="../../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="CG83DTi15h23DStS0Q9&#x2B;rFhk&#x2B;luH8NMR"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../../content/images/logos/burp-suite-icon.svg">
+                <h4>Find OAuth 2.0 authentication vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="../cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="../sql-injection.html">SQL injection</a>
+            <a href="../csrf.html">Cross-site request forgery</a>
+            <a href="../xxe.html">XML external entity injection</a>
+            <a href="../file-path-traversal.html">Directory traversal</a>
+            <a href="../ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="CG83DTi15h23DStS0Q9+rFhk+luH8NMR" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/oauth/grant-types by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:06:25 GMT -->
+</html>

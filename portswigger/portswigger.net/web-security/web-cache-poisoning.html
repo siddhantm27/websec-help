@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/web-cache-poisoning by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:06:27 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Web cache poisoning | Web Security Academy</title>
+    <meta content="In this section, we&#x27;ll talk about what web cache poisoning is and what behaviors can lead to web cache poisoning vulnerabilities. We&#x27;ll also look at some ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="web-cache-poisoning.html"/>
+<link rel="icon" href="../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../content/images/logos/apple-touch-icon.png">
+    <link href="../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="skyVzduQgdlhwQb4HFUPxUJEtWBPZPdT">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "skyVzduQgdlhwQb4HFUPxUJEtWBPZPdT";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="request-smuggling.html">Request smuggling</a>
+                            <a href="web-cache-deception.html">Web cache deception</a>
+                            <a href="llm-attacks.html">Web LLM attacks</a>
+                            <a href="api-testing.html">API testing</a>
+                            <a href="nosql-injection.html">NoSQL injection</a>
+                            <a href="all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="all-labs.html">All labs</a>
+                            <a href="all-topics.html">All topics</a>
+                            <a href="mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="hall-of-fame.html">Leaderboard</a>
+                            <a href="getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="certification.html">Get certified</a>
+                             <a href="certification/how-to-prepare.html">How to prepare</a>
+                             <a href="certification/how-it-works.html">How it works</a>
+                             <a href="certification/practice-exam.html">Practice exam</a>
+                             <a href="certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="39">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>Web cache poisoning</h3>
+        <ul>
+            <li><a href="web-cache-poisoning.html#what-is-web-cache-poisoning">What is web cache poisoning?</a></li>
+            <li><a href="web-cache-poisoning.html#how-does-a-web-cache-work">How does a web cache work?</a></li>
+            <li><a href="web-cache-poisoning.html#what-is-the-impact-of-a-web-cache-poisoning-attack">Impact of web cache poisoning</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-1">
+                <label for="sub-nav-id-1">
+                    <a href="web-cache-poisoning.html#constructing-a-web-cache-poisoning-attack">Constructing an attack</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-2">
+                        <label for="sub-nav-id-2">
+                            <a href="web-cache-poisoning.html#identify-and-evaluate-unkeyed-inputs">Identify and evaluate unkeyed inputs</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="web-cache-poisoning.html#param-miner">Param Miner</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="web-cache-poisoning.html#elicit-a-harmful-response-from-the-back-end-server">Elicit a harmful response</a></li>
+                    <li><a href="web-cache-poisoning.html#get-the-response-cached">Get the response cached</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-3">
+                <label for="sub-nav-id-3">
+                    <a href="web-cache-poisoning/exploiting-design-flaws.html">Exploiting cache design flaws</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="web-cache-poisoning/exploiting-design-flaws.html#using-web-cache-poisoning-to-deliver-an-xss-attack">Delivering an XSS attack</a></li>
+                    <li><a href="web-cache-poisoning/exploiting-design-flaws.html#using-web-cache-poisoning-to-exploit-unsafe-handling-of-resource-imports">Exploit unsafe handling of resource imports</a></li>
+                    <li><a href="web-cache-poisoning/exploiting-design-flaws.html#using-web-cache-poisoning-to-exploit-cookie-handling-vulnerabilities">Exploit cookie-handling vulnerabilities</a></li>
+                    <li><a href="web-cache-poisoning/exploiting-design-flaws.html#using-multiple-headers-to-exploit-web-cache-poisoning-vulnerabilities">Using multiple headers</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-4">
+                        <label for="sub-nav-id-4">
+                            <a href="web-cache-poisoning/exploiting-design-flaws.html#exploiting-responses-that-expose-too-much-information">Responses that expose too much information</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="web-cache-poisoning/exploiting-design-flaws.html#cache-control-directives">Cache-control directives</a></li>
+                            <li><a href="web-cache-poisoning/exploiting-design-flaws.html#vary-header">Vary header</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="web-cache-poisoning/exploiting-design-flaws.html#using-web-cache-poisoning-to-exploit-dom-based-vulnerabilities">Exploiting DOM-based vulnerabilities</a></li>
+                    <li><a href="web-cache-poisoning/exploiting-design-flaws.html#chaining-web-cache-poisoning-vulnerabilities">Chaining web-cache poisoning vulnerabilities</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-5">
+                <label for="sub-nav-id-5">
+                    <a href="web-cache-poisoning/exploiting-implementation-flaws.html">Exploiting cache implementation flaws</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="web-cache-poisoning/exploiting-implementation-flaws.html#cache-key-flaws">Key flaws</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-6">
+                        <label for="sub-nav-id-6">
+                            <a href="web-cache-poisoning/exploiting-implementation-flaws.html#cache-probing-methodology">Probing for flaws</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="web-cache-poisoning/exploiting-implementation-flaws.html#identify-a-suitable-cache-oracle">Identifying a suitable cache oracle</a></li>
+                            <li><a href="web-cache-poisoning/exploiting-implementation-flaws.html#probe-key-handling">Probe key handling</a></li>
+                            <li><a href="web-cache-poisoning/exploiting-implementation-flaws.html#identify-an-exploitable-gadget">Identifying an exploitable gadget</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-7">
+                        <label for="sub-nav-id-7">
+                            <a href="web-cache-poisoning/exploiting-implementation-flaws.html#exploiting-cache-key-flaws">Exploiting cache key flaws</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="web-cache-poisoning/exploiting-implementation-flaws.html#unkeyed-port">Unkeyed port</a></li>
+                            <li><a href="web-cache-poisoning/exploiting-implementation-flaws.html#unkeyed-query-string">Unkeyed query string</a></li>
+                            <li><a href="web-cache-poisoning/exploiting-implementation-flaws.html#cache-parameter-cloaking">Cache parameter cloaking</a></li>
+                            <li><a href="web-cache-poisoning/exploiting-implementation-flaws.html#normalized-cache-keys">Normalized cache keys</a></li>
+                            <li><a href="web-cache-poisoning/exploiting-implementation-flaws.html#cache-key-injection">Cache key injection</a></li>
+                            <li><a href="web-cache-poisoning/exploiting-implementation-flaws.html#poisoning-internal-caches">Poisoning internal caches</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="web-cache-poisoning.html#how-to-prevent-web-cache-poisoning-vulnerabilities">Preventing vulnerabilities</a></li>
+            <li><a href="web-cache-poisoning.html#web-cache-poisoning-research">Research</a></li>
+            <li><a href="all-labs.html#web-cache-poisoning">View all web cache poisoning labs</a></li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="web-cache-poisoning.html"><span itemprop="name">Web cache poisoning</span></a><meta itemprop="position" content="2" /></li></ul>    <div class="section theme-white">
+
+        <h1 class="heading-2">Web cache poisoning</h1><p>
+            In this section, we'll talk about what web cache poisoning is and what behaviors can lead to web cache poisoning vulnerabilities. We'll also look at some ways of exploiting these vulnerabilities and suggest ways you can reduce your exposure to them.
+        </p><h2 id="what-is-web-cache-poisoning">What is web cache poisoning?</h2><p>
+            Web cache poisoning is an advanced technique whereby an attacker exploits the behavior of a web server and cache so that a harmful HTTP response is served to other users.
+        </p><p>
+            Fundamentally, web cache poisoning involves two phases. First, the attacker must work out how to elicit a response from the back-end server that inadvertently contains some kind of dangerous payload. Once successful, they need to make sure that their response is cached and subsequently served to the intended victims.
+        </p><p>
+            A poisoned web cache can potentially be a devastating means of distributing numerous different attacks, exploiting vulnerabilities such as XSS, JavaScript injection, open redirection, and so on.
+        </p><div class="highlightedarea">
+            <h4>Labs</h4>
+            <p>
+                If you're already familiar with the basic concepts behind web cache poisoning and just want to practice exploiting them on some realistic, deliberately vulnerable targets, you can access all of the labs in this topic from the link below.
+            </p>
+            
+        <ul><li><a href="all-labs.html#web-cache-poisoning">View all web cache poisoning labs</a></li></ul></div><h3 id="web-cache-poisoning-research">Web cache poisoning research</h3><p>
+			This technique was first popularized by our 2018 research paper, "Practical Web Cache Poisoning", and developed further in 2020 with a second research paper, "Web Cache Entanglement: Novel Pathways to Poisoning". If you're interested in a detailed description of how we discovered and exploited these vulnerabilities in the wild, the full write-ups are available on our research page.
+		</p><div class="highlightedarea">
+			<h4>Research</h4>
+			<ul>
+                <li>
+				    <a href="https://portswigger.net/research/practical-web-cache-poisoning">Practical Web Cache Poisoning</a>
+			    </li>
+                <li>
+                    <a href="https://portswigger.net/research/web-cache-entanglement">Web Cache Entanglement: Novel Pathways to Poisoning</a>
+                </li>
+            </ul>
+		</div><h3 id="how-does-a-web-cache-work">How does a web cache work?</h3><p>
+            To understand how web cache poisoning vulnerabilities arise, it is important to have a basic understanding of how web caches work.
+        </p><p>
+            If a server had to send a new response to every single HTTP request separately, this would likely overload the server, resulting in latency issues and a poor user experience, especially during busy periods. Caching is primarily a means of reducing such issues.
+        </p><p>
+            The cache sits between the server and the user, where it saves (caches) the responses to particular requests, usually for a fixed amount of time. If another user then sends an equivalent request, the cache simply serves a copy of the cached response directly to the user, without any interaction from the back-end. This greatly eases the load on the server by reducing the number of duplicate requests it has to handle.
+        </p><img alt="Normal cache behavior" src="images/caching.svg"><h4>Cache keys</h4><p>
+            When the cache receives an HTTP request, it first has to determine whether there is a cached response that it can serve directly, or whether it has to forward the request for handling by the back-end server. Caches identify equivalent requests by comparing a predefined subset of the request's components, known collectively as the &quot;cache key&quot;. Typically, this would contain the request line and <code>Host</code> header. Components of the request that are not included in the cache key are said to be &quot;unkeyed&quot;.
+        </p><p>
+            If the cache key of an incoming request matches the key of a previous request, then the cache considers them to be equivalent. As a result, it will serve a copy of the cached response that was generated for the original request. This applies to all subsequent requests with the matching cache key, until the cached response expires.
+        </p><p>
+            Crucially, the other components of the request are ignored altogether by the cache. We'll explore the impact of this behavior in more detail later.
+        </p><h2 id="what-is-the-impact-of-a-web-cache-poisoning-attack">What is the impact of a web cache poisoning attack?</h2><p>
+            The impact of web cache poisoning is heavily dependent on two key factors:
+        </p><ul>
+			<li>
+				<strong>What exactly the attacker can successfully get cached</strong><br>
+				As the poisoned cache is more a means of distribution than a standalone attack, the impact of web cache poisoning is inextricably linked to how harmful the injected payload is. As with most kinds of attack, web cache poisoning can also be used in combination with other attacks to escalate the potential impact even further.
+			</li>
+			<li>
+				<strong>The amount of traffic on the affected page</strong><br>
+				The poisoned response will only be served to users who visit the affected page while the cache is poisoned. As a result, the impact can range from non-existent to massive depending on whether the page is popular or not. If an attacker managed to poison a cached response on the home page of a major website, for example, the attack could affect thousands of users without any subsequent interaction from the attacker.
+			</li>
+		</ul><p>
+            Note that the duration of a cache entry doesn't necessarily affect the impact of web cache poisoning. An attack can usually be scripted in such a way that it re-poisons the cache indefinitely.
+        </p><h2 id="constructing-a-web-cache-poisoning-attack">Constructing a web cache poisoning attack</h2><p>
+            Generally speaking, constructing a basic web cache poisoning attack involves the following steps:
+        </p><ol>
+			<li><a href="web-cache-poisoning.html#identify-and-evaluate-unkeyed-inputs">Identify and evaluate unkeyed inputs</a></li>
+			<li><a href="web-cache-poisoning.html#elicit-a-harmful-response-from-the-back-end-server">Elicit a harmful response from the back-end server</a></li>
+			<li><a href="web-cache-poisoning.html#get-the-response-cached">Get the response cached</a></li>
+		</ol><h3 id="identify-and-evaluate-unkeyed-inputs">Identify and evaluate unkeyed inputs</h3><p>
+            Any web cache poisoning attack relies on manipulation of unkeyed inputs, such as headers. Web caches ignore unkeyed inputs when deciding whether to serve a cached response to the user. This behavior means that you can use them to inject your payload and elicit a &quot;poisoned&quot; response which, if cached, will be served to all users whose requests have the matching cache key. Therefore, the first step when constructing a web cache poisoning attack is identifying unkeyed inputs that are supported by the server.
+        </p><p>
+            You can identify unkeyed inputs manually by adding random inputs to requests and observing whether or not they have an effect on the response. This can be obvious, such as reflecting the input in the response directly, or triggering an entirely different response. However, sometimes the effects are more subtle and require a bit of detective work to figure out. You can use tools such as Burp Comparer to compare the response with and without the injected input, but this still involves a significant amount of manual effort.
+        </p><h4 id="param-miner">Param Miner</h4><p>
+            Fortunately, you can automate the process of identifying unkeyed inputs by adding the <a href="https://portswigger.net/bappstore/17d2949a985c4b7ca092728dba871943">Param Miner</a> extension to Burp from the BApp store. To use Param Miner, you simply right-click on a request that you want to investigate and click "Guess headers". Param Miner then runs in the background, sending requests containing different inputs from its extensive, built-in list of headers. If a request containing one of its injected inputs has an effect on the response, Param Miner logs this in Burp, either in the "Issues" pane if you are using Burp Suite Professional, or in the "Output" tab of the extension ("Extensions" &gt; "Installed" &gt; "Param Miner" &gt; "Output") if you are using Burp Suite Community Edition.
+		</p><p>
+			For example, in the following screenshot, Param Miner found an unkeyed header <code>X-Forwarded-Host</code> on the home page of the website:
+		</p><div class="rounded-dropshadow">
+		    <img alt="Param miner" src="images/param-miner.png">
+        </div><p>
+            <strong>Caution:</strong> When testing for unkeyed inputs on a live website, there is a risk of inadvertently causing the cache to serve your generated responses to real users. Therefore, it is important to make sure that your requests all have a unique cache key so that they will only be served to you. To do this, you can manually add a cache buster (such as a unique parameter) to the request line each time you make a request. Alternatively, if you are using Param Miner, there are options for automatically adding a cache buster to every request.
+        </p><h3 id="elicit-a-harmful-response-from-the-back-end-server">Elicit a harmful response from the back-end server</h3><p>
+            Once you have identified an unkeyed input, the next step is to evaluate exactly how the website processes it. Understanding this is essential to successfully eliciting a harmful response. If an input is reflected in the response from the server without being properly sanitized, or is used to dynamically generate other data, then this is a potential entry point for web cache poisoning.
+        </p><h3 id="get-the-response-cached">Get the response cached</h3><p>
+            Manipulating inputs to elicit a harmful response is half the battle, but it doesn't achieve much unless you can cause the response to be cached, which can sometimes be tricky.
+        </p><p>
+            Whether or not a response gets cached can depend on all kinds of factors, such as the file extension, content type, route, status code, and response headers. You will probably need to devote some time to simply playing around with requests on different pages and studying how the cache behaves. Once you work out how to get a response cached that contains your malicious input, you are ready to deliver the exploit to potential victims.
+        </p><img alt="web cache poisoning" src="images/cache-poisoning.svg"><h2 id="exploiting-web-cache-poisoning-vulnerabilities">Exploiting web cache poisoning vulnerabilities</h2><p>
+			This basic process can be used to discover and exploit a variety of different web cache poisoning vulnerabilities.
+		</p><p>
+			In some cases, web cache poisoning vulnerabilities arise due to general flaws in the design of caches. Other times, the way in which a cache is implemented by a specific website can introduce unexpected quirks that can be exploited.
+        </p><p>
+            In the following sections, we'll outline some of the most common examples of both of these scenarios. We've also provided a number of interactive labs so that you can see some of these vulnerabilities in action and practice exploiting them.
+		</p><div class="highlightedarea">
+			<h4>Read more</h4>
+			
+			
+		<ul><li><a href="web-cache-poisoning/exploiting-design-flaws.html">Exploiting cache design flaws</a></li><li><a href="web-cache-poisoning/exploiting-implementation-flaws.html">Exploiting cache implementation flaws</a></li></ul></div><h2 id="how-to-prevent-web-cache-poisoning-vulnerabilities">How to prevent web cache poisoning vulnerabilities</h2><p>
+            The definitive way to prevent web cache poisoning would clearly be to disable caching altogether. While for many websites this might not be a realistic option, in other cases, it might be feasible. For example, if you only use caching because it was switched on by default when you adopted a CDN, it might be worth evaluating whether the default caching options really do reflect your needs.
+        </p><p>
+            Even if you do need to use caching, restricting it to purely static responses is also effective, provided you are sufficiently wary about what you class as &quot;static&quot;. For instance, make sure that an attacker can't trick the back-end server into retrieving their malicious version of a static resource instead of the genuine one.
+        </p><p>
+            This is also related to a wider point about web security. Most websites now incorporate a variety of third-party technologies into both their development processes and day-to-day operations. No matter how robust your own internal security posture may be, as soon as you incorporate third-party technology into your environment, you are relying on its developers also being as security-conscious as you are. On the basis that you are only as secure as your weakest point, it is vital to make sure that you fully understand the security implications of any third-party technology before you integrate it.
+        </p><p>
+            Specifically in the context of web cache poisoning, this not only means deciding whether to leave caching switched on by default, but also looking at which headers are supported by your CDN, for example. Several of the web cache poisoning vulnerabilities discussed above are exposed because an attacker is able to manipulate a series of obscure request headers, many of which are entirely unnecessary for the website's functionality. Again, you may be exposing yourself to these kinds of attacks without realizing, purely because you have implemented some technology that supports these unkeyed inputs by default. If a header isn't needed for the site to work, then it should be disabled.
+        </p><p>
+            You should also take the following precautions when implementing caching:
+        </p><ul>
+            <li>
+                If you are considering excluding something from the cache key for performance reasons, rewrite the request instead.
+            </li>
+            <li>
+                Don't accept fat <code>GET</code> requests. Be aware that some third-party technologies may permit this by default.</li>
+            <li>
+                Patch client-side vulnerabilities even if they seem unexploitable. Some of these vulnerabilities might actually be exploitable due to unpredictable quirks in your cache's behavior. It could be a matter of time before someone finds a quirk, whether it be cache-based or otherwise, that makes this vulnerability exploitable.</li>
+        </ul>
+        
+        <div widget-id="academy-registration-footer"></div>
+    
+    </div>
+
+
+    <script src="../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="skyVzduQgdlhwQb4HFUPxUJEtWBPZPdT"></script>
+    <script src="../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="skyVzduQgdlhwQb4HFUPxUJEtWBPZPdT"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../content/images/logos/burp-suite-icon.svg">
+                <h4>Find web cache poisoning vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="sql-injection.html">SQL injection</a>
+            <a href="csrf.html">Cross-site request forgery</a>
+            <a href="xxe.html">XML external entity injection</a>
+            <a href="file-path-traversal.html">Directory traversal</a>
+            <a href="ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="skyVzduQgdlhwQb4HFUPxUJEtWBPZPdT" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/web-cache-poisoning by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:06:29 GMT -->
+</html>

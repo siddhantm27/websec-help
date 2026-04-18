@@ -1,0 +1,10 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+portswigger.net	TRUE	/	FALSE	1999999999	.AspNetCore.Antiforgery.u6BwAk3a3CQ	CfDJ8FlMeYQV04VIpsf071Z3DmKCDxdbxVVfl7gyuWWDeiPONzx1PvPvdp0Sf8NAX3LDBmjH9-Bwp66ZMSJymKGeXnt-6BDWYqN7l3HYJH5-I18Aj5ORCCf9ycwVQLSZe4wTQp66OMXnYGpSwWGZkZoeQIA
+.portswigger.net	TRUE	/	FALSE	1999999999	SessionId	CfDJ8FlMeYQV04VIpsf071Z3DmK%2FPFGPrgy%2B6wKFbzHRPe79Zpo6Xt81B7NE3h9UNhVBbcem%2BHbrm632OvB%2B32OyONqblF%2Bt%2BlXJOcBTxN6RIN7rEKlm2yt9xbRySJJf9ZN0VSkEpeQrAh9%2BAGJTYPq%2Funzc8NZOCY9gNun%2FtB8xGbf1
+portswigger.net	TRUE	/	FALSE	1999999999	samesite	lax
+portswigger.net	TRUE	/	FALSE	1999999999	AWSALBAPP-0	_remove_
+portswigger.net	TRUE	/	FALSE	1999999999	AWSALBAPP-1	_remove_
+portswigger.net	TRUE	/	FALSE	1999999999	AWSALBAPP-2	_remove_
+portswigger.net	TRUE	/	FALSE	1999999999	AWSALBAPP-3	_remove_
+

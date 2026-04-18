@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/graphql by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:05:35 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>GraphQL API vulnerabilities | Web Security Academy</title>
+    <meta content="GraphQL vulnerabilities generally arise due to implementation and design flaws. For example, the introspection feature may be left active, enabling ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="graphql.html"/>
+<link rel="icon" href="../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../content/images/logos/apple-touch-icon.png">
+    <link href="../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="VXwK5no3kVRL6aYDzy2LslI2QmTEymWc">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "VXwK5no3kVRL6aYDzy2LslI2QmTEymWc";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="request-smuggling.html">Request smuggling</a>
+                            <a href="web-cache-deception.html">Web cache deception</a>
+                            <a href="llm-attacks.html">Web LLM attacks</a>
+                            <a href="api-testing.html">API testing</a>
+                            <a href="nosql-injection.html">NoSQL injection</a>
+                            <a href="all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="all-labs.html">All labs</a>
+                            <a href="all-topics.html">All topics</a>
+                            <a href="mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="hall-of-fame.html">Leaderboard</a>
+                            <a href="getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="certification.html">Get certified</a>
+                             <a href="certification/how-to-prepare.html">How to prepare</a>
+                             <a href="certification/how-it-works.html">How it works</a>
+                             <a href="certification/practice-exam.html">Practice exam</a>
+                             <a href="certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="23">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>GraphQL API vulnerabilities</h3>
+        <ul>
+            <li><a href="graphql.html">Overview</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-1">
+                <label for="sub-nav-id-1">
+                    <a href="graphql/what-is-graphql.html">What is GraphQL?</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="graphql/what-is-graphql.html#how-graphql-works">How GraphQL works</a></li>
+                    <li><a href="graphql/what-is-graphql.html#what-is-a-graphql-schema">What is a GraphQL schema?</a></li>
+                    <li><a href="graphql/what-is-graphql.html#what-are-graphql-queries">What are GraphQL queries?</a></li>
+                    <li><a href="graphql/what-is-graphql.html#what-are-graphql-mutations">What are GraphQL mutations?</a></li>
+                    <li><a href="graphql/what-is-graphql.html#components-of-queries-and-mutations">Components of queries and mutations</a></li>
+                    <li><a href="graphql/what-is-graphql.html#subscriptions">Subscriptions</a></li>
+                    <li><a href="graphql/what-is-graphql.html#introspection">Introspection</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-2">
+                <label for="sub-nav-id-2">
+                    <a href="graphql.html#finding-graphql-endpoints">Finding GraphQL endpoints</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="graphql.html#universal-queries">Universal queries</a></li>
+                    <li><a href="graphql.html#common-endpoint-names">Common endpoint names</a></li>
+                    <li><a href="graphql.html#request-methods">Request methods</a></li>
+                    <li><a href="graphql.html#initial-testing">Initial testing</a></li>
+                </ul>
+            </li>
+            <li><a href="graphql.html#exploiting-unsanitized-arguments">Exploiting unsanitized arguments</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-3">
+                <label for="sub-nav-id-3">
+                    <a href="graphql.html#discovering-schema-information">Discovering schema information</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="graphql.html#using-introspection">Using introspection</a></li>
+                    <li><a href="graphql.html#probing-for-introspection">Probing for introspection</a></li>
+                    <li><a href="graphql.html#running-a-full-introspection-query">Running a full introspection query</a></li>
+                    <li><a href="graphql.html#visualizing-introspection-results">Visualizing introspection results</a></li>
+                    <li><a href="graphql.html#suggestions">Suggestions</a></li>
+                </ul>
+            </li>
+            <li><a href="graphql.html#bypassing-graphql-introspection-defenses">Bypassing GraphQL introspection defenses</a></li>
+            <li><a href="graphql.html#bypassing-rate-limiting-using-aliases">Bypassing rate limiting using aliases</a></li>
+            <li><a href="graphql.html#graphql-csrf">GraphQL CSRF</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-4">
+                <label for="sub-nav-id-4">
+                    <a href="graphql.html#preventing-graphql-attacks">Preventing GraphQL attacks</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="graphql.html#preventing-graphql-brute-force-attacks">Preventing GraphQL brute force attacks</a></li>
+                    <li><a href="graphql.html#preventing-csrf-over-graphql">Preventing CSRF over GraphQL</a></li>
+                </ul>
+            </li>
+            <li><a href="all-labs.html#graphql-api-vulnerabilities">View all GraphQL labs</a></li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="graphql.html"><span itemprop="name">GraphQL API vulnerabilities</span></a><meta itemprop="position" content="2" /></li></ul>    <div class="section theme-white">
+
+        <h1 cms-ignore-validation="HEADING_CAPITALIZATION" class="heading-2">
+    GraphQL API vulnerabilities
+</h1><p>
+    GraphQL vulnerabilities generally arise due to implementation and design flaws. For example, the introspection feature may be left active, enabling attackers to query the API in order to glean information about its schema.
+</p><p>
+    GraphQL attacks usually take the form of malicious requests that can enable an attacker to obtain data or perform unauthorized actions. These attacks can have a severe impact, especially if the user is able to gain admin privileges by manipulating queries or executing a CSRF exploit. Vulnerable GraphQL APIs can also lead to information disclosure issues.
+</p><p>
+    In this section we'll look at how to test GraphQL APIs. Don't worry if you're not familiar with GraphQL - we'll cover the relevant details as we go. We've also provided some labs so you can practice what you've learned.
+</p><img alt="GraphQL example" src="graphql/images/graphql-graphic.png"><div class="highlightedarea">
+    <h4>
+        More information
+    </h4>
+    <ul>
+        <li>
+            <p>
+                To find out what GraphQL is and how it works, see our <a href="graphql/what-is-graphql.html">What is GraphQL</a> Web Security Academy page.
+            </p>
+        </li>
+        <li>
+            <p>
+                To learn how to work with GraphQL in Burp Suite, see <a href="https://portswigger.net/burp/documentation/desktop/testing-workflow/working-with-graphql">Working with GraphQL</a>.
+            </p>
+        </li>
+    </ul>
+</div><h2 id="finding-graphql-endpoints" chunk-id="BF3A96212059704B9282D676E0820997">
+    Finding GraphQL endpoints
+</h2><p>
+    Before you can test a GraphQL API, you first need to find its endpoint. As GraphQL APIs use the same endpoint for all requests, this is a valuable piece of information.
+</p><div class="highlightedarea">
+    <h4>
+        Note
+    </h4>
+    <p>
+        This section explains how to probe for GraphQL endpoints manually. However, Burp Scanner can automatically test for GraphQL endpoints as part of its scans. It raises a "GraphQL endpoint found" issue if any such endpoints are discovered.
+    </p>
+</div><h3 id="universal-queries" chunk-id="749C106353304A83DD089BD86325054B">
+    Universal queries
+</h3><p>
+    If you send <code>query{__typename}</code> to any GraphQL endpoint, it will include the string <code>{"data": {"__typename": "query"}}</code> somewhere in its response. This is known as a universal query, and is a useful tool in probing whether a URL corresponds to a GraphQL service.
+</p><p>
+    The query works because every GraphQL endpoint has a reserved field called <code>__typename</code> that returns the queried object's type as a string.
+</p><h3 id="common-endpoint-names" chunk-id="6CF730435025FCC5E518F2567B2247DB">
+    Common endpoint names
+</h3><p>
+    GraphQL services often use similar endpoint suffixes. When testing for GraphQL endpoints, you should look to send universal queries to the following locations:
+</p><ul>
+    <li><code>/graphql</code></li>
+    <li><code>/api</code></li>
+    <li><code>/api/graphql</code></li>
+    <li><code>/graphql/api</code></li>
+    <li><code>/graphql/graphql</code></li>
+</ul><p id="common-endpoint-names-5L3D" chunk-id="66050A88946E560CA330B28682C801EC">
+    If these common endpoints don't return a GraphQL response, you could also try appending <code>/v1</code> to the path.
+</p><div class="highlightedarea">
+    <h4>
+        Note
+    </h4>
+    <p>
+        GraphQL services will often respond to any non-GraphQL request with a "query not present" or similar error. You should bear this in mind when testing for GraphQL endpoints.
+    </p>
+</div><h3 id="request-methods" chunk-id="89D0A0DA46640846A88EB96B9048FF24">
+    Request methods
+</h3><p>
+    The next step in trying to find GraphQL endpoints is to test using different request methods.
+</p><p>
+    It is best practice for production GraphQL endpoints to only accept POST requests that have a content-type of <code>application/json</code>, as this helps to protect against CSRF vulnerabilities. However, some endpoints may accept alternative methods, such as GET requests or POST requests that use a content-type of <code>x-www-form-urlencoded</code>.
+</p><p>
+    If you can't find the GraphQL endpoint by sending POST requests to common endpoints, try resending the universal query using alternative HTTP methods.
+</p><h3 id="initial-testing" chunk-id="C6FF6F0167C0204B1C8965A7F5F63DE4">
+    Initial testing
+</h3><p>
+    Once you have discovered the endpoint, you can send some test requests to understand a little more about how it works. If the endpoint is powering a website, try exploring the web interface in Burp's browser and use the HTTP history to examine the queries that are sent.
+</p><h2 id="exploiting-unsanitized-arguments" chunk-id="BAC85D2743D6F54DA28982A6A175F44C">
+    Exploiting unsanitized arguments
+</h2><p>
+    At this point, you can start to look for vulnerabilities. Testing query arguments is a good place to start.
+</p><p>If the API uses arguments to access objects directly, it may be vulnerable to access control vulnerabilities. A user could potentially access information they should not have simply by supplying an argument that corresponds to that information. This is sometimes known as an insecure direct object reference (IDOR).
+</p><div class="highlightedarea">
+    <h4>
+        More information
+    </h4>
+    <ul>
+        <li>For a general explanation of GraphQL arguments, see <a href="graphql/what-is-graphql.html#arguments">Arguments</a>.</li>
+        <li>For further information on IDORs, see <a href="access-control/idor.html">Insecure direct object references (IDOR)</a>.</li>
+    </ul>
+</div><p id="exploiting-unsanitized-arguments-Q9Q1" chunk-id="40954ED09E42F2B998A542B760766574">
+    For example, the query below requests a product list for an online shop:
+</p><code class="code-scrollable">
+    #Example product query
+
+    query {
+        products {
+            id
+            name
+            listed
+        }
+    }
+
+</code><p>
+    The product list returned contains only listed products.
+</p><code class="code-scrollable">
+    #Example product response
+
+    {
+        "data": {
+            "products": [
+                {
+                    "id": 1,
+                    "name": "Product 1",
+                    "listed": true
+                },
+                {
+                    "id": 2,
+                    "name": "Product 2",
+                    "listed": true
+                },
+                {
+                    "id": 4,
+                    "name": "Product 4",
+                    "listed": true
+                }
+            ]
+        }
+    }
+
+</code><p>
+    From this information, we can infer the following:
+</p><ul>
+    <li>Products are assigned a sequential ID.</li>
+    <li>Product ID 3 is missing from the list, possibly because it has been delisted.</li>
+</ul><p>
+    By querying the ID of the missing product, we can get its details, even though it is not listed on the shop and was not returned by the original product query.
+</p><code class="code-scrollable">
+    #Query to get missing product
+
+    query {
+        product(id: 3) {
+            id
+            name
+            listed
+        }
+    }
+
+</code><code class="code-scrollable">
+    #Missing product response
+
+    {
+        "data": {
+            "product": {
+            "id": 3,
+            "name": "Product 3",
+            "listed": no
+            }
+        }
+    }
+
+</code><h2 id="discovering-schema-information" chunk-id="3CC9262F435EC2811CD2D829F9F81DF9">
+    Discovering schema information
+</h2><p>
+    The next step in testing the API is to piece together information about the underlying schema.
+</p><p>
+    The best way to do this is to use introspection queries. Introspection is a built-in GraphQL function that enables you to query a server for information about the schema.
+</p><p>
+    Introspection helps you to understand how you can interact with a GraphQL API. It can also disclose potentially sensitive data, such as description fields.
+</p><h3 id="using-introspection" chunk-id="D495AD68527BCFDA22C00387F3F128B3">
+    Using introspection
+</h3><p>
+    To use introspection to discover schema information, query the <code>__schema</code> field. This field is available on the root type of all queries.
+</p><p>
+    Like regular queries, you can specify the fields and structure of the response you want to be returned when running an introspection query. For example, you might want the response to contain only the names of available mutations.
+</p><div class="highlightedarea">
+    <h4>
+        Note
+    </h4>
+    <p>
+        Burp can generate introspection queries for you. For more information, see <a href="https://portswigger.net/burp/documentation/desktop/testing-workflow/working-with-graphql#accessing-graphql-api-schemas-using-introspection">Accessing GraphQL API schemas using introspection</a>.
+    </p>
+</div><h3 id="probing-for-introspection" chunk-id="F6AF3502351E201B576B0101EE6D29B1">
+    Probing for introspection
+</h3><p>
+    It is best practice for introspection to be disabled in production environments, but this advice is not always followed.
+</p><p>
+    You can probe for introspection using the following simple query. If introspection is enabled, the response returns the names of all available queries.
+</p><code class="code-scrollable">
+    #Introspection probe request
+
+    {
+        "query": "{__schema{queryType{name}}}"
+    }
+
+</code><div class="highlightedarea">
+    <h4>
+        Note
+    </h4>
+    <p>
+        Burp Scanner can automatically test for introspection during its scans. If it finds that introspection is enabled, it reports a "GraphQL introspection enabled" issue.
+    </p>
+</div><h3 id="running-a-full-introspection-query" chunk-id="009715701B37443FCD353C17B6D917C9">
+    Running a full introspection query
+</h3><p>
+    The next step is to run a full introspection query against the endpoint so that you can get as much information on the underlying schema as possible.
+</p><p>
+    The example query below returns full details on all queries, mutations, subscriptions, types, and fragments.
+</p><code class="code-scrollable">
+    #Full introspection query
+
+    query IntrospectionQuery {
+        __schema {
+            queryType {
+                name
+            }
+            mutationType {
+                name
+            }
+            subscriptionType {
+                name
+            }
+            types {
+             ...FullType
+            }
+            directives {
+                name
+                description
+                args {
+                    ...InputValue
+            }
+            onOperation  #Often needs to be deleted to run query
+            onFragment   #Often needs to be deleted to run query
+            onField      #Often needs to be deleted to run query
+            }
+        }
+    }
+
+    fragment FullType on __Type {
+        kind
+        name
+        description
+        fields(includeDeprecated: true) {
+            name
+            description
+            args {
+                ...InputValue
+            }
+            type {
+                ...TypeRef
+            }
+            isDeprecated
+            deprecationReason
+        }
+        inputFields {
+            ...InputValue
+        }
+        interfaces {
+            ...TypeRef
+        }
+        enumValues(includeDeprecated: true) {
+            name
+            description
+            isDeprecated
+            deprecationReason
+        }
+        possibleTypes {
+            ...TypeRef
+        }
+    }
+
+    fragment InputValue on __InputValue {
+        name
+        description
+        type {
+            ...TypeRef
+        }
+        defaultValue
+    }
+
+    fragment TypeRef on __Type {
+        kind
+        name
+        ofType {
+            kind
+            name
+            ofType {
+                kind
+                name
+                ofType {
+                    kind
+                    name
+                }
+            }
+        }
+    }
+
+</code><div class="highlightedarea">
+    <h4>
+        Note
+    </h4>
+    <p>
+        If introspection is enabled but the above query doesn't run, try removing the <code>onOperation</code>, <code>onFragment</code>, and <code>onField</code> directives from the query structure. Many endpoints do not accept these directives as part of an introspection query, and you can often have more success with introspection by removing them.
+    </p>
+</div><h3 id="visualizing-introspection-results" chunk-id="DA1EC8077BA3B0044FF705FA2DFC7665">
+    Visualizing introspection results
+</h3><p>
+    Responses to introspection queries can be full of information, but are often very long and hard to process.
+</p><p>
+    You can view relationships between schema entities more easily using a <a href="http://nathanrandal.com/graphql-visualizer/">GraphQL visualizer</a>. This is an online tool that takes the results of an introspection query and produces a visual representation of the returned data, including the relationships between operations and types.
+</p><h3 id="suggestions" chunk-id="ADFC3550A0AD4B1E604A1A4B86A9EDDC">
+    Suggestions
+</h3><p>
+    Even if introspection is entirely disabled, you can sometimes use suggestions to glean information on an API's structure.
+</p><p>Suggestions are a feature of the Apollo GraphQL platform in which the server can suggest query amendments in
+    error messages. These are generally used where a query is slightly incorrect but still recognizable (for
+    example, <code>There is no entry for 'productInfo'. Did you mean 'productInformation' instead?</code>).</p><p>
+    You can potentially glean useful information from this, as the response is effectively giving away valid parts of the schema.
+</p><p id="suggestions-A4W2" chunk-id="07A1D7516D0DF17761FB18CC429F75F5">
+    <a href="https://github.com/nikitastupin/clairvoyance">Clairvoyance</a> is a tool that uses suggestions to automatically recover all or part of a GraphQL schema, even when introspection is disabled. This makes it significantly less time consuming to piece together information from suggestion responses.
+</p><p>
+    You cannot disable suggestions directly in Apollo. See <a href="https://github.com/apollographql/apollo-server/issues/3919#issuecomment-836503305">this GitHub thread</a> for a workaround.
+</p><div class="highlightedarea">
+    <h4>
+        Note
+    </h4>
+    <p>
+        Burp Scanner can automatically test for suggestions as part of its scans. If active suggestions are found, Burp Scanner reports a "GraphQL suggestions enabled" issue.
+    </p>
+</div><div widget-id="academy-labstatus" widget-lab-id="417528E487706565F7A124CB5AA164335F05B77861A2C4875A5165D750DE9D3D"></div><div widget-id="academy-labstatus" widget-lab-id="CCDA6760929EBECCAB51242F59B1573DD478087800B63C88FC8AA308DB137802"></div><h2 id="bypassing-graphql-introspection-defenses" chunk-id="846050A85548A049508458855D3DB525">
+    Bypassing GraphQL introspection defenses
+</h2><p>
+    If you cannot get introspection queries to run for the API you are testing, try inserting a special character after the <code>__schema</code> keyword.
+</p><p>
+    When developers disable introspection, they could use a regex to exclude the <code>__schema</code> keyword in queries. You should try characters like spaces, new lines and commas, as they are ignored by GraphQL but not by flawed regex.
+</p><p>
+    As such, if the developer has only excluded <code>__schema{</code>, then the below introspection query would not be excluded.
+</p><code class="code-scrollable">
+    #Introspection query with newline
+
+    {
+        "query": "query{__schema
+        {queryType{name}}}"
+    }
+
+</code><p>
+    If this doesn't work, try running the probe over an alternative request method, as introspection may only be disabled over POST. Try a GET request, or a POST request with a content-type of <code>x-www-form-urlencoded</code>.
+</p><p id="bypassing-graphql-introspection-defenses-L5A1" chunk-id="78A69CD97DE03BE9C83588D6FCA1F159">
+    The example below shows an introspection probe sent via GET, with URL-encoded parameters.
+</p><code class="code-scrollable">
+    # Introspection probe as GET request
+
+    GET /graphql?query=query%7B__schema%0A%7BqueryType%7Bname%7D%7D%7D
+
+</code><div class="highlightedarea">
+    <h4>
+        Note
+    </h4>
+    <p>
+        You can save GraphQL queries to the site map. For more information, see <a href="https://portswigger.net/burp/documentation/desktop/testing-workflow/working-with-graphql">Working with GraphQL</a>.
+    </p>
+</div><div widget-id="academy-labstatus" widget-lab-id="3A73E7AA263F5E0DB7AC8A1C6CD9EC592206484CEE2AC6FDE2DC304CB2D13129"></div><h2 id="bypassing-rate-limiting-using-aliases" chunk-id="E8C9D442544E2AC7FFF5148DF9FBFD08">
+    Bypassing rate limiting using aliases
+</h2><p>
+    Ordinarily, GraphQL objects can't contain multiple properties with the same name. Aliases enable you to bypass this restriction by explicitly naming the properties you want the API to return. You can use aliases to return multiple instances of the same type of object in one request.
+</p><div class="highlightedarea">
+    <h4>
+        More information
+    </h4>
+    <p>
+        For more information on GraphQL aliases, see <a href="graphql/what-is-graphql.html#aliases">Aliases</a>.
+    </p>
+</div><p>
+    While aliases are intended to limit the number of API calls you need to make, they can also be used to brute force a GraphQL endpoint.
+</p><p>
+    Many endpoints will have some sort of rate limiter in place to prevent brute force attacks. Some rate limiters work based on the number of HTTP requests received rather than the number of operations performed on the endpoint. Because aliases effectively enable you to send multiple queries in a single HTTP message, they can bypass this restriction.
+</p><p id="bypassing-rate-limiting-using-aliases-P4G7" chunk-id="9A4E446ADBA382CA10844C8F2C3ABC87">
+    The simplified example below shows a series of aliased queries checking whether store discount codes are valid. This operation could potentially bypass rate limiting as it is a single HTTP request, even though it could potentially be used to check a vast number of discount codes at once.
+</p><code class="code-scrollable">
+    #Request with aliased queries
+
+    query isValidDiscount($code: Int) {
+        isvalidDiscount(code:$code){
+            valid
+        }
+        isValidDiscount2:isValidDiscount(code:$code){
+            valid
+        }
+        isValidDiscount3:isValidDiscount(code:$code){
+            valid
+        }
+    }
+
+</code><div widget-id="academy-labstatus" widget-lab-id="1FF12F295E639070B0200DE527E0D58CD54FFE26907088691BE7155D78305DC9"></div><h2 id="graphql-csrf" chunk-id="868F177B8A6BA31EF49510C5FD2AD325">
+    GraphQL CSRF
+</h2><p no-keyword-injection="">
+    Cross-site request forgery (CSRF) vulnerabilities enable an attacker to induce users to perform actions that they do not intend to perform. This is done by creating a malicious website that forges a cross-domain request to the vulnerable application.
+</p><div class="highlightedarea">
+    <h4>
+        More information
+    </h4>
+    <p>
+        For more information on CSRF vulnerabilities in general, see the <a href="csrf.html">CSRF academy topic</a>.
+    </p>
+</div><p>
+    GraphQL can be used as a vector for CSRF attacks, whereby an attacker creates an exploit that causes a victim's browser to send a malicious query as the victim user.
+</p><h3 id="how-do-csrf-over-graphql-vulnerabilities-arise" chunk-id="E47888CCA3D5929F0787E322DD54E007">
+    How do CSRF over GraphQL vulnerabilities arise?
+</h3><p>
+    CSRF vulnerabilities can arise where a GraphQL endpoint does not validate the content type of the requests sent to it and no CSRF tokens are implemented.
+</p><p>
+    POST requests that use a content type of <code>application/json</code> are secure against forgery as long as the content type is validated. In this case, an attacker wouldn't be able to make the victim's browser send this request even if the victim were to visit a malicious site.
+</p><p>
+    However, alternative methods such as GET, or any request that has a content type of <code>x-www-form-urlencoded</code>, can be sent by a browser and so may leave users vulnerable to attack if the endpoint accepts these requests. Where this is the case, attackers may be able to craft exploits to send malicious requests to the API.
+</p><div class="highlightedarea">
+    <p>
+        The steps to construct a CSRF attack and deliver an exploit are the same for GraphQL-based CSRF vulnerabilities as they are for "regular" CSRF vulnerabilities. For more information on this process, see <a href="csrf.html#how-to-construct-a-csrf-attack">How to construct a CSRF attack</a>.
+    </p>
+</div><div widget-id="academy-labstatus" widget-lab-id="EE2C12983456A4312F8435C1FFB0292D55C10E35DD899DE6FB8BB3560257EF75"></div><h2 id="preventing-graphql-attacks" chunk-id="C82E39D2B3699B16747CFCD55D114588">Preventing GraphQL attacks</h2><p>
+    To prevent many common GraphQL attacks, take the following steps when you deploy your API to production:
+</p><ul>
+    <li>
+        <p>If your API is not intended for use by the general public, disable introspection on it. This makes it harder for an attacker to gain information about how the API works, and reduces the risk of unwanted information disclosure.</p>
+        <p>For information on how to disable introspection in the Apollo GraphQL platform, see <a href="https://www.apollographql.com/blog/graphql/security/why-you-should-disable-graphql-introspection-in-production/#turning-off-introspection-in-production">this blog post</a>.</p>
+    </li>
+    <li>
+        <p>If your API is intended for use by the general public then you will likely need to leave introspection enabled. However, you should review the API's schema to make sure  that it does not expose unintended fields to the public.</p>
+    </li>
+    <li>
+        <p>Make sure that suggestions are disabled. This prevents attackers from being able to use Clairvoyance or similar tools to glean information about the underlying schema.</p>
+        <p>You cannot disable suggestions directly in Apollo. See <a href="https://github.com/apollographql/apollo-server/issues/3919#issuecomment-836503305">this GitHub thread</a> for a workaround.</p>
+    </li>
+    <li>
+        <p>Make sure that your API's schema does not expose any private user fields, such as email addresses or user IDs.</p>
+    </li>
+</ul><h3 id="preventing-graphql-brute-force-attacks" chunk-id="7E55CA71D4274DB67D0A10367EEA9090">Preventing GraphQL brute force attacks</h3><p>
+    It is sometimes possible to bypass standard rate limiting when using GraphQL APIs. For an example of this, see the <a href="graphql.html#bypassing-rate-limiting-using-aliases">Bypassing rate limiting using aliases</a> section.
+</p><p>
+    With this in mind, there are design steps that you can take to defend your API against brute force attacks. This generally involves restricting the complexity of queries accepted by the API, and reducing the opportunity for attackers to execute denial-of-service (DoS) attacks.
+</p><p>
+    To defend against brute force attacks:
+</p><ul>
+    <li>
+        <p>Limit the query depth of your API's queries. The term "query depth" refers to the number of levels of nesting within a query. Heavily-nested queries can have significant performance implications, and can potentially provide an opportunity for DoS attacks if they are accepted. By limiting the query depth your API accepts, you can reduce the chances of this happening.</p>
+    </li>
+    <li>
+        <p>Configure operation limits. Operation limits enable you to configure the maximum number of unique fields, aliases, and root fields that your API can accept.</p>
+    </li>
+    <li>
+        <p>Configure the maximum amount of bytes a query can contain.</p>
+    </li>
+    <li>
+        <p>Consider implementing cost analysis on your API. Cost analysis is a process whereby a library application identifies the resource cost associated with running queries as they are received. If a query would be too computationally complex to run, the API drops it.</p>
+    </li>
+</ul><div class="highlightedarea">
+    <h4>More information</h4>
+    <p>
+        For information on how to implement these features in Apollo, see <a href="https://www.apollographql.com/blog/graphql/security/securing-your-graphql-api-from-malicious-queries/">this blog post</a>.
+    </p>
+</div><h3 id="preventing-csrf-over-graphql" chunk-id="D42D5AAC0D8C046D14F5565940B54F08">Preventing CSRF over GraphQL</h3><p>
+    To defend against GraphQL CSRF vulnerabilities specifically, make sure of the following when designing your API:
+</p><ul>
+    <li>
+        <p>Your API only accepts queries over JSON-encoded POST.</p>
+    </li>
+    <li>
+        <p>The API validates that content provided matches the supplied content type.</p>
+    </li>
+    <li>
+        <p>The API has a secure CSRF token mechanism.</p>
+    </li>
+</ul>
+        
+        <div widget-id="academy-registration-footer"></div>
+    
+    </div>
+
+
+    <script src="../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="VXwK5no3kVRL6aYDzy2LslI2QmTEymWc"></script>
+    <script src="../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="VXwK5no3kVRL6aYDzy2LslI2QmTEymWc"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../content/images/logos/burp-suite-icon.svg">
+                <h4>Test GraphQL APIs using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="sql-injection.html">SQL injection</a>
+            <a href="csrf.html">Cross-site request forgery</a>
+            <a href="xxe.html">XML external entity injection</a>
+            <a href="file-path-traversal.html">Directory traversal</a>
+            <a href="ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="VXwK5no3kVRL6aYDzy2LslI2QmTEymWc" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/graphql by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:05:36 GMT -->
+</html>

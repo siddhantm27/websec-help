@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/api-testing/server-side-parameter-pollution by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:07:40 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Server-side parameter pollution | Web Security Academy</title>
+    <meta content="Some systems contain internal APIs that aren&#x27;t directly accessible from the internet. Server-side parameter pollution occurs when a website embeds user ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="server-side-parameter-pollution.html"/>
+<link rel="icon" href="../../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../../content/images/logos/apple-touch-icon.png">
+    <link href="../../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="ZF6800RPZGbE8Pe0yGfvnono7yK6HGeY">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "ZF6800RPZGbE8Pe0yGfvnono7yK6HGeY";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="../dashboard.html">Dashboard</a></li>
+                    <li><a href="../learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../request-smuggling.html">Request smuggling</a>
+                            <a href="../web-cache-deception.html">Web cache deception</a>
+                            <a href="../llm-attacks.html">Web LLM attacks</a>
+                            <a href="../api-testing.html">API testing</a>
+                            <a href="../nosql-injection.html">NoSQL injection</a>
+                            <a href="../all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../all-labs.html">All labs</a>
+                            <a href="../all-topics.html">All topics</a>
+                            <a href="../mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../hall-of-fame.html">Leaderboard</a>
+                            <a href="../getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="../getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="../getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="../getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="../certification.html">Get certified</a>
+                             <a href="../certification/how-to-prepare.html">How to prepare</a>
+                             <a href="../certification/how-it-works.html">How it works</a>
+                             <a href="../certification/practice-exam.html">Practice exam</a>
+                             <a href="../certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="../certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="../certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="../certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="12">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="../all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>API testing</h3>
+        <ul>
+            <li><a href="../api-testing.html">Overview</a></li>
+            <li>
+                <a href="../api-testing.html#api-recon">API recon</a>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-1">
+                <label for="sub-nav-id-1">
+                    <a href="../api-testing.html#api-documentation">API documentation</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li>
+                        <a href="../api-testing.html#discovering-api-documentation">Discovering API documentation</a>
+                    </li>
+                    <li>
+                        <a href="../api-testing.html#using-machine-readable-documentation">Using machine-readable API documentation</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-2">
+                <label for="sub-nav-id-2">
+                    <a href="../api-testing.html#identifying-api-endpoints">Identifying API endpoints</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-3">
+                        <label for="sub-nav-id-3">
+                            <a href="../api-testing.html#interacting-with-api-endpoints">Interacting with API endpoints</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li>
+                                <a href="../api-testing.html#identifying-supported-http-methods">Identifying supported HTTP methods</a>
+                            </li>
+                            <li>
+                                <a href="../api-testing.html#identifying-supported-content-types">Identifying supported content types</a>
+                            </li>
+                            <li>
+                                <a href="../api-testing.html#using-intruder-to-find-hidden-endpoints">Using Intruder to find hidden endpoints</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-4">
+                <label for="sub-nav-id-4">
+                    <a href="../api-testing.html#finding-hidden-parameters">Finding hidden parameters</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-5">
+                        <label for="sub-nav-id-5">
+                            <a href="../api-testing.html#mass-assignment-vulnerabilities">Mass assignment vulnerabilities</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li>
+                                <a href="../api-testing.html#identifying-hidden-parameters">Identifying hidden parameters</a>
+                            </li>
+                            <li>
+                                <a href="../api-testing.html#testing-mass-assignment-vulnerabilities">Testing mass assignment vulnerabilities</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="../api-testing.html#preventing-vulnerabilities-in-apis">Preventing vulnerabilities in APIs</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-6">
+                <label for="sub-nav-id-6">
+                    <a href="server-side-parameter-pollution.html">Server-side parameter pollution</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-7">
+                        <label for="sub-nav-id-7">
+                            <a href="server-side-parameter-pollution.html#testing-for-server-side-parameter-pollution-in-the-query-string">Testing the query string</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li>
+                                <a href="server-side-parameter-pollution.html#truncating-query-strings">Truncating query strings</a>
+                            </li>
+                            <li>
+                                <a href="server-side-parameter-pollution.html#injecting-invalid-parameters">Injecting invalid parameters</a>
+                            </li>
+                            <li>
+                                <a href="server-side-parameter-pollution.html#injecting-valid-parameters">Injecting valid parameters</a>
+                            </li>
+                            <li>
+                                <a href="server-side-parameter-pollution.html#overriding-existing-parameters">Overriding existing parameters</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="server-side-parameter-pollution.html#testing-for-server-side-parameter-pollution-in-rest-paths">Testing REST paths</a>
+                    </li>
+                    <li>
+                        <a href="server-side-parameter-pollution.html#testing-for-server-side-parameter-pollution-in-structured-data-formats">Testing structured data formats</a>
+                    </li>
+                    <li>
+                        <a href="server-side-parameter-pollution.html#testing-with-automated-tools">Testing with automated tools</a>
+                    </li>
+                    <li>
+                        <a href="server-side-parameter-pollution.html#preventing-server-side-parameter-pollution">Preventing server-side parameter pollution</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="top-10-api-vulnerabilities.html">Alignment with the OWASP Top 10 API vulnerabilities</a>
+            </li>
+            <li>
+                <a href="../all-labs.html#api-testing">View all API testing labs</a>
+            </li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="../api-testing.html"><span itemprop="name">API testing</span></a><meta itemprop="position" content="2" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="server-side-parameter-pollution.html"><span itemprop="name">Server-side parameter pollution</span></a><meta itemprop="position" content="3" /></li></ul>    <div class="section theme-white">
+
+        <h1 class="heading-2" id="server-side-parameter-pollution" chunk-id="E2DAA7D061DE2F97AECF63DC320CBD97">
+    Server-side parameter pollution
+</h1><p>
+    Some systems contain internal APIs that aren't directly accessible from the internet. Server-side parameter pollution occurs when a website embeds user input in a server-side request to an internal API without adequate encoding. This means that an attacker may be able to manipulate or inject parameters, which may enable them to, for example:
+</p><ul>
+    <li>Override existing parameters.</li>
+    <li>Modify the application behavior.</li>
+    <li>Access unauthorized data.</li>
+</ul><p>
+    You can test any user input for any kind of parameter pollution. For example, query parameters, form fields, headers, and URL path parameters may all be vulnerable.
+</p><img alt="server-side parameter pollution example" src="images/api-testing-2.jpg"><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        This vulnerability is sometimes called HTTP parameter pollution. However, this term is also used to refer to a web application firewall (WAF) bypass technique. To avoid confusion, in this topic we'll only refer to server-side parameter pollution.
+    </p>
+    <p>
+        In addition, despite the similar name, this vulnerability class has very little in common with <a href="../prototype-pollution/server-side.html">server-side
+        prototype pollution</a>.
+    </p>
+</div><h2 id="testing-for-server-side-parameter-pollution-in-the-query-string" chunk-id="9471BA7E4747026021C9653B29F6E129">Testing for server-side parameter pollution in the query string</h2><p>
+    To test for server-side parameter pollution in the query string, place query syntax characters like <code>#</code>,
+    <code>&</code>, and <code>=</code> in your input and observe how the application responds.
+</p><p>
+    Consider a vulnerable application that enables you to search for other users based on their username. When you search for a user, your browser makes the following request:
+</p><code class="code-scrollable">GET /userSearch?name=<span class="blue">peter</span>&back=/home</code><p>
+    To retrieve user information, the server queries an internal API with the following request:
+</p><code class="code-scrollable">GET /users/search?name=<span class="blue">peter</span>&publicProfile=true</code><h3 id="truncating-query-strings" chunk-id="97EE47EBF9F3472BB87B384AA172B36C">Truncating query strings</h3><p>
+    You can use a URL-encoded <code>#</code> character to attempt to truncate the server-side request. To help you interpret the response, you could also add a string after the <code>#</code> character.
+</p><p>
+    For example, you could modify the query string to the following:
+</p><code class="code-scrollable">GET /userSearch?name=<span class="blue">peter</span><span class="red">%23foo</span>&back=/home</code><p>
+    The front-end will try to access the following URL:
+</p><code class="code-scrollable">GET /users/search?name=<span class="blue">peter</span><span class="red">#foo</span>&publicProfile=true</code><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        It's essential that you URL-encode the <code>#</code> character. Otherwise the front-end application will interpret it as a fragment identifier and it won't be passed to the internal API.
+    </p>
+</div><p>
+    Review the response for clues about whether the query has been truncated. For example, if the response returns the user <code>peter</code>, the server-side query may have been truncated. If an <code>Invalid name</code> error message is returned, the application may have treated
+    <code>foo</code> as part of the username. This suggests that the server-side request may not have been truncated.
+</p><p>
+    If you're able to truncate the server-side request, this removes the requirement for the <code>publicProfile</code> field to be set to true. You may be able to exploit this to return non-public user profiles.
+</p><h3 id="injecting-invalid-parameters" chunk-id="4753B0B083A625C6776F407AD6296092">
+    Injecting invalid parameters
+</h3><p>
+    You can use an URL-encoded <code>&</code> character to attempt to add a second parameter to the server-side request.
+</p><p>
+    For example, you could modify the query string to the following:
+</p><code class="code-scrollable">GET /userSearch?name=<span class="blue">peter</span><span class="red">%26foo=xyz</span>&back=/home</code><p>
+    This results in the following server-side request to the internal API:
+</p><code class="code-scrollabble">GET /users/search?name=<span class="blue">peter</span><span class="red">&foo=xyz</span>&publicProfile=true</code><p>
+    Review the response for clues about how the additional parameter is parsed. For example, if the response is unchanged this may indicate that the parameter was successfully injected but ignored by the application.
+</p><p>
+    To build up a more complete picture, you'll need to test further.
+</p><h3 id="injecting-valid-parameters" chunk-id="E22115305659260F23C855E6C0B5D73D">Injecting valid parameters</h3><p>
+    If you're able to modify the query string, you can then attempt to add a second valid parameter to the server-side request.
+</p><div class="highlightedarea">
+    <h4>Related pages</h4>
+    <p>
+        For information on how to identify parameters that you can inject into the query string, see the <a href="../api-testing.html#finding-hidden-parameters">Finding hidden
+        parameters</a> section.
+    </p>
+</div><p>
+    For example, if you've identified the <code>email</code> parameter, you could add it to the query string as follows:
+</p><code class="code-scrollable">GET /userSearch?name=<span class="blue">peter</span><span class="red">%26email=foo</span>&back=/home</code><p>
+    This results in the following server-side request to the internal API:
+</p><code class="code-scrollable">GET /users/search?name=<span class="blue">peter</span><span class="red">&email=foo</span>&publicProfile=true</code><p>
+    Review the response for clues about how the additional parameter is parsed.
+</p><h3 id="overriding-existing-parameters" chunk-id="62D471909602BD09B02525DAAED143FE">Overriding existing parameters</h3><p>
+    To confirm whether the application is vulnerable to server-side parameter pollution, you could try to override the original parameter. Do this by injecting a second parameter with the same name.
+</p><p>
+    For example, you could modify the query string to the following:
+</p><code class="code-scrollable">GET /userSearch?name=<span class="blue">peter</span><span class="red">%26name=carlos</span>&back=/home</code><p>
+    This results in the following server-side request to the internal API:
+</p><code class="code-scrollable">GET /users/search?name=<span class="blue">peter</span><span class="red">&name=carlos</span>&publicProfile=true</code><p>
+    The internal API interprets two <code>name</code> parameters. The impact of this depends on how the application processes the second parameter. This varies across different web technologies. For example:
+</p><ul>
+    <li>PHP parses the last parameter only. This would result in a user search for <code>carlos</code>.</li>
+    <li>ASP.NET combines both parameters. This would result in a user search for <code>peter,carlos</code>, which might result in an <code>Invalid username</code> error message.</li>
+    <li>Node.js / express parses the first parameter only. This would result in a user search for <code>peter</code>, giving an unchanged result.</li>
+</ul><p>
+    If you're able to override the original parameter, you may be able to conduct an exploit. For example, you could add
+    <code>name=administrator</code> to the request. This may enable you to log in as the administrator user.
+</p><div widget-id="academy-labstatus" widget-lab-id="D74FC3117A595F2183EB88A24360BB9C2A7472A910E4E97B4907971835D1F4E3"></div><h2 id="testing-for-server-side-parameter-pollution-in-rest-paths" chunk-id="0B19929002F4EF28F05BCE462B568DDD">Testing for server-side parameter pollution in REST paths</h2><p>
+    A RESTful API may place parameter names and values in the URL path, rather than the query string. For example, consider the following path:
+</p><code class="code-scrollable">/api/users/123</code><p>
+    The URL path might be broken down as follows:
+</p><ul>
+    <li><code>/api</code> is the root API endpoint.</li>
+    <li><code>/users</code> represents a resource, in this case <code>users</code>.</li>
+    <li><code>/123</code>represents a parameter, here an identifier for the specific user.</li>
+</ul><p>
+    Consider an application that enables you to edit user profiles based on their username. Requests are sent to the following endpoint:
+</p><code class="code-scrollable">GET /edit_profile.php?name=peter</code><p>
+    This results in the following server-side request:
+</p><code class="code-scrollable">GET /api/private/users/peter</code><p>
+    An attacker may be able to manipulate server-side URL path parameters to exploit the API. To test for this vulnerability, add path traversal sequences to modify parameters and observe how the application responds.
+</p><p>
+    You could submit URL-encoded <code>peter/../admin</code> as the value of the <code>name</code> parameter:
+</p><code class="code-scrollable">GET /edit_profile.php?name=peter%2f..%2fadmin</code><p>
+    This may result in the following server-side request:
+</p><code class="code-scrollable">GET /api/private/users/peter/../admin</code><p>
+    If the server-side client or back-end API normalize this path, it may be resolved to <code>/api/private/users/admin</code>.
+</p><div widget-id="academy-labstatus" widget-lab-id="4967CB9AD484265A5742AFB7B567C2732E03C1753EC5232085B0D0FC48A426F5"></div><h2 id="testing-for-server-side-parameter-pollution-in-structured-data-formats" chunk-id="C427AB34631115954527DDE677A1425F">Testing for server-side parameter pollution in structured data formats</h2><p>
+    An attacker may be able to manipulate parameters to exploit vulnerabilities in the server's processing of other structured data formats, such as a JSON or XML. To test for this, inject unexpected structured data into user inputs and see how the server responds.
+</p><p>
+    Consider an application that enables users to edit their profile, then applies their changes with a request to a server-side API. When you edit your name, your browser makes the following request:
+</p><code class="code-scrollable">POST /myaccount
+name=<span class="red">peter</span>
+</code><p>
+    This results in the following server-side request:
+</p><code class="code-scrollable">PATCH /users/7312/update
+<span class="blue">{"name":"</span><span class="red">peter</span><span class="blue">"}</span>
+</code><p>
+    You can attempt to add the <code>access_level</code> parameter to the request as follows:
+</p><code class="code-scrollable">POST /myaccount
+name=<span class="red">peter","access_level":"administrator</span></code><p>
+    If the user input is added to the server-side JSON data without adequate validation or sanitization, this results in the following server-side request:
+</p><code class="code-scrollable">PATCH /users/7312/update
+<span class="blue">{name="</span><span class="red">peter","access_level":"administrator</span><span class="blue">"}</span>
+</code><p>
+    This may result in the user <code>peter</code> being given administrator access.
+</p><div class="highlightedarea">
+    <h4>Related pages</h4>
+    <p>
+        For information on how to identify parameters that you can inject into the query string, see the <a href="../api-testing.html#finding-hidden-parameters">Finding hidden
+        parameters</a> section.
+    </p>
+</div><p id="testing-for-server-side-parameter-pollution-in-structured-data-formats-1" chunk-id="03A80C454F0A42CF5E82595DCEB1A842">
+    Consider a similar example, but where the client-side user input is in JSON data. When you edit your name, your browser makes the following request:
+</p><code class="code-scrollable">POST /myaccount
+{"name": "<span class="red">peter</span>"}
+</code><p>
+    This results in the following server-side request:
+</p><code class="code-scrollable">PATCH /users/7312/update
+<span class="blue">{"name":"</span><span class="red">peter</span><span class="blue">"}</span>
+</code><p>
+    You can attempt to add the <code>access_level</code> parameter to the request as follows:
+</p><code class="code-scrollable">POST /myaccount
+<span class="blue">{"name": "</span><span class="red">peter\",\"access_level\":\"administrator</span><span class="blue">"}</span></code><p>
+    If the user input is decoded, then added to the server-side JSON data without adequate encoding, this results in the following server-side request:
+</p><code class="code-scrollable">PATCH /users/7312/update
+<span class="blue">{"name":"</span><span class="red">peter","access_level":"administrator</span><span class="blue">"}</span></code><p>
+    Again, this may result in the user <code>peter</code> being given administrator access.
+</p><p>
+    Structured format injection can also occur in responses. For example, this can occur if user input is stored securely in a database, then embedded into a JSON response from a back-end API without adequate encoding. You can usually detect and exploit structured format injection in responses in the same way you can in requests.
+</p><div class="highlightedarea">
+    <h4>Note</h4>
+    <p>
+        This example below is in JSON, but server-side parameter pollution can occur in any structured data format. For an example in XML, see the
+        <a href="../xxe.html#xinclude-attacks">XInclude attacks</a> section in the XML external entity (XXE) injection topic.
+    </p>
+</div><h2 id="testing-with-automated-tools" chunk-id="F7954688CFF1C46DA8624232206EECD5">Testing with automated tools</h2><p>
+    Burp includes automated tools that can help you detect server-side parameter pollution vulnerabilities.
+</p><p>
+    Burp Scanner automatically detects suspicious input transformations when performing an audit. These occur when an application receives user input, transforms it in some way, then performs further processing on the result. This behavior doesn't necessarily constitute a vulnerability, so you'll need to do further testing using the manual techniques outlined above. For more information, see the <a href="https://portswigger.net/kb/issues/00400d00_suspicious-input-transformation-reflected">Suspicious
+    input transformation</a> issue definition.
+</p><p>
+    You can also use the Backslash Powered Scanner BApp to identify server-side injection vulnerabilities. The scanner classifies inputs as boring, interesting, or vulnerable. You'll need to investigate interesting inputs using the manual techniques outlined above. For more information, see the <a href="https://portswigger.net/research/backslash-powered-scanning-hunting-unknown-vulnerability-classes">Backslash
+    Powered Scanning: hunting unknown vulnerability classes</a> whitepaper.
+</p><h2 id="preventing-server-side-parameter-pollution" chunk-id="8CEEDBD6761F0D2AC90596ABA4087525">Preventing server-side parameter pollution</h2><p>
+    To prevent server-side parameter pollution, use an allowlist to define characters that don't need encoding, and make sure all other user input is encoded before it's included in a server-side request. You should also make sure that all input adheres to the expected format and structure.
+</p>
+        
+        <div widget-id="academy-registration-footer"></div>
+    
+    </div>
+
+
+    <script src="../../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="ZF6800RPZGbE8Pe0yGfvnono7yK6HGeY"></script>
+    <script src="../../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="ZF6800RPZGbE8Pe0yGfvnono7yK6HGeY"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../../content/images/logos/burp-suite-icon.svg">
+                <h4>Test APIs for vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="../cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="../sql-injection.html">SQL injection</a>
+            <a href="../csrf.html">Cross-site request forgery</a>
+            <a href="../xxe.html">XML external entity injection</a>
+            <a href="../file-path-traversal.html">Directory traversal</a>
+            <a href="../ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="ZF6800RPZGbE8Pe0yGfvnono7yK6HGeY" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/api-testing/server-side-parameter-pollution by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:07:40 GMT -->
+</html>

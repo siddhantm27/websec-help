@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/access-control by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:06:20 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Access control vulnerabilities and privilege escalation | Web Security Academy</title>
+    <meta content="In this section, we describe: Privilege escalation. The types of vulnerabilities that can arise with access control. How to prevent access control ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="access-control.html"/>
+<link rel="icon" href="../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../content/images/logos/apple-touch-icon.png">
+    <link href="../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="Zk8hO33z03LzUFaIsj06rEtmKwddtj34">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "Zk8hO33z03LzUFaIsj06rEtmKwddtj34";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="request-smuggling.html">Request smuggling</a>
+                            <a href="web-cache-deception.html">Web cache deception</a>
+                            <a href="llm-attacks.html">Web LLM attacks</a>
+                            <a href="api-testing.html">API testing</a>
+                            <a href="nosql-injection.html">NoSQL injection</a>
+                            <a href="all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="all-labs.html">All labs</a>
+                            <a href="all-topics.html">All topics</a>
+                            <a href="mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="hall-of-fame.html">Leaderboard</a>
+                            <a href="getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="certification.html">Get certified</a>
+                             <a href="certification/how-to-prepare.html">How to prepare</a>
+                             <a href="certification/how-it-works.html">How it works</a>
+                             <a href="certification/practice-exam.html">Practice exam</a>
+                             <a href="certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="10">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>Access control</h3>
+        <ul>
+            <li>
+                <input type="checkbox" id="sub-nav-id-0">
+                <label for="sub-nav-id-0">
+                    <a href="access-control.html#what-is-access-control">What is access control?</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="access-control.html#vertical-access-controls">Vertical access controls</a></li>
+                    <li><a href="access-control.html#horizontal-access-controls">Horizontal access controls</a></li>
+                    <li><a href="access-control.html#context-dependent-access-controls">Context-dependent access controls</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-1">
+                <label for="sub-nav-id-1">
+                    <a href="access-control.html#vertical-privilege-escalation">Vertical privilege escalation</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="access-control.html#unprotected-functionality">Unprotected functionality</a></li>
+                    <li><a href="access-control.html#parameter-based-access-control-methods">Parameter-based access control</a></li>
+                    <li><a href="access-control.html#broken-access-control-resulting-from-platform-misconfiguration">Platform misconfiguration</a></li>
+                    <li><a href="access-control.html#broken-access-control-resulting-from-url-matching-discrepancies">URL-matching discrepancies</a></li>
+                </ul>
+            </li>
+            <li><a href="access-control.html#horizontal-privilege-escalation">Horizontal privilege escalation</a></li>
+            <li><a href="access-control.html#horizontal-to-vertical-privilege-escalation">Horizontal to vertical privilege escalation</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-4">
+                <label for="sub-nav-id-4">
+                    <a href="access-control/idor.html">Insecure direct object references (IDOR)</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="access-control/idor.html#idor-vulnerability-with-direct-reference-to-database-objects">Direct references to database objects</a></li>
+                    <li><a href="access-control/idor.html#idor-vulnerability-with-direct-reference-to-static-files">Direct references to static files</a></li>
+                </ul>
+            </li>
+            <li><a href="access-control.html#access-control-vulnerabilities-in-multi-step-processes">Vulnerabilities in multi-step processes</a></li>
+            <li><a href="access-control.html#referer-based-access-control">Vulnerabilities in Referer-based controls</a></li>
+            <li><a href="access-control.html#location-based-access-control">Vulnerabilities in location-based controls</a></li>
+            <li><a href="access-control.html#how-to-prevent-access-control-vulnerabilities">Preventing</a></li>
+            <li><a href="all-labs.html#access-control-vulnerabilities">View all access control labs</a></li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="access-control.html"><span itemprop="name">Access control</span></a><meta itemprop="position" content="2" /></li></ul>    <div class="section theme-white">
+
+        <h1 class="heading-2">Access control vulnerabilities and privilege escalation</h1><p>
+			In this section, we describe:
+		</p><ul>
+			<li>
+				Privilege escalation.
+			</li>
+			<li>
+				The types of vulnerabilities that can arise with access control.
+			</li>
+			<li>
+				How to prevent access control vulnerabilities.
+			</li>
+		</ul><div class="highlightedarea">
+			<h4>Labs</h4>
+			<p>
+				If you're familiar with the basic concepts behind access control vulnerabilities and want to practice exploiting them on some realistic, deliberately vulnerable targets, you can access labs in this topic from the link below.
+			</p>
+			
+		<ul><li><a href="all-labs.html#access-control-vulnerabilities">View all access control labs</a></li></ul></div><h2 id="what-is-access-control" chunk-id="4A7EF9E11D106FF5B02E9AAA3232BACD">What is access control?</h2><p>
+		    Access control is the application of constraints on who or what is authorized to perform actions or access resources. In the context of web applications, access control is dependent on authentication and session management:
+	    </p><ul>
+		    <li><strong>Authentication</strong> confirms that the user is who they say they are.</li>
+		    <li><strong>Session management</strong> identifies which subsequent HTTP requests are being made by that same user. </li>
+		    <li><strong>Access control</strong> determines whether the user is allowed to carry out the action that they are attempting to perform. </li>
+		</ul><p>
+			Broken access controls are common and often present a critical security vulnerability. Design and management of access controls is a complex and dynamic problem that applies business, organizational, and legal constraints to a technical implementation. Access control design decisions have to be made by humans so the potential for errors is high.
+		</p><img alt="Access control vulnerability" src="images/access-control.svg"><div class="highlightedarea">
+            <h4>Read more</h4>
+            
+        <ul><li><a href="access-control/security-models.html">Access control security models</a></li></ul></div><h3 id="vertical-access-controls">Vertical access controls</h3><p>
+		    Vertical access controls are mechanisms that restrict access to sensitive functionality to specific types of users.
+	    </p><p>
+			With vertical access controls, different types of users have access to different application functions. For example, an administrator might be able to modify or delete any user's account, while an ordinary user has no access to these actions. Vertical access controls can be more fine-grained implementations of security models designed to enforce business policies such as separation of duties and least privilege.
+		</p><h3 id="horizontal-access-controls">Horizontal access controls</h3><p>
+		    Horizontal access controls are mechanisms that restrict access to resources to specific users.
+	    </p><p>
+			With horizontal access controls, different users have access to a subset of resources of the same type. For example, a banking application will allow a user to view transactions and make payments from their own accounts, but not the accounts of any other user. 
+		</p><h3 id="context-dependent-access-controls">Context-dependent access controls</h3><p>
+		    Context-dependent access controls restrict access to functionality and resources based upon the state of the application or the user's interaction with it.
+	    </p><p>
+		    Context-dependent access controls prevent a user performing actions in the wrong order. For example, a retail website might prevent users from modifying the contents of their shopping cart after they have made payment.
+	    </p><h2 id="examples-of-broken-access-controls">Examples of broken access controls</h2><p>
+			Broken access control vulnerabilities exist when a user can access resources or perform actions that they are not supposed to be able to.
+		</p><h3 id="vertical-privilege-escalation" chunk-id="F9830C713CF303D38C690531601F4C7D">Vertical privilege escalation</h3><p>
+			If a user can gain access to functionality that they are not permitted to access then this is vertical privilege escalation. For example, if a non-administrative user can gain access to an admin page where they can delete user accounts, then this is vertical privilege escalation.
+		</p><h4 id="unprotected-functionality" chunk-id="2B86324A38656A397CA7B5C56EDC619C">Unprotected functionality</h4><p>
+			At its most basic, vertical privilege escalation arises where an application does not enforce any protection for sensitive functionality. For example, administrative functions might be linked from an administrator's welcome page but not from a user's welcome page. However, a user might be able to access the administrative functions by browsing to the relevant admin URL.
+		</p><p>
+			For example, a website might host sensitive functionality at the following URL:
+		</p><code class="code-scrollable">https://insecure-website.com/admin</code><p>
+			This might be accessible by any user, not only administrative users who have a link to the functionality in their user interface. In some cases, the administrative URL might be disclosed in other locations, such as the <code>robots.txt</code> file:
+		</p><code class="code-scrollable">https://insecure-website.com/robots.txt</code><p>
+			Even if the URL isn't disclosed anywhere, an attacker may be able to use a wordlist to brute-force the location of the sensitive functionality.
+		</p><div widget-id="academy-labstatus" widget-lab-id="EFB3CD7D563D637400D229D7B4949233047F1B2808B1D46393322D66594A8DE2">
+		</div><p id="unprotected-functionality-5I3H" chunk-id="BFDAE123A915F2C7A20C837AC50E7835">
+			In some cases, sensitive functionality is concealed by giving it a less predictable URL. This is an example of so-called "security by obscurity". However, hiding sensitive functionality does not provide effective access control because users might discover the obfuscated URL in a number of ways.
+		</p><p>
+			Imagine an application that hosts administrative functions at the following URL:
+		</p><code class="code-scrollable">https://insecure-website.com/administrator-panel-yb556</code><p>
+			This might not be directly guessable by an attacker. However, the application might still leak the URL to users. The URL might be disclosed in JavaScript that constructs the user interface based on the user's role:
+		</p><code class="code-scrollable">&lt;script&gt;
+	var isAdmin = false;
+	if (isAdmin) {
+		...
+		var adminPanelTag = document.createElement('a');
+		adminPanelTag.setAttribute('href', 'https://insecure-website.com/administrator-panel-yb556');
+		adminPanelTag.innerText = 'Admin panel';
+		...
+	}
+&lt;/script&gt;</code><p>
+			This script adds a link to the user's UI if they are an admin user. However, the script containing the URL is visible to all users regardless of their role.
+		</p><div widget-id="academy-labstatus" widget-lab-id="878A6A3A7BF5CA38441716313E1AD46697052F36B6C82C4A6BDA1A98E28F446F">
+		</div><h4 id="parameter-based-access-control-methods" chunk-id="3D720FEF2753C28133750A7F7B06CAAE">Parameter-based access control methods</h4><p>
+			Some applications determine the user's access rights or role at login, and then store this information in a user-controllable location. This could be:
+		</p><ul>
+			<li>
+				A hidden field.
+			</li>
+			<li>
+				A cookie.
+			</li>
+			<li>
+				A preset query string parameter.
+			</li>
+		</ul><p>
+			The application makes access control decisions based on the submitted value. For example:
+		</p><code class="code-scrollable">https://insecure-website.com/login/home.jsp?admin=true
+https://insecure-website.com/login/home.jsp?role=1</code><p>
+			This approach is insecure because a user can modify the value and access functionality they're not authorized to, such as administrative functions.
+		</p><div widget-id="academy-labstatus" widget-lab-id="F97895E072D86380DD3FDD12E2D6CEB6090708B4E3E0CD0990FE741AFB553B2E">
+		</div><div widget-id="academy-labstatus" widget-lab-id="703ED76CC046C2C9C06B661C1C25F53F7C1CB238E9B7FA9AFF664177FD7C7773">
+		</div><h4 id="broken-access-control-resulting-from-platform-misconfiguration">Broken access control resulting from platform misconfiguration</h4><p>
+			Some applications enforce access controls at the platform layer. they do this by restricting access to specific URLs and HTTP methods based on the user's role. For example, an application might configure a rule as follows:
+		</p><code class="code-scrollable">DENY: POST, /admin/deleteUser, managers</code><p>
+		    This rule denies access to the <code>POST</code> method on the URL <code>/admin/deleteUser</code>, for users in the managers group. Various things can go wrong in this situation, leading to access control bypasses.
+	    </p><p>
+		    Some application frameworks support various non-standard HTTP headers that can be used to override the URL in the original request, such as <code>X-Original-URL</code> and <code>X-Rewrite-URL</code>. If a website uses rigorous front-end controls to restrict access based on the URL, but the application allows the URL to be overridden via a request header, then it might be possible to bypass the access controls using a request like the following:
+	    </p><code class="code-scrollable">POST / HTTP/1.1
+X-Original-URL: /admin/deleteUser
+...</code><div widget-id="academy-labstatus" widget-lab-id="9955F5350904EDABE30089828D2C08ACE886493264A0B469354503102379A3E9">
+</div><p>
+    An alternative attack relates to the HTTP method used in the request. The front-end controls described in the previous sections restrict access based on the URL and HTTP method. Some websites tolerate different HTTP request methods when performing an action. If an attacker can use the <code>GET</code> (or another) method to perform actions on a restricted URL, they can bypass the access control that is implemented at the platform layer.
+</p><div widget-id="academy-labstatus" widget-lab-id="E115E4B43D59771BB787573F305861A795FB30F2447CEF9B53618F4232D1C83B">
+		</div><h4 id="broken-access-control-resulting-from-url-matching-discrepancies">Broken access control resulting from URL-matching discrepancies</h4><p>
+			Websites can vary in how strictly they match the path of an incoming request to a defined endpoint. For example, they may tolerate inconsistent capitalization, so a request to <code>/ADMIN/DELETEUSER</code> may still be mapped to the <code>/admin/deleteUser</code> endpoint. If the access control mechanism is less tolerant, it may treat these as two different endpoints and fail to enforce the correct restrictions as a result.
+		</p><p>
+			Similar discrepancies can arise if developers using the Spring framework have enabled the <code>useSuffixPatternMatch</code> option. This allows paths with an arbitrary file extension to be mapped to an equivalent endpoint with no file extension. In other words, a request to <code>/admin/deleteUser.anything</code> would still match the <code>/admin/deleteUser</code> pattern. Prior to Spring 5.3, this option is enabled by default.
+		</p><p>
+			On other systems, you may encounter discrepancies in whether <code>/admin/deleteUser</code> and <code>/admin/deleteUser/</code> are treated as distinct endpoints. In this case, you may be able to bypass access controls by appending a trailing slash to the path.
+		</p><h3 id="horizontal-privilege-escalation" chunk-id="32497DA2008417AED31915AF869585B0">Horizontal privilege escalation</h3><p>
+			Horizontal privilege escalation occurs if a user is able to gain access to resources belonging to another user, instead of their own resources of that type. For example, if an employee can access the records of other employees as well as their own, then this is horizontal privilege escalation.
+		</p><p>
+			Horizontal privilege escalation attacks may use similar types of exploit methods to vertical privilege escalation. For example, a user might access their own account page using the following URL:
+		</p><code class="code-scrollable">https://insecure-website.com/myaccount?id=123</code><p>
+			If an attacker modifies the <code>id</code> parameter value to that of another user, they might gain access to another user's account page, and the associated data and functions.
+		</p><div class="highlightedarea">
+			<h4>Note</h4>
+			<p>
+				This is an example of an insecure direct object reference (IDOR) vulnerability. This type of vulnerability arises where user-controller parameter values are used to access resources or functions directly.
+			</p>
+		</div><div widget-id="academy-labstatus" widget-lab-id="CF2D0A74362EE20A8F6FFB1028E3B44FEE9AE125F418ED15832E4A8A2073BFF9">
+		</div><p>
+			In some applications, the exploitable parameter does not have a predictable value. For example, instead of an incrementing number, an application might use globally unique identifiers (GUIDs) to identify users. This may prevent an attacker from guessing or predicting another user's identifier. However, the GUIDs belonging to other users might be disclosed elsewhere in the application where users are referenced, such as user messages or reviews.
+		</p><div widget-id="academy-labstatus" widget-lab-id="9D95A9E677B81F605D40D00001FFBC8BBB0F0EE73773A3A37727FBDE0406B779">
+		</div><p id="horizontal-privilege-escalation-0U2P" chunk-id="E97F2D4FE0F94B4E0DC89E294FC2BDAD">
+			In some cases, an application does detect when the user is not permitted to access the resource, and returns a redirect to the login page. However, the response containing the redirect might still include some sensitive data belonging to the targeted user, so the attack is still successful.
+		</p><div widget-id="academy-labstatus" widget-lab-id="114DE45758E410D7A7458144D568A9C3B78A4BE3A14DAF61D4E552610739359D">
+		</div><h3 id="horizontal-to-vertical-privilege-escalation" chunk-id="A2CF99F49A5740802962487C2BF11D7A">Horizontal to vertical privilege escalation</h3><p>
+			Often, a horizontal privilege escalation attack can be turned into a vertical privilege escalation, by compromising a more privileged user. For example, a horizontal escalation might allow an attacker to reset or capture the password belonging to another user. If the attacker targets an administrative user and compromises their account, then they can gain administrative access and so perform vertical privilege escalation.
+		</p><p>
+			An attacker might be able to gain access to another user's account page using the parameter tampering technique already described for horizontal privilege escalation:
+		</p><code class="code-scrollable">https://insecure-website.com/myaccount?id=456</code><p>
+			If the target user is an application administrator, then the attacker will gain access to an administrative account page. This page might disclose the administrator's password or provide a means of changing it, or might provide direct access to privileged functionality.
+		</p><div widget-id="academy-labstatus" widget-lab-id="9038DF39E72961A071967A83C2472BF2EDB0EF9595E6F13BD05CE1B2DCE81234">
+		</div><h3 id="insecure-direct-object-references">Insecure direct object references</h3><p>
+			Insecure direct object references (IDORs) are a subcategory of access control vulnerabilities. IDORs occur if an application uses user-supplied input to access objects directly and an attacker can modify the input to obtain unauthorized access. It was popularized by its appearance in the OWASP 2007 Top Ten. It's just one example of many implementation mistakes that can provide a means to bypass access controls.
+		</p><div widget-id="academy-labstatus" widget-lab-id="BF6B2F755E63BA10EEFDB6633048FC5CF8E4C1D5F386A756FD8E4B6864D70857">
+		</div><div class="highlightedarea">
+            <h4>Read more</h4>
+            
+        <ul><li><a href="access-control/idor.html">Insecure direct object references (IDOR)</a></li></ul></div><h3 id="access-control-vulnerabilities-in-multi-step-processes">Access control vulnerabilities in multi-step processes</h3><p>
+		    Many websites implement important functions over a series of steps. This is common when:
+		</p><ul>
+			<li>
+				A variety of inputs or options need to be captured.
+			</li>
+			<li>
+				The user needs to review and confirm details before the action is performed.
+			</li>
+		</ul><p>
+			For example, the administrative function to update user details might involve the following steps:
+	    </p><ol>
+		    <li>Load the form that contains details for a specific user.</li>
+		    <li>Submit the changes.</li>
+		    <li>Review the changes and confirm.</li>
+		</ol><p>
+		    Sometimes, a website will implement rigorous access controls over some of these steps, but ignore others. Imagine a website where access controls are correctly applied to the first and second steps, but not to the third step. The website assumes that a user will only reach step 3 if they have already completed the first steps, which are properly controlled. An attacker can gain unauthorized access to the function by skipping the first two steps and directly submitting the request for the third step with the required parameters.
+	    </p><div widget-id="academy-labstatus" widget-lab-id="48EA5EFF7577D0D5E50C64B5D91F3E2FCC175EBB055C95F30BF8E909F6BA9D2C">
+		</div><h3 id="referer-based-access-control">Referer-based access control</h3><p>
+			Some websites base access controls on the <code>Referer</code> header submitted in the HTTP request. The <code>Referer</code> header can be added to requests by browsers to indicate which page initiated a request.
+		</p><p>
+			For example, an application robustly enforces access control over the main administrative page at <code>/admin</code>, but for sub-pages such as <code>/admin/deleteUser</code> only inspects the <code>Referer</code> header. If the <code>Referer</code> header contains the main <code>/admin</code> URL, then the request is allowed.
+		</p><p>
+			In this case, the <code>Referer</code> header can be fully controlled by an attacker. This means that they can forge direct requests to sensitive sub-pages by supplying the required <code>Referer</code> header, and gain unauthorized access.
+		</p><div widget-id="academy-labstatus" widget-lab-id="16E507638191C125691E9F9D752A1D42BF2E8FA811002B872CA607BD2CD8C334">
+		</div><h3 id="location-based-access-control">Location-based access control</h3><p>
+			Some websites enforce access controls based on the user's geographical location. This can apply, for example, to banking applications or media services where state legislation or business restrictions apply. These access controls can often be circumvented by the use of web proxies, VPNs, or manipulation of client-side geolocation mechanisms.
+		</p><h2 id="how-to-prevent-access-control-vulnerabilities">How to prevent access control vulnerabilities</h2><p>
+			Access control vulnerabilities can be prevented by taking a defense-in-depth approach and applying the following principles:
+		</p><ul>
+			<li>
+				Never rely on obfuscation alone for access control.
+			</li>
+			<li>
+				Unless a resource is intended to be publicly accessible, deny access by default.
+			</li>
+			<li>
+				Wherever possible, use a single application-wide mechanism for enforcing access controls.
+			</li>
+			<li>
+				At the code level, make it mandatory for developers to declare the access that is allowed for each resource, and deny access by default.
+			</li>
+			<li>
+				Thoroughly audit and test access controls to ensure they work as designed.
+			</li>
+		</ul>
+        
+        <div widget-id="academy-registration-footer"></div>
+    
+    </div>
+
+
+    <script src="../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="Zk8hO33z03LzUFaIsj06rEtmKwddtj34"></script>
+    <script src="../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="Zk8hO33z03LzUFaIsj06rEtmKwddtj34"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../content/images/logos/burp-suite-icon.svg">
+                <h4>Find access control vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="sql-injection.html">SQL injection</a>
+            <a href="csrf.html">Cross-site request forgery</a>
+            <a href="xxe.html">XML external entity injection</a>
+            <a href="file-path-traversal.html">Directory traversal</a>
+            <a href="ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="Zk8hO33z03LzUFaIsj06rEtmKwddtj34" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/access-control by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:06:21 GMT -->
+</html>

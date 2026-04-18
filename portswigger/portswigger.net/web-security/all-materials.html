@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/all-materials by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:01:22 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>All learning materials | Web Security Academy</title>
+    <meta content="See detailed view Web Security Academy Learning Paths Race conditions GraphQL API vulnerabilities &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; What is GraphQL? All topics Put ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="all-materials.html"/>
+<link rel="icon" href="../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../content/images/logos/apple-touch-icon.png">
+    <link href="../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="C0cfyQ31EOZwm08/ZSt72mwNtdD5PIhY">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "C0cfyQ31EOZwm08/ZSt72mwNtdD5PIhY";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="request-smuggling.html">Request smuggling</a>
+                            <a href="web-cache-deception.html">Web cache deception</a>
+                            <a href="llm-attacks.html">Web LLM attacks</a>
+                            <a href="api-testing.html">API testing</a>
+                            <a href="nosql-injection.html">NoSQL injection</a>
+                            <a href="all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="all-labs.html">All labs</a>
+                            <a href="all-topics.html">All topics</a>
+                            <a href="mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="hall-of-fame.html">Leaderboard</a>
+                            <a href="getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="certification.html">Get certified</a>
+                             <a href="certification/how-to-prepare.html">How to prepare</a>
+                             <a href="certification/how-it-works.html">How it works</a>
+                             <a href="certification/practice-exam.html">Practice exam</a>
+                             <a href="certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="-1">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="all-materials.html"><span itemprop="name">All materials</span></a><meta itemprop="position" content="2" /></li></ul>    <div class="section theme-white">
+
+        <h1 class="heading-2">All learning materials</h1><p>
+            <a class="chevron-after" href="all-materials/detailed.html">See detailed view</a>
+        </p><table class="is-nonresponsive-table">
+            <tr>
+                <td colspan="5">
+                    <strong><a href="learning-paths.html">Web Security Academy Learning Paths</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="race-conditions.html">Race conditions</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="graphql.html">GraphQL API vulnerabilities</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="graphql/what-is-graphql.html">What is GraphQL?</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="all-topics.html">All topics</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="mystery-lab-challenge.html">Put your recon skills to the test</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="getting-started.html">Getting started with the Web Security Academy</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="prototype-pollution.html">What is prototype pollution?</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="prototype-pollution/javascript-prototypes-and-inheritance.html">JavaScript prototypes and inheritance</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="prototype-pollution/client-side.html">Client-side prototype pollution vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="3">
+                    <a href="prototype-pollution/client-side/browser-apis.html">Prototype pollution via browser APIs</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="prototype-pollution/server-side.html">Server-side prototype pollution</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="prototype-pollution/preventing.html">Preventing prototype pollution vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="essential-skills.html">Essential skills</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="essential-skills/obfuscating-attacks-using-encodings.html">Obfuscating attacks using encodings</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="essential-skills/using-burp-scanner-during-manual-testing.html">Using Burp Scanner during manual testing</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="sql-injection.html">SQL injection</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="sql-injection/examining-the-database.html">Examining the database in SQL injection attacks</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="sql-injection/union-attacks.html">SQL injection UNION attacks</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="sql-injection/blind.html">Blind SQL injection</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="sql-injection/cheat-sheet.html">SQL injection cheat sheet</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="cross-site-scripting.html">Cross-site scripting</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cross-site-scripting/reflected.html">Reflected XSS</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cross-site-scripting/stored.html">Stored XSS</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cross-site-scripting/dom-based.html">DOM-based XSS</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cross-site-scripting/contexts.html">Cross-site scripting contexts</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="3">
+                    <a href="cross-site-scripting/contexts/client-side-template-injection.html">Client-side template injection</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cross-site-scripting/exploiting.html">Exploiting cross-site scripting vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cross-site-scripting/dangling-markup.html">Dangling markup injection</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cross-site-scripting/content-security-policy.html">Content security policy</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cross-site-scripting/preventing.html">How to prevent XSS</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cross-site-scripting/cheat-sheet.html">Cross-site scripting (XSS) cheat sheet</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="csrf.html">Cross-site request forgery (CSRF)</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="csrf/xss-vs-csrf.html">XSS vs CSRF</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="csrf/bypassing-token-validation.html">Bypassing CSRF token validation</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="csrf/bypassing-samesite-restrictions.html">Bypassing SameSite cookie restrictions</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="csrf/bypassing-referer-based-defenses.html">Bypassing Referer-based CSRF defenses</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="csrf/preventing.html">How to prevent CSRF vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="xxe.html">XML external entity (XXE) injection</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="xxe/xml-entities.html">XML entities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="xxe/blind.html">Finding and exploiting blind XXE vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="clickjacking.html">Clickjacking (UI redressing)</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="cors.html">Cross-origin resource sharing (CORS)</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cors/same-origin-policy.html">Same-origin policy (SOP)</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="cors/access-control-allow-origin.html">CORS and the Access-Control-Allow-Origin response header</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="ssrf.html">Server-side request forgery (SSRF)</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="ssrf/blind.html">Blind SSRF vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="request-smuggling.html">HTTP request smuggling</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="request-smuggling/finding.html">Finding HTTP request smuggling vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="request-smuggling/exploiting.html">Exploiting HTTP request smuggling vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="request-smuggling/advanced.html">Advanced request smuggling</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="3">
+                    <a href="request-smuggling/advanced/http2-exclusive-vectors.html">HTTP/2-exclusive vectors</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="3">
+                    <a href="request-smuggling/advanced/response-queue-poisoning.html">Response queue poisoning</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="3">
+                    <a href="request-smuggling/advanced/request-tunnelling.html">HTTP request tunnelling</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="3">
+                    <a href="request-smuggling/advanced/http2-downgrading.html">HTTP/2 downgrading</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="request-smuggling/browser.html">Browser-powered request smuggling</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="3">
+                    <a href="request-smuggling/browser/cl-0.html">CL.0 request smuggling</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="3">
+                    <a href="request-smuggling/browser/client-side-desync.html">Client-side desync attacks</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="3">
+                    <a href="request-smuggling/browser/pause-based-desync.html">Pause-based desync attacks</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="os-command-injection.html">OS command injection</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="server-side-template-injection.html">Server-side template injection</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="server-side-template-injection/exploiting.html">Exploiting server-side template injection vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="deserialization.html">Insecure deserialization</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="deserialization/exploiting.html">Exploiting insecure deserialization vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="file-path-traversal.html">Path traversal</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="access-control.html">Access control vulnerabilities and privilege escalation</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="access-control/idor.html">Insecure direct object references (IDOR)</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="access-control/security-models.html">Access control security models</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="authentication.html">Authentication vulnerabilities</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="authentication/password-based.html">Vulnerabilities in password-based login</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="authentication/multi-factor.html">Vulnerabilities in multi-factor authentication</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="authentication/other-mechanisms.html">Vulnerabilities in other authentication mechanisms</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="authentication/securing.html">How to secure your authentication mechanisms</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="authentication/auth-lab-usernames.html">Authentication lab usernames</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="authentication/auth-lab-passwords.html">Authentication lab passwords</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="oauth.html">OAuth 2.0 authentication vulnerabilities</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="oauth/grant-types.html">OAuth grant types</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="oauth/openid.html">OpenID Connect</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="oauth/preventing.html">How to prevent OAuth authentication vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="logic-flaws.html">Business logic vulnerabilities</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="logic-flaws/examples.html">Examples of business logic vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="websockets.html">Testing for WebSockets security vulnerabilities</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="websockets/what-are-websockets.html">What are WebSockets?</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="websockets/cross-site-websocket-hijacking.html">Cross-site WebSocket hijacking</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="dom-based.html">DOM-based vulnerabilities</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/controlling-the-web-message-source.html">Controlling the web message source</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/open-redirection.html">DOM-based open redirection</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/cookie-manipulation.html">DOM-based cookie manipulation</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/javascript-injection.html">DOM-based JavaScript injection</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/document-domain-manipulation.html">DOM-based document-domain manipulation</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/websocket-url-poisoning.html">DOM-based WebSocket-URL poisoning</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/link-manipulation.html">DOM-based link manipulation</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/web-message-manipulation.html">Web message manipulation</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/ajax-request-header-manipulation.html">DOM-based Ajax request-header manipulation</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/local-file-path-manipulation.html">DOM-based local file-path manipulation</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/client-side-sql-injection.html">DOM-based client-side SQL injection</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/html5-storage-manipulation.html">DOM-based HTML5-storage manipulation</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/client-side-xpath-injection.html">DOM-based client-side XPath injection</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/client-side-json-injection.html">DOM-based client-side JSON injection</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/dom-data-manipulation.html">DOM-data manipulation</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/denial-of-service.html">DOM-based denial of service</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="dom-based/dom-clobbering.html">DOM clobbering</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="web-cache-poisoning.html">Web cache poisoning</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="web-cache-poisoning/exploiting-design-flaws.html">Exploiting cache design flaws</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="web-cache-poisoning/exploiting-implementation-flaws.html">Exploiting cache implementation flaws</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="host-header.html">HTTP Host header attacks</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="host-header/exploiting.html">How to identify and exploit HTTP Host header vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="3">
+                    <a href="host-header/exploiting/password-reset-poisoning.html">Password reset poisoning</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="information-disclosure.html">Information disclosure vulnerabilities</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="information-disclosure/exploiting.html">How to find and exploit information disclosure vulnerabilities</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="file-upload.html">File upload vulnerabilities</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="jwt.html">JWT attacks</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td colspan="4">
+                    <a href="jwt/algorithm-confusion.html">Algorithm confusion attacks</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="video-guidelines.html">Guidelines for submitting video solutions</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="credits.html">Who is behind the Web Security Academy?</a></strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <strong><a href="dashboard.html">Welcome back!</a></strong>
+                </td>
+            </tr>
+        </table>
+        
+    </div>
+
+
+    <script src="../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="C0cfyQ31EOZwm08/ZSt72mwNtdD5PIhY"></script>
+    <script src="../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="C0cfyQ31EOZwm08/ZSt72mwNtdD5PIhY"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../content/images/logos/burp-suite-icon.svg">
+                <h4>Find vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="sql-injection.html">SQL injection</a>
+            <a href="csrf.html">Cross-site request forgery</a>
+            <a href="xxe.html">XML external entity injection</a>
+            <a href="file-path-traversal.html">Directory traversal</a>
+            <a href="ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="C0cfyQ31EOZwm08/ZSt72mwNtdD5PIhY" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/all-materials by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:04:13 GMT -->
+</html>

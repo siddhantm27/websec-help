@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/certification/how-it-works by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:05:14 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>How the Burp Suite Certified Practitioner exam process works | Web Security Academy - PortSwigger</title>
+    <meta name="description" content="Understand how the process of becoming a Burp Suite Certified Practitioner works, then book your certification exam.">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="how-it-works.html"/>
+<link rel="icon" href="../../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../../content/images/logos/apple-touch-icon.png">
+    <link href="../../content/psproducts.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-nomainsection">
+
+
+<script nonce="451aE4JJeaJFx4OpZiQQDmkPbzY/641c">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "451aE4JJeaJFx4OpZiQQDmkPbzY/641c";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+
+
+
+
+    <nav class="navigation-top">
+            <input type="checkbox" id="nav-main-enterprise">
+            <label for="nav-main-enterprise">
+                <span>Academy home</span>
+                <span class="icon-arrow-head-down"></span>
+            </label>
+            <ul>
+                <li><a href="../dashboard.html">Dashboard</a></li>
+                <li><a href="../learning-paths.html">Learning paths</a></li>
+                <li>
+                    <input type="checkbox" id="nav-main-academy-topics">
+                    <label for="nav-main-academy-topics">
+                        <span>Latest topics</span>
+                        <span class="icon-arrow-head-down"></span>
+                    </label>
+                    <div>
+                        <a href="../request-smuggling.html">Request smuggling</a>
+                        <a href="../web-cache-deception.html">Web cache deception</a>
+                        <a href="../llm-attacks.html">Web LLM attacks</a>
+                        <a href="../api-testing.html">API testing</a>
+                        <a href="../nosql-injection.html">NoSQL injection</a>
+                        <a href="../all-topics.html">View all topics</a>
+                    </div>
+                </li>
+                <li>
+                    <input type="checkbox" id="nav-main-academy-all-content">
+                    <label for="nav-main-academy-all-content">
+                        <span>All content</span>
+                        <span class="icon-arrow-head-down"></span>
+                    </label>
+                    <div>
+                        <a href="../all-labs.html">All labs</a>
+                        <a href="../all-topics.html">All topics</a>
+                        <a href="../mystery-lab-challenge.html">Mystery labs</a>
+                    </div>
+                </li>
+                <li>
+                    <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                    <label for="nav-main-academy-hall-of-fame">
+                        <span>Hall of Fame</span>
+                        <span class="icon-arrow-head-down"></span>
+                    </label>
+                    <div>
+                        <a href="../hall-of-fame.html">Leaderboard</a>
+                        <a href="../getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                        <a href="../getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                        <a href="../getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                    </div>
+                </li>
+                <li><a href="../getting-started.html">Get started</a></li>
+                <li>
+                     <input type="checkbox" id="nav-main-academy-certification">
+                     <label for="nav-main-academy-certification">
+                         <span>Get certified</span>
+                         <span class="icon-arrow-head-down"></span>
+                     </label>
+                         <div>
+                            <a href="../certification.html">Get certified</a>
+                            <a href="how-to-prepare.html">How to prepare</a>
+                            <a href="how-it-works.html">How it works</a>
+                            <a href="practice-exam.html">Practice exam</a>
+                            <a href="exam-hints-and-guidance.html">Exam hints and guidance</a>
+                            <a href="how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                            <a href="frequently-asked-questions.html">FAQs</a>
+                            <a href="../certification.html#validate-your-certification">Validate your certification</a>
+                         </div>
+                </li>
+            </ul>
+        </nav>
+    
+
+
+<div no-keyword-injection="" class="wrapper" id="certification">
+
+    <div class="hero theme-pro-2">
+
+        <div class="container-columns">
+            <div>
+                <h2 cms-ignore-validation="HEADING_CAPITALIZATION,DUPLICATE_HEADINGS" id="get-burp-suite-certified-for">Get Burp Suite Certified for <span widget-id="burp-certificationstartingprice"></span></h2>
+                <h1 class="heading1-white heading-2" id="how-to-get-your-certification"><span>How to </span>get your certification</h1>
+                <div class="container-buttons-left">
+                    <a class="button-orange" href="https://portswigger.net/buy/certification">Get certified</a>
+                    <a class="button-white" href="how-to-prepare.html">Get prepared</a>
+                </div>
+            </div>
+            <img cms-ignore-validation="UNIQUE_IMG_ALT_TEXT" class="desktop-show" alt="PortSwigger" src="images/certified-secondary-hero.png">
+        </div>
+
+    </div>
+
+    <div class="notification-tab-teal-50">
+        <p>Ready to take the exam?
+            <a href="how-it-works.html#what-the-exam-involves">Here's what you need to know.</a></p>
+    </div>
+
+    <div class="section theme-white text-center">
+        <p class="intro">The Burp Suite Certified Practitioner exam is a challenging practical examination designed to demonstrate your web security testing knowledge and Burp Suite skills. To pass the certification exam, you are required to
+            demonstrate an in-depth knowledge of a wide range of vulnerability classes, and the Burp Suite functionality required to support you in discovery, understanding, and exploitation.
+        </p>
+    </div>
+
+    <div class="sticky-side-menu-white">
+        <div>
+            <aside>
+                <h4 cms-ignore-validation="HEADING_CAPITALIZATION">In this guide</h4>
+
+                <a class="sticky-menu-link" href="how-it-works.html#overview">Overview</a>
+                <a class="sticky-menu-link" href="how-it-works.html#purchasing-your-exam">Purchasing your exam</a>
+                <a class="sticky-menu-link" href="how-it-works.html#preparing-for-the-exam">Preparing for the exam</a>
+                <a class="sticky-menu-link" href="how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                <a class="sticky-menu-link" href="how-it-works.html#exam-conditions">Exam conditions</a>
+                <a class="sticky-menu-link" href="how-it-works.html#requirements">Requirements</a>
+                <a class="sticky-menu-link" href="how-it-works.html#system">System</a>
+                <a class="sticky-menu-link" href="how-it-works.html#your-exam-results">Your exam results</a>
+
+            </aside>
+            <span>
+
+                <div class="section theme-community-6">
+                    <h3 id="overview">Overview</h3>
+                    <p>The exam follows a process that is similar to the labs in the Web Security Academy, and the practice exam. However, in order to take the exam you first need to go through our automated identity verification process.
+                    </p>
+                    <p>To become a Burp Suite Certified Practitioner, you need to work through the following steps:</p>
+
+                    <ol>
+                        <li><p>Purchase your certification exam.</p></li>
+                        <li><p>Check the system requirements.</p></li>
+                        <li><p>Configure your device to work with our proctoring software, and upload your ID documents.</p></li>
+                        <li><p>Take your certification exam.</p></li>
+                        <li><p>Get your certification results.</p></li>
+                    </ol>
+                    <h4>You'll need a Burp Suite Professional subscription to take the exam.</h4>
+                    <p>To undertake the certification exam, you will need access to an active subscription of Burp Suite Professional. <a href="https://portswigger.net/buy/pro">Get a subscription to Burp
+                        Suite Professional now</a>, if you don't already have access to a separate license.
+                    </p>
+                </div>
+
+                <div class="section theme-white">
+                    <h3 id="purchasing-your-exam">Purchasing your exam</h3>
+                    <p>You can purchase a Burp Suite Certified Practitioner exam from your PortSwigger user account. Once you have purchased your exam, you will need to configure your device to work with our proctoring service. This service also verifies your identity before your exam starts.</p>
+                    <h4>How does an automated proctoring service work?</h4>
+                    <p>The process is simple, and involves an ID check by our automated proctor. You will be unable to pass the exam until we have verified your ID.
+                    </p>
+                    <div class="container-buttons-left">
+                        <a class="chevron-after" href="https://portswigger.net/buy/certification">Purchase your Burp Suite Certified Practitioner exam now</a>
+                    </div>
+                </div>
+
+                <div class="banner-layered theme-pro-2 spacer">
+                    <div>
+                        <h2 cms-ignore-validation="HEADING_TOO_LONG,HEADING_CAPITALIZATION" class="heading2-white " id="overall-my-experience-was-totally-crazy-fun-i-don-t-think-i-ve-ever-taken-an-exam-like-this-since-the-oscp-it-was-always-a-wild-ride-and-one-of-the-most-enjoyable">"Overall my
+                            experience was totally crazy fun, I don't think I've ever taken an exam like this since the OSCP. It was always a wild ride and one of the most enjoyable."
+                        </h2>
+                        <h4>Johnny Villarreal</h4>
+                    </div>
+                </div>
+
+                <div class="section theme-community-6 spacer">
+                    <h3 id="using-our-proctoring-service">Using our proctoring service</h3>
+                    <p>In order to complete your exam, you need to configure your device to work with our proctoring service. You also need to upload an image of a government-issued photo ID. This can be a driver's license, passport, military identification card, or another form of acceptable ID. </p>
+                    <p>Make sure that your name and photo are visible and that the image is clear and bright enough to be easily read.</p>
+                </div>
+
+                <div class="section theme-white">
+                    <h3 id="preparing-for-the-exam">Preparing for the exam</h3>
+                    <p>Before you take your real exam, we strongly advise that you work through our four preparation steps. They have been designed to thoroughly prepare you, by testing the wide variety of both vulnerabilities and skills that you
+                        will be required to demonstrate to successfully pass the exam.
+                    </p>
+                    <p>The preparation steps should also help you to gauge the difficulty level of the exam, and therefore judge for yourself whether you are at the required skill level to gain the certification.</p>
+                    <p>There are no restrictions on the amount of times you may complete the preparation steps.</p>
+                    <div class="container-buttons-left">
+                        <a class="button-orange" href="how-to-prepare.html">Go to exam preparation steps</a>
+                    </div>
+                </div>
+
+                <div class="section theme-community-6">
+                    <h3 id="what-the-exam-involves">What the exam involves</h3>
+                    <p>In order to take the exam, you will first need to log in to your PortSwigger user account. You will find a button labeled "Take exam". By clicking this button, you will begin the official exam process. Once you have successfully completed the automated proctoring session, your exam will begin.
+                    </p>
+                    <p>You will have four hours to complete the Burp Suite Certified Practitioner exam. There are two applications, and each application contains deliberate vulnerabilities. This means that each application
+                        can be completed in three stages:
+                    </p>
+                    <ol>
+                        <li><p><strong>Stage 1</strong>: Access any user account.</p></li>
+                        <li><p><strong>Stage 2</strong>: Use your user account to access the admin interface, perhaps by elevating your privileges or compromising the administrator account.</p></li>
+                        <li><p><strong>Stage 3</strong>: Use the admin interface to read the contents of /home/carlos/secret from the server's filesystem, and submit it using "submit solution".</p></li>
+                    </ol>
+                    <p>While exploiting each application, you will gain access to powerful functionality. If you use this to delete your own account or a core system component, you may make your exam impossible to complete.</p>
+                    <p>There is always an administrator account with the username "<strong>administrator</strong>", plus a lower-privileged account usually called "<strong>carlos</strong>". If you find a
+                        username enumeration vulnerability, you may be able to break into a low-privileged account using the following <a href="../authentication/auth-lab-usernames.html">
+                            username list</a> and <a href="../authentication/auth-lab-passwords.html">password list</a>.
+                    </p>
+                    <p>Each application has up to one active user, who will be logged in either as a user or an administrator. You can assume that they will visit the homepage of the site every 15 seconds, and click any
+                        links in any emails they receive from the application. You can use exploit server's "send to victim" functionality to target them with reflected vulnerabilities.
+                    </p>
+                    <p>If you find an SSRF vulnerability, you can use it to read files by accessing an internal-only service, running on localhost on port 6566.</p>
+                    <p>Host header attacks are fair game, but the _lab and _lab_analytics cookies are part of the core exam functionality - please don't waste your time tampering with them.</p>
+                    <p>To understand the skills required to take this exam, please refer to the <a href="how-to-prepare.html">prepare for the exam</a> page.</p>
+                </div>
+
+                <div class="section theme-white">
+                    <h3 id="exam-conditions">Exam conditions</h3>
+                    <p>The integrity of the Burp Suite Certified Practitioner exam is what makes it so valuable, so we have a robust system for identifying and banning people who attempt to cheat. Here's what you need to know:</p>
+                    <ul>
+                        <li><p>Any cheating will result in a permanent ban.</p></li>
+                        <li><p>You must use a Burp project file for the full period of the exam, and submit that project file for analysis.</p></li>
+                        <li><p>You must complete the exam without help from anyone.</p></li>
+                        <li><p>You must not share your exam addresses with anyone.</p></li>
+                    </ul>
+                </div>
+
+                <div class="section theme-community-6">
+                    <h3 id="requirements">Requirements</h3>
+                    <p>The following sections outline the requirements for the exam. Please make sure you read these sections thoroughly before purchasing your certification exam.</p>
+                </div>
+
+                <div class="section theme-community-6">
+                    <h4>Proficiency/skill</h4>
+                    <p>To pass the certification exam, you are required to demonstrate an in-depth knowledge of a wide range of vulnerability classes, and the Burp Suite functionality required to support you in discovery, understanding, and exploitation.</p>
+                    <p>To get ready for the challenges you'll face in the certification exam, please refer to the <a href="how-to-prepare.html">how to prepare for the exam</a> page.</p>
+                </div>
+
+                <div class="section theme-community-6">
+                    <h4>Language</h4>
+                    <p>All exam materials will be presented in English. If you can comfortably read the learning materials within the Web Security Academy, and all of the exam guidance pages, the exam will not present
+                        you with any language-based challenges.
+                    </p>
+                </div>
+
+                <div class="section theme-white">
+                    <h3 id="system">System</h3>
+                    <p>Operating system:</p>
+                    <ul>
+                        <li><p>MacOS X 10.5 or higher.</p></li>
+                        <li><p>Windows Vista or higher.</p></li>
+                        <li><p>Linux</p></li>
+                        <li><p>ChromeOS.</p></li>
+                    </ul>
+                    <h4>Browser:</h4>
+                    <ul>
+                        <li><p>The latest version of Google Chrome - please disable your pop-up blocker.</p></li>
+                    </ul>
+                    <h4>Hardware:</h4>
+                    <ul>
+                        <li><p>Desktop or laptop.</p></li>
+                        <li><p>Built-in or external webcam.</p></li>
+                        <li><p>Built-in or external microphone.</p></li>
+                    </ul>
+                    <p>Please note that tablets and mobile devices are not supported.</p>
+                    <h4>Internet:</h4>
+                    <ul>
+                        <li><p>An upload and download speed of 2Mbps.</p></li>
+                        <li><p>Hot spots are not recommended because a reliable internet connection is essential.</p></li>
+                    </ul>
+                    <h4>Software:</h4>
+                    <ul>
+                        <li><p>Burp Suite Professional. Please note that it will not be possible for you to complete the exam without Burp Suite Professional.</p></li>
+                        <li><p>In addition, we require that you use a project file, which we may request up to a week after you have taken the exam to confirm your certificate or investigate any reported issues.</p></li>
+                    </ul>
+                    <div class="container-buttons-left">
+                        <a class="chevron-after" href="https://portswigger.net/buy/pro">Get Burp Suite Professional</a>
+                    </div>
+                </div>
+
+                <div class="section theme-community-6 spacer">
+                    <h3 id="your-exam-results">Your exam results</h3>
+                    <p>We will notify you by email with your results. If you successfully pass the Burp Suite Certified Practitioner exam, you will receive a link to your certificate by email. If you failed the exam, we will
+                        let you know by email. We will also provide you with resources and guidance to help you prepare for re-booking your certification exam.
+                    </p>
+                    <p>If you haven't received your results after 3-5 working days, log in to your PortSwigger user account to check the status of your exam.</p>
+                    <p>If you successfully pass the exam, and become a Burp Suite Certified Practitioner, make sure you let the world know! Add your certification status to your social channels and profiles, and let
+                        your employers and prospective employers know.
+                    </p>
+                </div>
+
+                <div class="section theme-white">
+                    <h3 id="verifying-your-exam-results">Verifying your exam results</h3>
+                    <p>If your employer (or prospective employer) wishes to validate your certification, you will need to share the unique code on your certificate and the <a href="verify-your-certification.html">
+                        link to the validation platform</a>.
+                    </p>
+                </div>
+
+            </span>
+        </div>
+    </div>
+
+    <div class="section-full-width theme-navy-9 spacer">
+        <div class="container-cards-white-medium-space-between">
+            <a href="how-it-works.html">
+                <h4>How the exam works</h4>
+                <div class="chevron-after">Read more</div>
+            </a>
+            <a href="exam-hints-and-guidance.html">
+                <h4>Exam hints and guidance</h4>
+                <div class="chevron-after">Read more</div>
+            </a>
+            <a href="how-it-works.html#what-the-exam-involves">
+                <h4>What the exam involves</h4>
+                <div class="chevron-after">Read more</div>
+            </a>
+            <a href="https://portswigger.net/buy/certification">
+                <h4>Buy your BSCP exam</h4>
+                <div class="chevron-after">Buy now</div>
+            </a>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+    <script src="../../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="451aE4JJeaJFx4OpZiQQDmkPbzY/641c"></script>
+
+
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="../cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="../sql-injection.html">SQL injection</a>
+            <a href="../csrf.html">Cross-site request forgery</a>
+            <a href="../xxe.html">XML external entity injection</a>
+            <a href="../file-path-traversal.html">Directory traversal</a>
+            <a href="../ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="451aE4JJeaJFx4OpZiQQDmkPbzY/641c" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/certification/how-it-works by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:05:14 GMT -->
+</html>

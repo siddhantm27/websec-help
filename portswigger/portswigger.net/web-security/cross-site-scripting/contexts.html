@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from portswigger.net/web-security/cross-site-scripting/contexts by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:05:46 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Cross-site scripting contexts | Web Security Academy</title>
+    <meta content="When testing for reflected and stored XSS, a key task is to identify the XSS context: The location within the response where attacker-controllable data ..." name="description">
+    <!-- Twitter data -->
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="">
+<meta name="twitter:image" content="../../content/images/logos/academy-twittercard.png">
+    <meta name="twitter:site" content="@WebSecAcademy">
+
+<!-- Open Graph data -->
+<meta property="og:title" content=""/>
+<meta property="og:url" content="https://portswigger.net/"/>
+<meta property="og:image" content="../../content/images/logos/academy-twittercard.png"/>
+<meta property="og:type" content="website"/>
+<link rel="canonical" href="contexts.html"/>
+<link rel="icon" href="../../content/images/logos/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon" href="../../content/images/logos/apple-touch-icon.png">
+    <link href="../../content/pswebsecacademy.css" rel="stylesheet" type="text/css">
+    <link rel="preload" href="../../content/fonts/ps-icons-small/ps-icons-small5722.woff?td2uot" as="font" crossorigin="anonymous">
+<link rel="preload" href="../../content/fonts/ps-main/ps-icons6208.woff?l1la2n" as="font" crossorigin="anonymous">
+</head>
+<body class="theme-">
+
+
+<script nonce="KGwqy6lsrxmyXbzwpjVfTzffUrDKtnhm">
+    (function (window, document, dataLayerName, id) {
+        window[dataLayerName] = window[dataLayerName] || [], window[dataLayerName].push({
+            start: (new Date).getTime(),
+            event: "stg.start"
+        });
+        var scripts = document.getElementsByTagName('script')[0], tags = document.createElement('script');
+        var qP = [];
+        dataLayerName !== "dataLayer" && qP.push("data_layer_name=" + dataLayerName), tags.nonce = "KGwqy6lsrxmyXbzwpjVfTzffUrDKtnhm";
+        var qPString = qP.length > 0 ? ("?" + qP.join("&")) : "";
+        tags.async = !0, tags.src = "https://ps.containers.piwik.pro/" + id + ".js" + qPString,
+            scripts.parentNode.insertBefore(tags, scripts);
+        !function (a, n, i) {
+            a[n] = a[n] || {};
+            for (var c = 0; c < i.length; c++) !function (i) {
+                a[n][i] = a[n][i] || {}, a[n][i].api = a[n][i].api || function () {
+                    var a = [].slice.call(arguments, 0);
+                    "string" == typeof a[0] && window[dataLayerName].push({
+                        event: n + "." + i + ":" + a[0],
+                        parameters: [].slice.call(arguments, 1)
+                    })
+                }
+            }(i[c])
+        }(window, "ppms", ["tm", "cm"]);
+    })(window, document, 'dataLayer', '287552c2-4917-42e0-8982-ba994a2a73d7');
+</script>
+
+
+
+<header class="page-header" id="top">
+    <div class="container">
+    <a class="logo" href="https://portswigger.net/"></a>
+    <div class="header-right">
+        <div class="login-buttons">
+            <a class="button-orange-small" href="https://portswigger.net/users/youraccount/personaldetails">My account</a>
+        </div>
+        
+
+    <input type="checkbox" id="hamburger-mobile" class="hamburger-input-mobile">
+    <input type="radio" id="hamburger-desktop" class="hamburger-input-desktop" name="mega-nav-input">
+    <div class="hamburger-menu-mobile">
+        <label class="hamburger-menu-label header-hidden" for="hamburger-mobile">
+            <span class="hamburger-layers"></span>
+        </label>
+    </div>
+    <div class="mega-nav">
+        <input type="radio" id="mega-nav-close" class="mega-nav-input-close" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-1" class="mega-nav-input-1" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-2" class="mega-nav-input-2" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-6" class="mega-nav-input-6" name="mega-nav-input">
+        <input type="radio" id="mega-nav-label-7" class="mega-nav-input-7" name="mega-nav-input">
+
+        <label for="mega-nav-close" class="mega-nav-close"></label>
+
+        <label class="mega-nav-label mega-nav-label-1" for="mega-nav-label-1">
+            <span class="mega-nav-text">Products</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <label class="mega-nav-label mega-nav-label-2" for="mega-nav-label-2">
+            <span class="mega-nav-text">Solutions</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <a class="mega-nav-link" href="https://portswigger.net/research"><span class="mega-nav-text">Research</span></a>
+        <a class="mega-nav-link" href="https://portswigger.net/web-security"><span class="mega-nav-text">Academy</span></a>
+        <label class="mega-nav-label mega-nav-label-6" for="mega-nav-label-6">
+            <span class="mega-nav-text">Support</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+
+        <label class="mega-nav-label mega-nav-label-7 header-hidden" for="mega-nav-label-7">
+            <span class="mega-nav-text">Company</span>
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <div class="hamburger-menu-desktop">
+            <label class="hamburger-menu-label header-show" for="hamburger-desktop">
+                <span class="hamburger-layers"></span>
+            </label>
+            <div>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+                <a class="hamburger-menu-desktop-link hamburger-menu-desktop-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+            </div>
+        </div>
+
+        <a class="mega-nav-link header-hidden" href="https://portswigger.net/users/youraccount"><span class="mega-nav-text">My account</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-1" href="https://portswigger.net/customers"><span class="mega-nav-text">Customers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-3" href="https://portswigger.net/about"><span class="mega-nav-text">About</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-4" href="https://portswigger.net/blog"><span class="mega-nav-text">Blog</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-5" href="https://portswigger.net/careers"><span class="mega-nav-text">Careers</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-6" href="https://portswigger.net/legal"><span class="mega-nav-text">Legal</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-7" href="https://portswigger.net/contact"><span class="mega-nav-text">Contact</span></a>
+        <a class="hamburger-menu-link hamburger-menu-link-8" href="https://portswigger.net/support/reseller-faqs"><span class="mega-nav-text">Resellers</span></a>
+
+        <div class="mega-nav-container">
+
+            <div class="mega-nav-content mega-nav-content-1">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <a href="https://portswigger.net/burp/enterprise" class="link-block-white">
+                                <img src="../../content/images/svg/icons/enterprise.svg" alt="Burp Suite DAST">
+                                <span><strong>Burp Suite DAST</strong></span>
+                                <span>The enterprise-enabled dynamic web vulnerability scanner.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/pro" class="link-block-white">
+                                <img src="../../content/images/svg/icons/professional.svg" alt="Burp Suite Professional">
+                                <span><strong>Burp Suite Professional</strong></span>
+                                <span>The world's #1 web penetration testing toolkit.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp/communitydownload" class="link-block-white">
+                                <img src="../../content/images/svg/icons/community.svg" alt="Burp Suite Community Edition">
+                                <span><strong>Burp Suite Community Edition</strong></span>
+                                <span>The best manual tools to start web security testing.</span>
+                            </a>
+
+                            <a href="https://portswigger.net/burp" class="chevron-after">View all product editions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/vulnerability-scanner">
+                                    <p><strong>Burp Scanner</strong></p>
+                                    <p>Burp Suite's web vulnerability scanner</p>
+                                    <img src="../../mega-nav/images/burp-suite-scanner.jpg" alt="Burp Suite's web vulnerability scanner'">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-2">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/solutions/attack-surface-visibility" class="link-block-white">
+                                    <span><strong>Attack surface visibility</strong></span>
+                                    <span>Improve security posture, prioritize manual testing, free up time.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/ci-driven-scanning" class="link-block-white">
+                                    <span><strong>CI-driven scanning</strong></span>
+                                    <span>More proactive security - find and fix vulnerabilities earlier.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions" class="link-block-white">
+                                    <span><strong>Application security testing</strong></span>
+                                    <span>See how our software enables the world to secure the web.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/devsecops" class="link-block-white">
+                                    <span><strong>DevSecOps</strong></span>
+                                    <span>Catch critical bugs; ship more secure software, more quickly.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/penetration-testing" class="link-block-white">
+                                    <span><strong>Penetration testing</strong></span>
+                                    <span>Accelerate penetration testing - find more bugs, more quickly.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/automated-security-testing" class="link-block-white">
+                                    <span><strong>Automated scanning</strong></span>
+                                    <span>Scale dynamic scanning. Reduce risk. Save time/money.</span>
+                                </a>
+
+                                <a href="https://portswigger.net/solutions/bug-bounty-hunting" class="link-block-white">
+                                    <span><strong>Bug bounty hunting</strong></span>
+                                    <span>Level up your hacking and earn more bug bounties.</span>
+                                </a>
+                                <a href="https://portswigger.net/solutions/compliance" class="link-block-white">
+                                    <span><strong>Compliance</strong></span>
+                                    <span>Enhance security monitoring to comply with confidence.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/solutions" class="chevron-after">View all solutions</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/enterprise/resources/enterprise-edition-vs-professional">
+                                    <p><strong>Product comparison</strong></p>
+                                    <p>What's the difference between Pro and Enterprise Edition?</p>
+                                    <img src="../../mega-nav/images/burp-suite.jpg" alt="Burp Suite Professional vs Burp Suite Enterprise Edition">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="mega-nav-content mega-nav-content-6">
+                <div class="section-white-medium-no-padding">
+                    <div class="container-columns-66-percent-right">
+                        <div>
+                            <div class="container-columns">
+                                <a href="https://portswigger.net/support" class="link-block-white">
+                                    <span><strong>Support Center</strong></span>
+                                    <span>Get help and advice from our experts on all things Burp.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation" class="link-block-white">
+                                    <span><strong>Documentation</strong></span>
+                                    <span>Tutorials and guides for Burp Suite.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/desktop/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Professional</strong></span>
+                                    <span>Get started with Burp Suite Professional.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/documentation/enterprise/getting-started" class="link-block-white">
+                                    <span><strong>Get Started - Enterprise</strong></span>
+                                    <span>Get started with Burp Suite Enterprise Edition.</span>
+                                </a>
+                                <a href="https://forum.portswigger.net/" class="link-block-white">
+                                    <span><strong>User Forum</strong></span>
+                                    <span>Get your questions answered in the User Forum.</span>
+                                </a>
+                                <a href="https://portswigger.net/burp/releases" class="link-block-white">
+                                    <span><strong>Downloads</strong></span>
+                                    <span>Download the latest version of Burp Suite.</span>
+                                </a>
+                            </div>
+                            <a href="https://portswigger.net/support" class="chevron-after">Visit the Support Center</a>
+                        </div>
+
+                        <div>
+                            <div class="container-cards-lists-white">
+                                <a href="https://portswigger.net/burp/releases">
+                                    <p><strong>Downloads</strong></p>
+                                    <p>Download the latest version of Burp Suite.</p>
+                                    <img src="../../mega-nav/images/latest-burp-suite-software-download.jpg" alt="The latest version of Burp Suite software for download">
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</div>
+</header>
+
+            <nav class="navigation-top">
+                <input type="checkbox" id="nav-main-enterprise">
+                <label for="nav-main-enterprise">
+                    <span>Academy home</span>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="../dashboard.html">Dashboard</a></li>
+                    <li><a href="../learning-paths.html">Learning paths</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-topics">
+                        <label for="nav-main-academy-topics">
+                            <span>Latest topics</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../request-smuggling.html">Request smuggling</a>
+                            <a href="../web-cache-deception.html">Web cache deception</a>
+                            <a href="../llm-attacks.html">Web LLM attacks</a>
+                            <a href="../api-testing.html">API testing</a>
+                            <a href="../nosql-injection.html">NoSQL injection</a>
+                            <a href="../all-topics.html">View all topics</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-all-content">
+                        <label for="nav-main-academy-all-content">
+                            <span>All content</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../all-labs.html">All labs</a>
+                            <a href="../all-topics.html">All topics</a>
+                            <a href="../mystery-lab-challenge.html">Mystery labs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-hall-of-fame">
+                        <label for="nav-main-academy-hall-of-fame">
+                            <span>Hall of Fame</span>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                            <a href="../hall-of-fame.html">Leaderboard</a>
+                            <a href="../getting-started/kamil-vavra.html">Interview - Kamil Vavra</a>
+                            <a href="../getting-started/johnny-villarreal.html">Interview - Johnny Villarreal</a>
+                            <a href="../getting-started/andres-rauschecker.html">Interview - Andres Rauschecker</a>
+                        </div>
+                    </li>
+                    <li><a href="../getting-started.html">Get started</a></li>
+                    <li>
+                        <input type="checkbox" id="nav-main-academy-certification">
+                        <label for="nav-main-academy-certification">
+                             <span>Get certified</span>
+                             <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <div>
+                             <a href="../certification.html">Get certified</a>
+                             <a href="../certification/how-to-prepare.html">How to prepare</a>
+                             <a href="../certification/how-it-works.html">How it works</a>
+                             <a href="../certification/practice-exam.html">Practice exam</a>
+                             <a href="../certification/exam-hints-and-guidance.html">Exam hints and guidance</a>
+                             <a href="../certification/how-it-works.html#what-the-exam-involves">What the exam involves</a>
+                             <a href="../certification/frequently-asked-questions.html">FAQs</a>
+                             <a href="../certification.html#validate-your-certification">Validate your certification</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        
+<div class="wrapper-large">
+    <div class="container-academy">
+
+        <input class="nav-lhs-toggle-input" type="checkbox" id="nav-lhs-toggle">
+        <aside class="nav-lhs" id="tree-nav" tree-nav-version="16">
+            <nav class="nav-lhs-scrollable">
+                <label class="nav-lhs-toggle-label" for="nav-lhs-toggle"></label>
+                
+
+        <a class="nav-back" href="../all-topics.html">
+            <span class="icon-arrow-head-left"></span>
+            Back to all topics
+        </a>
+        <input type="checkbox" id="nav-main-id">
+        <label class="nav-label" for="nav-main-id">
+            <span class="icon-arrow-head-down"></span>
+        </label>
+        <h3>Cross-site scripting (XSS)</h3>
+        <ul>
+            <li><a href="../cross-site-scripting.html#what-is-cross-site-scripting-xss">What is XSS?</a></li>
+            <li><a href="../cross-site-scripting.html#how-does-xss-work">How does XSS work?</a></li>
+            <li><a href="../cross-site-scripting.html#impact-of-xss-vulnerabilities">Impact of an attack</a></li>
+            <li><a href="../cross-site-scripting.html#xss-proof-of-concept">Proof of concept</a></li>
+            <li><a href="../cross-site-scripting.html#how-to-find-and-test-for-xss-vulnerabilities">Testing</a></li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-1">
+                <label for="sub-nav-id-1">
+                    <a href="reflected.html">Reflected XSS</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="reflected.html#impact-of-reflected-xss-attacks">Impact</a></li>
+                    <li><a href="reflected.html#reflected-xss-in-different-contexts">Contexts</a></li>
+                    <li><a href="reflected.html#how-to-find-and-test-for-reflected-xss-vulnerabilities">Testing</a></li>
+                    <li><a href="reflected.html#common-questions-about-reflected-cross-site-scripting">FAQs</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-2">
+                <label for="sub-nav-id-2">
+                    <a href="stored.html">Stored XSS</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="stored.html#impact-of-stored-xss-attacks">Impact</a></li>
+                    <li><a href="stored.html#stored-xss-in-different-contexts">Contexts</a></li>
+                    <li><a href="stored.html#how-to-find-and-test-for-stored-xss-vulnerabilities">Testing for vulnerabilities</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-3">
+                <label for="sub-nav-id-3">
+                    <a href="dom-based.html">DOM-based XSS</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-4">
+                        <label for="sub-nav-id-4">
+                            <a href="dom-based.html#how-to-test-for-dom-based-cross-site-scripting">Testing</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="dom-based.html#testing-html-sinks">HTML sinks</a></li>
+                            <li><a href="dom-based.html#testing-javascript-execution-sinks">JavaScript execution sinks</a></li>
+                            <li><a href="dom-based.html#testing-for-dom-xss-using-dom-invader">Using DOM Invader</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-5">
+                        <label for="sub-nav-id-5">
+                            <a href="dom-based.html#exploiting-dom-xss-with-different-sources-and-sinks">Exploiting</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li>
+                                <input type="checkbox" id="sub-nav-id-6">
+                                <label for="sub-nav-id-6">
+                                    <a href="dom-based.html#sources-and-sinks-in-third-party-dependencies">In third-party dependencies</a>
+                                    <span class="icon-arrow-head-down"></span>
+                                </label>
+                                <ul>
+                                    <li><a href="dom-based.html#dom-xss-in-jquery">jQuery</a></li>
+                                    <li><a href="dom-based.html#dom-xss-in-angularjs">AngularJS</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="dom-based.html#dom-xss-combined-with-reflected-and-stored-data">DOM
+                                XSS combined with reflected and stored data</a></li>
+                            <li><a href="dom-based.html#which-sinks-can-lead-to-dom-xss-vulnerabilities">Sinks</a></li>
+                            <li><a href="dom-based.html#how-to-prevent-dom-xss-vulnerabilities">Preventing</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-7">
+                <label for="sub-nav-id-7">
+                    <a href="contexts.html">XSS contexts</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="contexts.html#xss-between-html-tags">Between HTML tags</a></li>
+                    <li><a href="contexts.html#xss-in-html-tag-attributes">In HTML tag attributes</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-8">
+                        <label for="sub-nav-id-8">
+                            <a href="contexts.html#xss-into-javascript">JavaScript</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="contexts.html#terminating-the-existing-script">Terminating the existing script</a></li>
+                            <li><a href="contexts.html#breaking-out-of-a-javascript-string">Breaking out of a string</a></li>
+                            <li><a href="contexts.html#making-use-of-html-encoding">Using HTML-encoding</a></li>
+                            <li><a href="contexts.html#xss-in-javascript-template-literals">Template literals</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-9">
+                        <label for="sub-nav-id-9">
+                            <a href="contexts/client-side-template-injection.html">Client-side template injection</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="contexts/client-side-template-injection.html#what-is-the-angularjs-sandbox">AngularJS sandbox</a></li>
+                            <li>
+                                <input type="checkbox" id="sub-nav-id-10">
+                                <label for="sub-nav-id-10">
+                                    <a href="contexts/client-side-template-injection.html#how-does-an-angularjs-sandbox-escape-work">AngularJS sandbox escape</a>
+                                    <span class="icon-arrow-head-down"></span>
+                                </label>
+                                <ul>
+                                    <li><a href="contexts/client-side-template-injection.html#constructing-an-advanced-angularjs-sandbox-escape">Constructing an advanced escape</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="sub-nav-id-11">
+                                <label for="sub-nav-id-11">
+                                    <a href="contexts/client-side-template-injection.html#how-does-an-angularjs-csp-bypass-work">AngularJS CSP bypass</a>
+                                    <span class="icon-arrow-head-down"></span>
+                                </label>
+                                <ul>
+                                    <li><a href="contexts/client-side-template-injection.html#bypassing-a-csp-with-an-angularjs-sandbox-escape">Bypassing a CSP with an AngularJS sandbox escape</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="contexts/client-side-template-injection.html#how-to-prevent-client-side-template-injection-vulnerabilities">Preventing</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-12">
+                <label for="sub-nav-id-12">
+                    <a href="exploiting.html">Exploiting XSS vulnerabilities</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="exploiting.html#exploiting-cross-site-scripting-to-steal-cookies">To steal cookies</a></li>
+                    <li><a href="exploiting.html#exploiting-cross-site-scripting-to-capture-passwords">To capture passwords</a></li>
+                    <li><a href="exploiting.html#exploiting-cross-site-scripting-to-bypass-csrf-protections">To perform CSRF</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-13">
+                <label for="sub-nav-id-13">
+                    <a href="dangling-markup.html">Dangling markup injection</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="dangling-markup.html#how-to-prevent-dangling-markup-attacks">Preventing attacks</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-14">
+                <label for="sub-nav-id-14">
+                    <a href="content-security-policy.html">Content security policy (CSP)</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="content-security-policy.html#mitigating-xss-attacks-using-csp">Mitigating XSS attacks</a></li>
+                    <li><a href="content-security-policy.html#mitigating-dangling-markup-attacks-using-csp">Mitigating dangling markup attacks</a></li>
+                    <li><a href="content-security-policy.html#bypassing-csp-with-policy-injection">Bypassing CSP</a></li>
+                    <li><a href="content-security-policy.html#protecting-against-clickjacking-using-csp">Protecting against clickjacking</a></li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" id="sub-nav-id-15">
+                <label for="sub-nav-id-15">
+                    <a href="preventing.html">Preventing XSS attacks</a>
+                    <span class="icon-arrow-head-down"></span>
+                </label>
+                <ul>
+                    <li><a href="preventing.html#encode-data-on-output">Encode data on output</a></li>
+                    <li>
+                        <input type="checkbox" id="sub-nav-id-16">
+                        <label for="sub-nav-id-16">
+                            <a href="preventing.html#validate-input-on-arrival">Validate input on arrival</a>
+                            <span class="icon-arrow-head-down"></span>
+                        </label>
+                        <ul>
+                            <li><a href="preventing.html#whitelisting-vs-blacklisting">Whitelisting vs blacklisting</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="preventing.html#allowing-safe-html">Allowing "safe" HTML</a></li>
+                    <li><a href="preventing.html#how-to-prevent-xss-using-a-template-engine">Using a template engine</a></li>
+                    <li><a href="preventing.html#how-to-prevent-xss-in-php">In PHP</a></li>
+                    <li><a href="preventing.html#how-to-prevent-xss-client-side-in-javascript">In JavaScript</a></li>
+                    <li><a href="preventing.html#how-to-prevent-xss-in-jquery">In jQuery</a></li>
+                    <li><a href="preventing.html#mitigating-xss-using-content-security-policy-csp">Using CSP</a></li>
+                </ul>
+            </li>
+            <li><a href="cheat-sheet.html">Cheat sheet</a></li>
+            <li><a href="../all-labs.html#cross-site-scripting">View all XSS labs</a></li>
+        </ul>
+    
+            </nav>
+        </aside>
+        <main>
+            
+
+
+
+<ul class="breadcrumb-list" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="https://portswigger.net/web-security"><span itemprop="name">Web Security Academy</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="../cross-site-scripting.html"><span itemprop="name">Cross-site scripting</span></a><meta itemprop="position" content="2" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="contexts.html"><span itemprop="name">Contexts</span></a><meta itemprop="position" content="3" /></li></ul>    <div class="section theme-white">
+
+        <h1 class="heading-2">Cross-site scripting contexts</h1><p>
+            When testing for <a href="reflected.html">reflected</a> and <a href="stored.html">stored</a> XSS, a key task is to identify the XSS context:
+        </p><ul>
+            <li>
+                The location within the response where attacker-controllable data appears.
+            </li>
+            <li>
+                Any input validation or other processing that is being performed on that data by the application.
+            </li>
+        </ul><p>
+            Based on these details, you can then select one or more candidate XSS payloads, and test whether they are effective.
+        </p><div class="highlightedarea">
+            <h4>Note</h4>
+            <p>We have built a comprehensive <a href="cheat-sheet.html">XSS cheat sheet</a> to help testing web applications and filters. You can filter by events and tags and see which vectors require user interaction. The cheat sheet also contains AngularJS sandbox escapes and many other sections to help with XSS research.</p>
+        </div><h2 id="xss-between-html-tags">XSS between HTML tags</h2><p>
+            When the XSS context is text between HTML tags, you need to introduce some new HTML tags designed to trigger execution of JavaScript.
+        </p><p>
+            Some useful ways of executing JavaScript are:
+        </p><code class="code-scrollable">&lt;script&gt;alert(document.domain)&lt;/script&gt;
+&lt;img src=1 onerror=alert(1)&gt;</code><div widget-id="academy-labstatus" widget-lab-id="9E3414EE887EBAED9F7ED25B58DD639959BB28A3B926F53C831C1D86E03D8813">
+        </div><div widget-id="academy-labstatus" widget-lab-id="09E0BEE59E32E92A78E614589793110F95C397459ED0AB96A3DBAF100E3B7CDE">
+        </div><div widget-id="academy-labstatus" widget-lab-id="626E9E76C544AF64DB41C2723C8720AB0F25BF6F4C14B8D47C81A2790C472BAD">
+        </div><div widget-id="academy-labstatus" widget-lab-id="35D25A422AF775CC93101FFF0B686AE37E3CCB4844D3272061E090AA0C854CED">
+        </div><div widget-id="academy-labstatus" widget-lab-id="8D3B6A32167C58218B1807A6070D8D24BD5FD88AC74F6EB74127CD73AAE46CB8">
+        </div><div widget-id="academy-labstatus" widget-lab-id="20812D5112754AD4D73AAB3069147BF39635016F2005C5C0062A7E766FD72FFB">
+        </div><h2 id="xss-in-html-tag-attributes">XSS in HTML tag attributes</h2><p>
+            When the XSS context is into an HTML tag attribute value, you might sometimes be able to terminate the attribute value, close the tag, and introduce a new one. For example:
+        </p><code class="code-scrollable">&quot;&gt;&lt;script&gt;alert(document.domain)&lt;/script&gt;</code><p>
+            More commonly in this situation, angle brackets are blocked or encoded, so your input cannot break out of the tag in which it appears. Provided you can terminate the attribute value, you can normally introduce a new attribute that creates a scriptable context, such as an event handler. For example:
+        </p><code class="code-scrollable">&quot; autofocus onfocus=alert(document.domain) x=&quot;</code><p>
+            The above payload creates an <code>onfocus</code> event that will execute JavaScript when the element receives the focus, and also adds the <code>autofocus</code> attribute to try to trigger the <code>onfocus</code> event automatically without any user interaction. Finally, it adds <code>x=&quot;</code> to gracefully repair the following markup.
+        </p><div widget-id="academy-labstatus" widget-lab-id="8DB2D4D5D579849CA64098E4415C35888C0AF17E8F9B0849462456D7B14B8087">
+        </div><p>
+            Sometimes the XSS context is into a type of HTML tag attribute that itself can create a scriptable context. Here, you can execute JavaScript without needing to terminate the attribute value. For example, if the XSS context is into the <code>href</code> attribute of an anchor tag, you can use the <code>javascript</code> pseudo-protocol to execute script. For example:
+        </p><code class="code-scrollable">&lt;a href=&quot;javascript:alert(document.domain)&quot;&gt;</code><div widget-id="academy-labstatus" widget-lab-id="837B80F7B6CB679DDB307A046AF6DF7C851399E3337726434AC2681CBA79F639">
+        </div><p>
+			You might encounter websites that encode angle brackets but still allow you to inject attributes. Sometimes, these injections are possible even within tags that don't usually fire events automatically, such as a canonical tag. You can exploit this behavior using access keys and user interaction on Chrome. Access keys allow you to provide keyboard shortcuts that reference a specific element. The <code>accesskey</code> attribute allows you to define a letter that, when pressed in combination with other keys (these vary across different platforms), will cause events to fire. In the next lab you can experiment with access keys and exploit a canonical tag.
+            <a href="https://portswigger.net/research/xss-in-hidden-input-fields">You can exploit XSS in hidden input fields using a technique invented by PortSwigger Research</a>.
+		</p><div widget-id="academy-labstatus" widget-lab-id="69D9A58B4BE85FE3DA0E5E65BB0B6655278492C77FCE16B6989C5B40481C66ED">
+        </div><h2 id="xss-into-javascript">XSS into JavaScript</h2><p>
+            When the XSS context is some existing JavaScript within the response, a wide variety of situations can arise, with different techniques necessary to perform a successful exploit.
+        </p><h3 id="terminating-the-existing-script">Terminating the existing script</h3><p>
+            In the simplest case, it is possible to simply close the script tag that is enclosing the existing JavaScript, and introduce some new HTML tags that will trigger execution of JavaScript. For example, if the XSS context is as follows:
+        </p><code class="code-scrollable">&lt;script&gt;
+...
+var input = 'controllable data here';
+...
+&lt;/script&gt;</code><p>
+            then you can use the following payload to break out of the existing JavaScript and execute your own:
+        </p><code class="code-scrollable">&lt;/script&gt;&lt;img src=1 onerror=alert(document.domain)&gt;</code><p>
+            The reason this works is that the browser first performs HTML parsing to identify the page elements including blocks of script, and only later performs JavaScript parsing to understand and execute the embedded scripts. The above payload leaves the original script broken, with an unterminated string literal. But that doesn't prevent the subsequent script being parsed and executed in the normal way.
+        </p><div widget-id="academy-labstatus" widget-lab-id="D926F2EB65B5882B27710E31D931B82BFF5ECCF019671CE0D921D6D23FD97442">
+        </div><h3 id="breaking-out-of-a-javascript-string">Breaking out of a JavaScript string</h3><p>
+            In cases where the XSS context is inside a quoted string literal, it is often possible to break out of the string and execute JavaScript directly. It is essential to repair the script following the XSS context, because any syntax errors there will prevent the whole script from executing.
+        </p><p>
+            Some useful ways of breaking out of a string literal are:
+        </p><code class="code-scrollable">'-alert(document.domain)-'
+';alert(document.domain)//</code><div widget-id="academy-labstatus" widget-lab-id="164E6FE824EF894FFA05160602259AF63F6266C2E82F19714DAF79A0BE75E363">
+        </div><p>
+            Some applications attempt to prevent input from breaking out of the JavaScript string by escaping any single quote characters with a backslash. A backslash before a character tells the JavaScript parser that the character should be interpreted literally, and not as a special character such as a string terminator. In this situation, applications often make the mistake of failing to escape the backslash character itself. This means that an attacker can use their own backslash character to neutralize the backslash that is added by the application.
+        </p><p>
+            For example, suppose that the input:
+        </p><code class="code-scrollable">';alert(document.domain)//</code><p>
+            gets converted to:
+        </p><code class="code-scrollable">\';alert(document.domain)//</code><p>
+            You can now use the alternative payload:
+        </p><code class="code-scrollable">\';alert(document.domain)//</code><p>
+            which gets converted to:
+        </p><code class="code-scrollable">\\';alert(document.domain)//</code><p>
+            Here, the first backslash means that the second backslash is interpreted literally, and not as a special character. This means that the quote is now interpreted as a string terminator, and so the attack succeeds.
+        </p><div widget-id="academy-labstatus" widget-lab-id="1BF4B9250FA4C31D4444F2ADF45736C70DD7E5515F1E35A50F3E5D1F74969D63">
+        </div><p>
+			Some websites make XSS more difficult by restricting which characters you are allowed to use. This can be on the website level or by deploying a WAF that prevents your requests from ever reaching the website. In these situations, you need to experiment with other ways of calling functions which bypass these security measures. One way of doing this is to use the <code>throw</code> statement with an exception handler. This enables you to pass arguments to a function without using parentheses. The following code assigns the <code>alert()</code> function to the global exception handler and the <code>throw</code> statement passes the <code>1</code> to the exception handler (in this case <code>alert</code>). The end result is that the <code>alert()</code> function is called with <code>1</code> as an argument.
+		</p><code class="code-scrollable">onerror=alert;throw 1</code><p>There are multiple ways of using this technique to call <a href="https://portswigger.net/research/xss-without-parentheses-and-semi-colons">functions without parentheses</a>.</p><p>
+			The next lab demonstrates a website that filters certain characters. You'll have to use similar techniques to those described above in order to solve it.
+		</p><div widget-id="academy-labstatus" widget-lab-id="C29F5F30A0C79A94F6A847A63911BFBB403F8D60977B3E3B09110D166711A345">
+        </div><h3 id="making-use-of-html-encoding">Making use of HTML-encoding</h3><p>
+            When the XSS context is some existing JavaScript within a quoted tag attribute, such as an event handler, it is possible to make use of HTML-encoding to work around some input filters.
+        </p><p>
+            When the browser has parsed out the HTML tags and attributes within a response, it will perform HTML-decoding of tag attribute values before they are processed any further. If the server-side application blocks or sanitizes certain characters that are needed for a successful XSS exploit, you can often bypass the input validation by HTML-encoding those characters.
+        </p><p>
+            For example, if the XSS context is as follows:
+        </p><code class="code-scrollable">&lt;a href=&quot;#&quot; onclick=&quot;... var input='controllable data here'; ...&quot;&gt;</code><p>
+            and the application blocks or escapes single quote characters, you can use the following payload to break out of the JavaScript string and execute your own script:
+        </p><code class="code-scrollable">&amp;apos;-alert(document.domain)-&amp;apos;</code><p>
+            The <code>&amp;apos;</code> sequence is an HTML entity representing an apostrophe or single quote. Because the browser HTML-decodes the value of the <code>onclick</code> attribute before the JavaScript is interpreted, the entities are decoded as quotes, which become string delimiters, and so the attack succeeds.
+        </p><div widget-id="academy-labstatus" widget-lab-id="53DDF9EF1ABEEE631133A34645F234B5A0115EB9E739C4CEBBE2A4668735893B">
+        </div><h3 id="xss-in-javascript-template-literals">XSS in JavaScript template literals</h3><p>
+            JavaScript template literals are string literals that allow embedded JavaScript expressions. The embedded expressions are evaluated and are normally concatenated into the surrounding text. Template literals are encapsulated in backticks instead of normal quotation marks, and embedded expressions are identified using the <code>${...}</code> syntax.
+        </p><p>
+            For example, the following script will print a welcome message that includes the user's display name:
+        </p><code class="code-scrollable">document.getElementById('message').innerText = `Welcome, ${user.displayName}.`;</code><p>
+            When the XSS context is into a JavaScript template literal, there is no need to terminate the literal. Instead, you simply need to use the <code>${...}</code> syntax to embed a JavaScript expression that will be executed when the literal is processed. For example, if the XSS context is as follows:
+        </p><code class="code-scrollable">&lt;script&gt;
+...
+var input = `controllable data here`;
+...
+&lt;/script&gt;</code><p>
+            then you can use the following payload to execute JavaScript without terminating the template literal:
+        </p><code class="code-scrollable">${alert(document.domain)}</code><div widget-id="academy-labstatus" widget-lab-id="0A88D8A0C7685665C8BAFF00182659BF0A53F478D01725B703663BC726D81776">
+        </div><h2 id="xss-via-client-side-template-injection">XSS via client-side template injection</h2><p>
+		    Some websites use a client-side template framework, such as AngularJS, to dynamically render web pages. If they embed user input into these templates in an unsafe manner, an attacker may be able to inject their own malicious template expressions that launch an XSS attack.
+	    </p><div class="highlightedarea"> 
+     <h4>Read more</h4> 
+     
+    <ul><li><a href="contexts/client-side-template-injection.html">Client-side template injection</a></li></ul></div>
+        
+        <div widget-id="academy-registration-footer"></div>
+    
+    </div>
+
+
+    <script src="../../bundles/static-content/public/scripts/main18c2.js?v=NgmUiCsYwhVhi9Bra0okrfjnxkY" nonce="KGwqy6lsrxmyXbzwpjVfTzffUrDKtnhm"></script>
+    <script src="../../bundles/static-content/public/scripts/web-security5605.js?v=aLTI8D4Ps-_XoohiDNpR1LAARC0" nonce="KGwqy6lsrxmyXbzwpjVfTzffUrDKtnhm"></script>
+
+            
+        <div class="sidebar-content">
+            <div widget-id="academy-accountstatus"></div>
+            <div class="sidebar-trial-advert">
+                <img alt="Try Burp Suite for Free" src="../../content/images/logos/burp-suite-icon.svg">
+                <h4>Find XSS vulnerabilities using Burp Suite</h4>
+                <a class="button-white" href="https://portswigger.net/burp">Try for free</a>
+            </div>
+        </div>
+    
+        </main>
+    </div>
+</div>
+<footer class="wrapper">
+    <div class="container">
+        <div>
+            <p>Burp Suite</p>
+            <a href="https://portswigger.net/burp/vulnerability-scanner">Web vulnerability scanner</a>
+            <a href="https://portswigger.net/burp">Burp Suite Editions</a>
+            <a href="https://portswigger.net/burp/releases">Release Notes</a>
+        </div>
+        <div>
+            <p>Vulnerabilities</p>
+            <a href="../cross-site-scripting.html">Cross-site scripting (XSS)</a>
+            <a href="../sql-injection.html">SQL injection</a>
+            <a href="../csrf.html">Cross-site request forgery</a>
+            <a href="../xxe.html">XML external entity injection</a>
+            <a href="../file-path-traversal.html">Directory traversal</a>
+            <a href="../ssrf.html">Server-side request forgery</a>
+        </div>
+        <div>
+            <p>Customers</p>
+            <a href="https://portswigger.net/organizations">Organizations</a>
+            <a href="https://portswigger.net/testers">Testers</a>
+            <a href="https://portswigger.net/developers">Developers</a>
+        </div>
+        <div>
+            <p>Company</p>
+            <a href="https://portswigger.net/about">About</a>
+            <a href="https://portswigger.net/careers">Careers</a>
+            <a href="https://portswigger.net/about/contact">Contact</a>
+            <a href="https://portswigger.net/legal">Legal</a>
+            <a href="https://portswigger.net/privacy">Privacy Notice</a>
+        </div>
+        <div>
+            <p>Insights</p>
+            <a href="https://portswigger.net/web-security">Web Security Academy</a>
+            <a href="https://portswigger.net/blog">Blog</a>
+            <a href="https://portswigger.net/research">Research</a>
+        </div>
+        <div>
+            <a href="https://portswigger.net/"><img src="../../content/images/logos/portswigger-logo.svg" alt="PortSwigger Logo"
+                             class="footer-logo"></a>
+            <a class="button-outline-blue-small camelcase" href="https://twitter.com/Burp_Suite" rel="noreferrer"><span
+                    class="icon-twitter"></span> Follow us</a>
+            <p class="grey">&copy; 2026 PortSwigger Ltd.</p>
+        </div>
+    </div>
+</footer>
+<a href="#top" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <polygon points="4.07 14.7 5.03 15.78 12.48 9.13 19.94 15.78 20.9 14.7 12.48 7.2 4.07 14.7" fill="#f63"/>
+    <path d="M13,0A13,13,0,1,0,26,13,13,13,0,0,0,13,0Zm0,24.56A11.56,11.56,0,1,1,24.56,13,11.58,11.58,0,0,1,13,24.56Z"
+          fill="#f63"/>
+</svg></a>
+
+
+<script nonce="KGwqy6lsrxmyXbzwpjVfTzffUrDKtnhm" type="text/javascript">
+    piAId = '1067743';
+    piCId = '';
+    piHostname = 'go.portswigger.net';
+
+    (function () {
+        function async_load() {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + piHostname + '/pd.js';
+            var c = document.getElementsByTagName('script')[0];
+            c.parentNode.insertBefore(s, c);
+        }
+
+        if (window.attachEvent) {
+            window.attachEvent('onload', async_load);
+        } else {
+            window.addEventListener('load', async_load, false);
+        }
+    })();
+</script>
+</body>
+
+<!-- Mirrored from portswigger.net/web-security/cross-site-scripting/contexts by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Apr 2026 22:05:46 GMT -->
+</html>
