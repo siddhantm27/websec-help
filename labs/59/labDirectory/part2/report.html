@@ -1,0 +1,4030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZAP Scanning Report</title>
+<link
+	href="report/normalize/normalize.css" rel="stylesheet">
+<link
+	href="report/themes/original/main.css" rel="stylesheet">
+<link
+	href="report/themes/original/colors.css" rel="stylesheet">
+</head>
+<body>
+	<header>
+		<h1>ZAP Scanning Report</h1>
+		<p>
+			<span>Generated with</span> <a href="https://zaproxy.org"><img
+				src="report/zap32x32.png" alt="The ZAP logo" class="zap-logo">ZAP</a>
+			<span>on Thu 22 Jan 2026, at 12:44:18</span>
+		</p>
+		<p>ZAP Version: 2.15.0</p>
+		<p>
+			ZAP by <a href="https://checkmarx.com/">Checkmarx</a>
+		</p>
+	</header>
+
+	<main>
+
+		<section id="contents" class="contents">
+			<h2>Contents</h2>
+			<nav>
+				<ol>
+					<li><a
+						href="#about-this-report">About this report</a>
+						<ol>
+							
+							<li><a
+								href="#report-parameters">Report parameters</a></li>
+						</ol></li>
+					<data-th-block>
+					<li><a
+						href="#summaries">Summaries</a>
+						<ol>
+							<li><a
+								href="#risk-confidence-counts">Alert counts by risk and confidence</a></li>
+							<li><a
+								href="#site-risk-counts">Alert counts by site and risk</a></li>
+							<li><a
+								href="#alert-type-counts">Alert counts by alert type</a></li>
+						</ol></li>
+					<li><a
+						href="#alerts">Alerts</a>
+						<ol>
+							
+							
+							
+							
+							
+							
+							
+							<li><a
+								href="#alerts--risk-3-confidence-2"><span>Risk</span>=<span
+									class="risk-level">High</span>, <span>Confidence</span>=<span
+									class="confidence-level">Medium</span> <span>(2)</span></a></li>
+							
+							
+							  
+							
+							
+							
+							
+							<li><a
+								href="#alerts--risk-2-confidence-3"><span>Risk</span>=<span
+									class="risk-level">Medium</span>, <span>Confidence</span>=<span
+									class="confidence-level">High</span> <span>(1)</span></a></li>
+							
+							<li><a
+								href="#alerts--risk-2-confidence-2"><span>Risk</span>=<span
+									class="risk-level">Medium</span>, <span>Confidence</span>=<span
+									class="confidence-level">Medium</span> <span>(1)</span></a></li>
+							
+							<li><a
+								href="#alerts--risk-2-confidence-1"><span>Risk</span>=<span
+									class="risk-level">Medium</span>, <span>Confidence</span>=<span
+									class="confidence-level">Low</span> <span>(1)</span></a></li>
+							  
+							
+							
+							
+							
+							<li><a
+								href="#alerts--risk-1-confidence-3"><span>Risk</span>=<span
+									class="risk-level">Low</span>, <span>Confidence</span>=<span
+									class="confidence-level">High</span> <span>(1)</span></a></li>
+							
+							<li><a
+								href="#alerts--risk-1-confidence-2"><span>Risk</span>=<span
+									class="risk-level">Low</span>, <span>Confidence</span>=<span
+									class="confidence-level">Medium</span> <span>(4)</span></a></li>
+							
+							
+							  
+							
+							
+							
+							
+							<li><a
+								href="#alerts--risk-0-confidence-3"><span>Risk</span>=<span
+									class="risk-level">Informational</span>, <span>Confidence</span>=<span
+									class="confidence-level">High</span> <span>(1)</span></a></li>
+							
+							<li><a
+								href="#alerts--risk-0-confidence-2"><span>Risk</span>=<span
+									class="risk-level">Informational</span>, <span>Confidence</span>=<span
+									class="confidence-level">Medium</span> <span>(1)</span></a></li>
+							
+							<li><a
+								href="#alerts--risk-0-confidence-1"><span>Risk</span>=<span
+									class="risk-level">Informational</span>, <span>Confidence</span>=<span
+									class="confidence-level">Low</span> <span>(2)</span></a></li>
+							  
+						</ol></li>
+					<li><a
+						href="#appendix">Appendix</a>
+						<ol>
+							<li><a
+								href="#alert-types">Alert types</a></li>
+						</ol></li>
+					</data-th-block>
+				</ol>
+			</nav>
+		</section>
+
+		<section
+			id="about-this-report" class="about-this-report">
+			<h2>About this report</h2>
+
+			
+
+			<section
+				id="report-parameters">
+				<h3>Report parameters</h3>
+				<div class="report-parameters--container">
+					<h4>Contexts</h4>
+					
+					
+					
+					
+					<p>The following contexts were selected to be included:</p>
+					<ul class="contexts-list">
+						<li><span
+							class="context">Authenticated Scan</span></li>
+					</ul>
+					  
+
+					<h4>Sites</h4>
+					
+					<p>The following sites were included:</p>
+					<ul class="sites-list">
+						<li><span class="site">http://websec-bodhi.duckdns.org:30001</span></li>
+					</ul>
+					
+					<p>(If no sites were selected, all sites were included by default.)</p>
+					<p>An included site must also be within one of the included contexts for its data to be included in the report.</p>
+
+					<h4>Risk levels</h4>
+					<p>
+						<span>Included</span>:
+						 
+						<span class="included-risk-codes"><span class="risk-level">High</span>, <span class="risk-level">Medium</span>, <span class="risk-level">Low</span>, <span class="risk-level">Informational</span></span>
+					</p>
+					<p>
+						<span>Excluded</span>:
+						 <span>None</span>
+						
+					</p>
+
+					<h4>Confidence levels</h4>
+					<p>
+						<span>Included</span>:
+						
+						
+						<span class="included-confidence-codes"><span class="confidence-level">User Confirmed</span>, <span class="confidence-level">High</span>, <span class="confidence-level">Medium</span>, <span class="confidence-level">Low</span></span>
+					</p>
+					<p>
+						<span>Excluded</span>:
+						
+						
+						<span class="included-confidence-codes"> <span class="confidence-level">User Confirmed</span>, <span class="confidence-level">High</span>, <span class="confidence-level">Medium</span>, <span class="confidence-level">Low</span>, <span class="confidence-level">False Positive</span></span>
+					</p>
+				</div>
+			</section>
+		</section>
+
+		
+		<section>
+			
+		</section>
+		
+		<section id="summaries" class="summaries">
+			<h2>Summaries</h2>
+
+			<section
+				id="risk-confidence-counts">
+				<h3>Alert counts by risk and confidence</h3>
+				<table class="risk-confidence-counts-table">
+					<caption>
+						<p>This table shows the number of alerts for each level of risk and confidence included in the report.</p>
+						<p>(The percentages in brackets represent the count as a percentage of the total number of alerts included in the report, rounded to one decimal place.)</p>
+					</caption>
+					<colgroup>
+						<col>
+						<col>
+					</colgroup>
+					<colgroup>
+						<col
+							style="width: 14.0%"><col
+							style="width: 14.0%"><col
+							style="width: 14.0%"><col
+							style="width: 14.0%">
+						<col style="width: 14.0%">
+					</colgroup>
+					<thead>
+						<tr>
+							<td colspan="2" rowspan="2"></td>
+							<th scope="colgroup"
+								colspan="5">Confidence</th>
+						</tr>
+						<tr>
+							<th scope="col">User Confirmed</th>
+							<th scope="col">High</th>
+							<th scope="col">Medium</th>
+							<th scope="col">Low</th>
+							<th scope="col">Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="rowgroup"
+								rowspan="5">Risk</th>
+							<th scope="row">High</th>
+							<td><span>0</span><br> <span
+								class="additional-info-percentages">(0.0%)</span></td>
+							<td><span>0</span><br> <span
+								class="additional-info-percentages">(0.0%)</span></td>
+							<td><span>2</span><br> <span
+								class="additional-info-percentages">(14.3%)</span></td>
+							<td><span>0</span><br> <span
+								class="additional-info-percentages">(0.0%)</span></td>
+							<td><span>2</span><br> <span class="additional-info-percentages">(14.3%)</span></td>
+						</tr>
+						<tr>
+							
+							<th scope="row">Medium</th>
+							<td><span>0</span><br> <span
+								class="additional-info-percentages">(0.0%)</span></td>
+							<td><span>1</span><br> <span
+								class="additional-info-percentages">(7.1%)</span></td>
+							<td><span>1</span><br> <span
+								class="additional-info-percentages">(7.1%)</span></td>
+							<td><span>1</span><br> <span
+								class="additional-info-percentages">(7.1%)</span></td>
+							<td><span>3</span><br> <span class="additional-info-percentages">(21.4%)</span></td>
+						</tr>
+						<tr>
+							
+							<th scope="row">Low</th>
+							<td><span>0</span><br> <span
+								class="additional-info-percentages">(0.0%)</span></td>
+							<td><span>1</span><br> <span
+								class="additional-info-percentages">(7.1%)</span></td>
+							<td><span>4</span><br> <span
+								class="additional-info-percentages">(28.6%)</span></td>
+							<td><span>0</span><br> <span
+								class="additional-info-percentages">(0.0%)</span></td>
+							<td><span>5</span><br> <span class="additional-info-percentages">(35.7%)</span></td>
+						</tr>
+						<tr>
+							
+							<th scope="row">Informational</th>
+							<td><span>0</span><br> <span
+								class="additional-info-percentages">(0.0%)</span></td>
+							<td><span>1</span><br> <span
+								class="additional-info-percentages">(7.1%)</span></td>
+							<td><span>1</span><br> <span
+								class="additional-info-percentages">(7.1%)</span></td>
+							<td><span>2</span><br> <span
+								class="additional-info-percentages">(14.3%)</span></td>
+							<td><span>4</span><br> <span class="additional-info-percentages">(28.6%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row">Total</th>
+							<td><span>0</span><br> <span
+								class="additional-info-percentages">(0.0%)</span></td>
+							<td><span>3</span><br> <span
+								class="additional-info-percentages">(21.4%)</span></td>
+							<td><span>8</span><br> <span
+								class="additional-info-percentages">(57.1%)</span></td>
+							<td><span>3</span><br> <span
+								class="additional-info-percentages">(21.4%)</span></td>
+							<td><span>14</span><br> <span
+								class="additional-info-percentages">(100%)</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section
+				id="site-risk-counts">
+				<h3>Alert counts by site and risk</h3>
+				<table class="site-risk-counts-table">
+					<caption>
+						<p>This table shows, for each site for which one or more alerts were raised, the number of alerts raised at each risk level.</p>
+						<p>Alerts with a confidence level of &quot;False Positive&quot; have been excluded from these counts.</p>
+						<p>(The numbers in brackets are the number of alerts raised for the site at or above that risk level.)</p>
+					</caption>
+					<colgroup>
+						<col>
+						<col>
+					</colgroup>
+					<colgroup>
+						<col
+							style="width: 16.25%"><col
+							style="width: 16.25%"><col
+							style="width: 16.25%"><col
+							style="width: 16.25%">
+					</colgroup>
+					<thead>
+						<tr>
+							<td colspan="2" rowspan="2"></td>
+							<th scope="colgroup" colspan="4">Risk</th>
+						</tr>
+						<tr>
+							<th scope="col">
+								<span>High</span><br>  <span
+									class="additional-info-percentages">(= High)</span>  
+							</th>
+							<th scope="col">
+								<span>Medium</span><br>   <span
+									class="additional-info-percentages">(&gt;= Medium)</span> 
+							</th>
+							<th scope="col">
+								<span>Low</span><br>   <span
+									class="additional-info-percentages">(&gt;= Low)</span> 
+							</th>
+							<th scope="col">
+								<span>Informational</span><br>   <span
+									class="additional-info-percentages">(&gt;= Informational)</span> 
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="rowgroup"
+								rowspan="1">Site</th>
+							<th scope="row">http://websec-bodhi.duckdns.org:30001</th>
+							
+							<td><span>1</span><br> <span
+								class="additional-info-percentages">(1)</span></td>
+							<td><span>2</span><br> <span
+								class="additional-info-percentages">(3)</span></td>
+							<td><span>5</span><br> <span
+								class="additional-info-percentages">(8)</span></td>
+							<td><span>4</span><br> <span
+								class="additional-info-percentages">(12)</span></td>
+							
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section
+				id="alert-type-counts">
+				<h3>Alert counts by alert type</h3>
+				<table class="alert-type-counts-table">
+					<caption>
+						<p>This table shows the number of alerts of each alert type, together with the alert type&#39;s risk level.</p>
+						<p>(The percentages in brackets represent each count as a percentage, rounded to one decimal place, of the total number of alerts included in this report.)</p>
+					</caption>
+					<thead>
+						<tr>
+							<th scope="col">Alert type</th>
+							<th scope="col">Risk</th>
+							<th scope="col">Count</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-0">Cross Site Scripting (Reflected)</a></th>
+							<td class="risk-level">High</td>
+							<td><span>2</span><br> <span
+								class="additional-info-percentages">(14.3%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-1">SQL Injection</a></th>
+							<td class="risk-level">High</td>
+							<td><span>1</span><br> <span
+								class="additional-info-percentages">(7.1%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-2">Absence of Anti-CSRF Tokens</a></th>
+							<td class="risk-level">Medium</td>
+							<td><span>1</span><br> <span
+								class="additional-info-percentages">(7.1%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-3">Content Security Policy (CSP) Header Not Set</a></th>
+							<td class="risk-level">Medium</td>
+							<td><span>8</span><br> <span
+								class="additional-info-percentages">(57.1%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-4">Missing Anti-clickjacking Header</a></th>
+							<td class="risk-level">Medium</td>
+							<td><span>8</span><br> <span
+								class="additional-info-percentages">(57.1%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-5">Big Redirect Detected (Potential Sensitive Information Leak)</a></th>
+							<td class="risk-level">Low</td>
+							<td><span>1</span><br> <span
+								class="additional-info-percentages">(7.1%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-6">Cookie No HttpOnly Flag</a></th>
+							<td class="risk-level">Low</td>
+							<td><span>2</span><br> <span
+								class="additional-info-percentages">(14.3%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-7">Cookie without SameSite Attribute</a></th>
+							<td class="risk-level">Low</td>
+							<td><span>2</span><br> <span
+								class="additional-info-percentages">(14.3%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-8">Server Leaks Version Information via &quot;Server&quot; HTTP Response Header Field</a></th>
+							<td class="risk-level">Low</td>
+							<td><span>9</span><br> <span
+								class="additional-info-percentages">(64.3%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-9">X-Content-Type-Options Header Missing</a></th>
+							<td class="risk-level">Low</td>
+							<td><span>8</span><br> <span
+								class="additional-info-percentages">(57.1%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-10">Authentication Request Identified</a></th>
+							<td class="risk-level">Informational</td>
+							<td><span>2</span><br> <span
+								class="additional-info-percentages">(14.3%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-11">Information Disclosure - Suspicious Comments</a></th>
+							<td class="risk-level">Informational</td>
+							<td><span>9</span><br> <span
+								class="additional-info-percentages">(64.3%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-12">Modern Web Application</a></th>
+							<td class="risk-level">Informational</td>
+							<td><span>9</span><br> <span
+								class="additional-info-percentages">(64.3%)</span></td>
+						</tr>
+						<tr>
+							<th scope="row"><a
+								href="#alert-type-13">Session Management Response Identified</a></th>
+							<td class="risk-level">Informational</td>
+							<td><span>2450</span><br> <span
+								class="additional-info-percentages">(17,500.0%)</span></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th scope="row">Total</th>
+							<td></td>
+							<td>14</td>
+						</tr>
+					</tfoot>
+				</table>
+			</section>
+		</section>
+
+		<section id="alerts" class="alerts">
+			<h2>Alerts</h2>
+			<ol>
+				
+				 
+				
+				
+				
+				
+				<li id="alerts--risk-3-confidence-2">
+					<h3>
+						<span>Risk</span>=<span
+							class="risk-level">High</span>, <span>Confidence</span>=<span
+							class="confidence-level">Medium</span> <span>(2)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://websec-bodhi.duckdns.org:30001</span> <span>(1)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-1">SQL Injection</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://websec-bodhi.duckdns.org:30001/participants.php?courseid=2&amp;search=s%27+AND+%271%27%3D%271%27+--+</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A1_2017-Injection.html">OWASP_2017_A01</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/A03_2021-Injection/">OWASP_2021_A03</a></span> 
+				</li>
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05-Testing_for_SQL_Injection">WSTG-v42-INPV-05</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>SQL injection may be possible.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>The page results were successfully manipulated using the boolean conditions [s&#39; AND &#39;1&#39;=&#39;1&#39; -- ] and [s&#39; OR &#39;1&#39;=&#39;1&#39; -- ]</p>
+
+<p>The parameter value being modified was NOT stripped from the HTML output for the purposes of the comparison.</p>
+
+<p>Data was NOT returned for the original parameter.</p>
+
+<p>The vulnerability was detected by successfully retrieving more data than originally returned, by manipulating the parameter.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (568 bytes)</summary>
+				
+				<pre><code>GET http://websec-bodhi.duckdns.org:30001/participants.php?courseid=2&amp;search=s%27+AND+%271%27%3D%271%27+--+ HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Sec-GPC: 1
+Connection: keep-alive
+Referer: http://websec-bodhi.duckdns.org:30001/participants.php?courseid=2
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i
+Cookie: PHPSESSID=si9sgl5qsv38n3kgnnkfivkgm2
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (338 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+Date: Thu, 22 Jan 2026 12:43:02 GMT
+Server: Apache/2.4.62 (Debian)
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Vary: Accept-Encoding
+Content-Length: 4538
+Keep-Alive: timeout=5, max=62
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (4538 bytes)</summary>
+				
+				<pre><code>
+
+
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://www.w3schools.com/w3css/4/w3.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
+    &lt;title&gt;Bodhitree&lt;/title&gt;
+    &lt;style&gt;
+        #customers {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        #customers td, #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        }
+
+        #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+        #customers tr:hover {background-color: #ddd;}
+
+        #customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: black;
+        color: white;
+        }
+
+        form.example input[type=text] {
+        padding: 10px;
+        font-size: 17px;
+        border: 1px solid grey;
+        float: left;
+        width: 80%;
+        background: #f1f1f1;
+        }
+
+        form.example button {
+        float: left;
+        width: 20%;
+        padding: 10px;
+        background: black;
+        color: white;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-left: none;
+        cursor: pointer;
+        }
+
+        form.example button:hover {
+        background: black;
+        }
+
+        form.example::after {
+        content: &quot;&quot;;
+        clear: both;
+        display: table;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    &lt;!-- Navbar (sit on top) --&gt;
+    &lt;div class=&quot;w3-top&quot;&gt;
+        &lt;div class=&quot;w3-bar w3-white w3-wide w3-padding w3-card&quot;&gt;
+            &lt;a href=&quot;&quot; class=&quot;w3-bar-item w3-button&quot;&gt;&lt;b&gt;Username: &lt;/b&gt; Laksh &lt;/a&gt;
+            &lt;!-- Float links to the right. Hide them on small screens --&gt;
+            &lt;div class=&quot;w3-right w3-hide-small&quot;&gt;                
+                &lt;a href=&quot;course.php?courseid=2&quot; class=&quot;w3-bar-item w3-button&quot;&gt;Course Details&lt;/a&gt;
+                &lt;a href=&quot;participants.php?courseid=2&quot; class=&quot;w3-bar-item w3-button&quot;&gt;Participants&lt;/a&gt;
+                &lt;a href=&quot;grades.php?courseid=2&quot; class=&quot;w3-bar-item w3-button&quot;&gt;Grades&lt;/a&gt; 
+                &lt;a href=&quot;user.php&quot; class=&quot;w3-bar-item w3-button&quot;&gt;My Dashboard&lt;/a&gt;                  
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;   
+    &lt;div class=&quot;vertical-space&quot;&gt;&lt;/div&gt;
+    &lt;!-- Participants Section --&gt;
+&lt;div class=&quot;w3-container w3-padding-32&quot; id=&quot;about&quot;&gt;
+            &lt;h3 class=&quot;w3-border-bottom w3-border-light-grey w3-padding-16&quot;&gt;Participants&lt;/h3&gt;
+            &lt;form class=&quot;example&quot; style=&quot;margin:auto;max-width:350px&quot; method=&quot;GET&quot;&gt;
+                &lt;input type=&quot;hidden&quot; name=&quot;courseid&quot; value=&#39;2&#39;&gt; 
+                &lt;input type=&quot;text&quot; placeholder=&quot;Search here by Username&quot; name=&quot;search&quot;&gt;
+                &lt;button type=&quot;submit&quot;&gt;&lt;i class=&quot;fa fa-search&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+            &lt;/form&gt;
+            &lt;br&gt;
+            &lt;table id=&quot;customers&quot;&gt;           
+            &lt;tr&gt;
+                        &lt;th&gt;Username&lt;/th&gt;
+                        &lt;th&gt;Waitlisted&lt;/th&gt;
+                    &lt;/tr&gt; Username not found            &lt;/table&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;floating-button-div&quot;&gt;
+            &lt;button class=&quot;fb&quot; onclick=&quot;confirmReset()&quot;&gt;Reset Activity&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        function confirmReset() {
+            // Display a confirmation dialog
+            var confirmation = confirm(&quot;Are you sure you want to reset the entire activity? NOTE: This will also delete any and all progress you have made, and a new flag will be generated!&quot;);
+            // If user confirms, reset the form
+            console.log(confirmation);
+            if (confirmation) {
+                // Send AJAX request to reset.php using Fetch API
+                fetch(&#39;reset.php&#39;, {
+                    method: &#39;POST&#39;,
+                    headers: {
+                        &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+                    }
+                })
+                .then(response =&gt; {
+                    if (response.ok) {
+                        // Redirect to the login page
+                        window.location.href = &#39;index.php&#39;;
+                    } else {
+                        console.error(&#39;Reset request failed&#39;);
+                    }
+                })
+                .catch(error =&gt; {
+                    console.error(&#39;Error:&#39;, error);
+                });
+            }
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>search</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Attack</th>
+		<td><pre><code>s&#39; OR &#39;1&#39;=&#39;1&#39; -- </code></pre></td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Do not trust client side input, even if there is client side validation in place.</p>
+
+<p>In general, type check all data on the server side.</p>
+
+<p>If the application uses JDBC, use PreparedStatement or CallableStatement, with parameters passed by &#39;?&#39;</p>
+
+<p>If the application uses ASP, use ADO Command Objects with strong type checking and parameterized queries.</p>
+
+<p>If database Stored Procedures can be used, use them.</p>
+
+<p>Do *not* concatenate strings into queries in the stored procedure, or use &#39;exec&#39;, &#39;exec immediate&#39;, or equivalent functionality!</p>
+
+<p>Do not create dynamic SQL queries using simple string concatenation.</p>
+
+<p>Escape all data received from the client.</p>
+
+<p>Apply an &#39;allow list&#39; of allowed characters, or a &#39;deny list&#39; of disallowed characters in user input.</p>
+
+<p>Apply the principle of least privilege by using the least privileged database user possible.</p>
+
+<p>In particular, avoid using the &#39;sa&#39; or &#39;db-owner&#39; database users. This does not eliminate SQL injection, but minimizes its impact.</p>
+
+<p>Grant the minimum database access that is necessary for the application.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				
+				  
+				 
+				
+				
+				<li id="alerts--risk-2-confidence-3">
+					<h3>
+						<span>Risk</span>=<span
+							class="risk-level">Medium</span>, <span>Confidence</span>=<span
+							class="confidence-level">High</span> <span>(1)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://websec-bodhi.duckdns.org:30001</span> <span>(1)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-3">Content Security Policy (CSP) Header Not Set</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://websec-bodhi.duckdns.org:30001/</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/693.html">CWE-693</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP_2021_A05</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html">OWASP_2017_A06</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks. These attacks are used for everything from data theft to site defacement or distribution of malware. CSP provides a set of standard HTTP headers that allow website owners to declare approved sources of content that browsers should be allowed to load on that page — covered types are JavaScript, CSS, HTML frames, fonts, images and embeddable objects such as Java applets, ActiveX, audio and video files.</p>
+ </td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (381 bytes)</summary>
+				
+				<pre><code>GET http://websec-bodhi.duckdns.org:30001/ HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Sec-GPC: 1
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (397 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+Date: Thu, 22 Jan 2026 12:11:36 GMT
+Server: Apache/2.4.62 (Debian)
+Set-Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Vary: Accept-Encoding
+Content-Length: 2873
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (2873 bytes)</summary>
+				
+				<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;title&gt;Bodhitree&lt;/title&gt;
+    &lt;meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;keywords&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;description&quot;&gt;
+
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class=&quot;carousel-item active&quot; style=&quot;min-height: 300px;&quot;&gt;
+        &lt;img class=&quot;position-relative w-100&quot; src=&quot;./bg1.jpg&quot; style=&quot;min-height: 300px; object-fit: cover;&quot;&gt;
+        &lt;div class=&quot;carousel-caption d-flex align-items-center justify-content-center&quot;&gt;
+            &lt;div class=&quot;p-5&quot; style=&quot;width: 100%; max-width: 900px;&quot;&gt;
+                &lt;h5 class=&quot;text-white text-uppercase mb-md-3&quot;&gt;Best Online Courses&lt;/h5&gt;
+                &lt;h1 class=&quot;display-3 text-white mb-md-4&quot;&gt;Best Education From Your Home&lt;/h1&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;colm-form&quot;&gt;
+            &lt;div class=&quot;form-container&quot;&gt;
+                &lt;form method=&quot;post&quot; action=&quot;index.php&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;username&quot; placeholder=&quot;Username&quot; required&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required&gt;
+                    &lt;button type=&quot;submit&quot; class=&quot;btn-login&quot;&gt;Login&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;floating-button-div&quot;&gt;
+            &lt;button class=&quot;fb&quot; onclick=&quot;confirmReset()&quot;&gt;Reset Activity&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        function confirmReset() {
+            // Display a confirmation dialog
+            var confirmation = confirm(&quot;Are you sure you want to reset the entire activity? NOTE: This will also delete any and all progress you have made, and a new flag will be generated!&quot;);
+            // If user confirms, reset the form
+            console.log(confirmation);
+            if (confirmation) {
+                // Send AJAX request to reset.php using Fetch API
+                fetch(&#39;reset.php&#39;, {
+                    method: &#39;POST&#39;,
+                    headers: {
+                        &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+                    }
+                })
+                .then(response =&gt; {
+                    if (response.ok) {
+                        // Redirect to the login page
+                        window.location.href = &#39;index.php&#39;;
+                    } else {
+                        console.error(&#39;Reset request failed&#39;);
+                    }
+                })
+                .catch(error =&gt; {
+                    console.error(&#39;Error:&#39;, error);
+                });
+            }
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	
+	
+	
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				<li id="alerts--risk-2-confidence-2">
+					<h3>
+						<span>Risk</span>=<span
+							class="risk-level">Medium</span>, <span>Confidence</span>=<span
+							class="confidence-level">Medium</span> <span>(1)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://websec-bodhi.duckdns.org:30001</span> <span>(1)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-4">Missing Anti-clickjacking Header</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://websec-bodhi.duckdns.org:30001/</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/11-Client-side_Testing/09-Testing_for_Clickjacking">WSTG-v42-CLNT-09</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP_2021_A05</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html">OWASP_2017_A06</a></span> 
+				</li>
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/1021.html">CWE-1021</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>The response does not protect against &#39;ClickJacking&#39; attacks. It should include either Content-Security-Policy with &#39;frame-ancestors&#39; directive or X-Frame-Options.</p>
+ </td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (381 bytes)</summary>
+				
+				<pre><code>GET http://websec-bodhi.duckdns.org:30001/ HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Sec-GPC: 1
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (397 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+Date: Thu, 22 Jan 2026 12:11:36 GMT
+Server: Apache/2.4.62 (Debian)
+Set-Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Vary: Accept-Encoding
+Content-Length: 2873
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (2873 bytes)</summary>
+				
+				<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;title&gt;Bodhitree&lt;/title&gt;
+    &lt;meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;keywords&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;description&quot;&gt;
+
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class=&quot;carousel-item active&quot; style=&quot;min-height: 300px;&quot;&gt;
+        &lt;img class=&quot;position-relative w-100&quot; src=&quot;./bg1.jpg&quot; style=&quot;min-height: 300px; object-fit: cover;&quot;&gt;
+        &lt;div class=&quot;carousel-caption d-flex align-items-center justify-content-center&quot;&gt;
+            &lt;div class=&quot;p-5&quot; style=&quot;width: 100%; max-width: 900px;&quot;&gt;
+                &lt;h5 class=&quot;text-white text-uppercase mb-md-3&quot;&gt;Best Online Courses&lt;/h5&gt;
+                &lt;h1 class=&quot;display-3 text-white mb-md-4&quot;&gt;Best Education From Your Home&lt;/h1&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;colm-form&quot;&gt;
+            &lt;div class=&quot;form-container&quot;&gt;
+                &lt;form method=&quot;post&quot; action=&quot;index.php&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;username&quot; placeholder=&quot;Username&quot; required&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required&gt;
+                    &lt;button type=&quot;submit&quot; class=&quot;btn-login&quot;&gt;Login&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;floating-button-div&quot;&gt;
+            &lt;button class=&quot;fb&quot; onclick=&quot;confirmReset()&quot;&gt;Reset Activity&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        function confirmReset() {
+            // Display a confirmation dialog
+            var confirmation = confirm(&quot;Are you sure you want to reset the entire activity? NOTE: This will also delete any and all progress you have made, and a new flag will be generated!&quot;);
+            // If user confirms, reset the form
+            console.log(confirmation);
+            if (confirmation) {
+                // Send AJAX request to reset.php using Fetch API
+                fetch(&#39;reset.php&#39;, {
+                    method: &#39;POST&#39;,
+                    headers: {
+                        &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+                    }
+                })
+                .then(response =&gt; {
+                    if (response.ok) {
+                        // Redirect to the login page
+                        window.location.href = &#39;index.php&#39;;
+                    } else {
+                        console.error(&#39;Reset request failed&#39;);
+                    }
+                })
+                .catch(error =&gt; {
+                    console.error(&#39;Error:&#39;, error);
+                });
+            }
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>x-frame-options</code></pre></td>
+	</tr>
+	
+	
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.</p>
+
+<p>If you expect the page to be framed only by pages on your server (e.g. it&#39;s part of a FRAMESET) then you&#39;ll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy&#39;s &quot;frame-ancestors&quot; directive.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				<li id="alerts--risk-2-confidence-1">
+					<h3>
+						<span>Risk</span>=<span
+							class="risk-level">Medium</span>, <span>Confidence</span>=<span
+							class="confidence-level">Low</span> <span>(1)</span>
+					</h3>
+					<ol>
+						
+						
+						
+					</ol>
+				</li>
+				  
+				 
+				
+				
+				<li id="alerts--risk-1-confidence-3">
+					<h3>
+						<span>Risk</span>=<span
+							class="risk-level">Low</span>, <span>Confidence</span>=<span
+							class="confidence-level">High</span> <span>(1)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://websec-bodhi.duckdns.org:30001</span> <span>(1)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-8">Server Leaks Version Information via &quot;Server&quot; HTTP Response Header Field</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://websec-bodhi.duckdns.org:30001/style.css</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP_2021_A05</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html">OWASP_2017_A06</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/01-Information_Gathering/02-Fingerprint_Web_Server">WSTG-v42-INFO-02</a></span> 
+				</li>
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/200.html">CWE-200</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>The web/application server is leaking version information via the &quot;Server&quot; HTTP response header. Access to such information may facilitate attackers identifying other vulnerabilities your web/application server is subject to.</p>
+ </td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (407 bytes)</summary>
+				
+				<pre><code>GET http://websec-bodhi.duckdns.org:30001/style.css HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/css,*/*;q=0.1
+Accept-Language: en-US,en;q=0.5
+Sec-GPC: 1
+Connection: keep-alive
+Referer: http://websec-bodhi.duckdns.org:30001/
+Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj
+Priority: u=2
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (307 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+Date: Thu, 22 Jan 2026 12:11:36 GMT
+Server: Apache/2.4.62 (Debian)
+Last-Modified: Thu, 22 Jan 2026 12:10:28 GMT
+ETag: &quot;f66-648f8ed343840&quot;
+Accept-Ranges: bytes
+Content-Length: 3942
+Vary: Accept-Encoding
+Keep-Alive: timeout=5, max=99
+Connection: Keep-Alive
+Content-Type: text/css
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (3942 bytes)</summary>
+				
+				<pre><code>body {
+  margin: 0;
+  font-family: &quot;Poppins&quot;, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #6C6A74;
+  text-align: left;
+  background-color: #fff;
+}
+.vertical-space {
+  height: 50px; /* Adjust as needed */
+}
+
+/* Style for the floating button */
+.floating-button-div {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  }
+
+
+  .fb {
+  background-color: #04b8fa;
+  color: white;
+  border: none;
+  border-radius: 20%;
+  padding: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+  }
+
+  /* Hover effect */
+  .fb:hover {
+      background-color: red;
+      color: #fff;
+      box-shadow: 0 0 20px red;
+  }
+
+h1,h5,.h1,.h5 ,h6 ,.h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #44425A;
+}
+
+h1, .h1 {
+  font-size: 2.5rem;
+}
+h5, .h5 {
+  font-size: 1.25rem;
+}
+h6, .h6 {
+  font-size: 1rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  border-style: none;
+} 
+
+
+.display-3 {
+  font-size: 4.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+
+.carousel-item {
+  position: relative;
+  display: none;
+  float: left;
+  width: 100%;
+  margin-right: -100%;
+  backface-visibility: hidden;
+  transition: transform 0.6s ease-in-out;
+}
+
+.carousel-item.active,
+.carousel-item-next,
+.carousel-item-prev {
+  display: block;
+}
+
+.carousel-caption {
+  position: absolute;
+  right: 15%;
+  bottom: 20px;
+  left: 15%;
+  z-index: 10;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #fff;
+  text-align: center;
+}
+.carousel-caption {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1; 
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.text-white {
+  color: #fff !important;
+}
+
+
+h1,
+.font-weight-bold {
+  font-weight: 700 !important;
+}
+
+h5,
+.font-weight-medium {
+  font-weight: 500 !important;
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  position: absolute;
+  left: 50%;
+  top: 85%;
+  transform: translate(-50%, -50%);
+}
+
+.colm-form .form-container {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  padding: 20px;
+  max-width: 400px;
+}
+
+.colm-form .form-container input, .colm-form .form-container .btn-login {
+  width: 100%;
+  margin: 5px 0;
+  height: 45px;
+  vertical-align: middle;
+  font-size: 16px;
+}
+
+.colm-form .form-container input {
+  border: 1px solid #dddfe2;
+  color: #1d2129;
+  padding: 0 8px;
+  outline: none;
+}
+
+.colm-form .form-container input:focus {
+  border-color: #1877f2;
+  box-shadow: 0 0 0 2px #e7f3ff;
+}
+
+.colm-form .form-container .btn-login {
+  background-color: #1877f2;
+  border: none;
+  border-radius: 6px;
+  font-size: 20px;
+  padding: 0 16px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.colm-form .form-container a {
+  display: block;
+  color: #1877f2;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 10px 0 20px;
+  border-bottom: 1px solid #dadde1;
+}
+
+.colm-form .form-container a:hover {
+  text-decoration: underline;
+}
+
+.colm-form .form-container .btn-new {
+  background-color: #42b72a;
+  border: none;
+  border-radius: 6px;
+  font-size: 17px;
+  line-height: 48px;
+  padding: 0 16px;
+  color: #ffffff;
+  font-weight: 700;
+  margin-top: 20px; 
+}
+
+.colm-form p {
+  font-size: 14px;
+}
+
+.colm-form p a {
+  text-decoration: none;
+  color: #1c1e21;
+  font-weight: 600;
+}
+
+.colm-form p a:hover {
+  text-decoration: underline;
+}
+
+/* ---------------------------------- */
+
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* Global styles */
+.container-fluid
+ {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	
+	
+	<tr>
+		<th scope="row">Evidence</th>
+		<td><pre><code>Apache/2.4.62 (Debian)</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Ensure that your web server, application server, load balancer, etc. is configured to suppress the &quot;Server&quot; header or provide generic details.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				<li id="alerts--risk-1-confidence-2">
+					<h3>
+						<span>Risk</span>=<span
+							class="risk-level">Low</span>, <span>Confidence</span>=<span
+							class="confidence-level">Medium</span> <span>(4)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://websec-bodhi.duckdns.org:30001</span> <span>(4)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-5">Big Redirect Detected (Potential Sensitive Information Leak)</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">POST http://websec-bodhi.duckdns.org:30001/index.php</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/01-Information_Gathering/05-Review_Webpage_Content_for_Information_Leakage">WSTG-v42-INFO-05</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure.html">OWASP_2017_A03</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/A04_2021-Insecure_Design/">OWASP_2021_A04</a></span> 
+				</li>
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/201.html">CWE-201</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>The server has responded with a redirect that seems to provide a large response. This may indicate that although the server sent a redirect it also responded with body content (which may include sensitive details, PII, etc.).</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>Location header URI length: 8 [user.php].</p>
+
+<p>Predicted response size: 308.</p>
+
+<p>Response Body Length: 2,873.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (602 bytes)</summary>
+				
+				<pre><code>POST http://websec-bodhi.duckdns.org:30001/index.php HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 36
+Origin: http://websec-bodhi.duckdns.org:30001
+Sec-GPC: 1
+Connection: keep-alive
+Referer: http://websec-bodhi.duckdns.org:30001/
+Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (36 bytes)</summary>
+				
+				<pre><code>username=Laksh&amp;password=SecretPwd%21</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (339 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 302 Found
+Date: Thu, 22 Jan 2026 12:35:13 GMT
+Server: Apache/2.4.62 (Debian)
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Location: user.php
+Content-Length: 2873
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (2873 bytes)</summary>
+				
+				<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;title&gt;Bodhitree&lt;/title&gt;
+    &lt;meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;keywords&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;description&quot;&gt;
+
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class=&quot;carousel-item active&quot; style=&quot;min-height: 300px;&quot;&gt;
+        &lt;img class=&quot;position-relative w-100&quot; src=&quot;./bg1.jpg&quot; style=&quot;min-height: 300px; object-fit: cover;&quot;&gt;
+        &lt;div class=&quot;carousel-caption d-flex align-items-center justify-content-center&quot;&gt;
+            &lt;div class=&quot;p-5&quot; style=&quot;width: 100%; max-width: 900px;&quot;&gt;
+                &lt;h5 class=&quot;text-white text-uppercase mb-md-3&quot;&gt;Best Online Courses&lt;/h5&gt;
+                &lt;h1 class=&quot;display-3 text-white mb-md-4&quot;&gt;Best Education From Your Home&lt;/h1&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;colm-form&quot;&gt;
+            &lt;div class=&quot;form-container&quot;&gt;
+                &lt;form method=&quot;post&quot; action=&quot;index.php&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;username&quot; placeholder=&quot;Username&quot; required&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required&gt;
+                    &lt;button type=&quot;submit&quot; class=&quot;btn-login&quot;&gt;Login&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;floating-button-div&quot;&gt;
+            &lt;button class=&quot;fb&quot; onclick=&quot;confirmReset()&quot;&gt;Reset Activity&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        function confirmReset() {
+            // Display a confirmation dialog
+            var confirmation = confirm(&quot;Are you sure you want to reset the entire activity? NOTE: This will also delete any and all progress you have made, and a new flag will be generated!&quot;);
+            // If user confirms, reset the form
+            console.log(confirmation);
+            if (confirmation) {
+                // Send AJAX request to reset.php using Fetch API
+                fetch(&#39;reset.php&#39;, {
+                    method: &#39;POST&#39;,
+                    headers: {
+                        &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+                    }
+                })
+                .then(response =&gt; {
+                    if (response.ok) {
+                        // Redirect to the login page
+                        window.location.href = &#39;index.php&#39;;
+                    } else {
+                        console.error(&#39;Reset request failed&#39;);
+                    }
+                })
+                .catch(error =&gt; {
+                    console.error(&#39;Error:&#39;, error);
+                });
+            }
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	
+	
+	
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Ensure that no sensitive information is leaked via redirect responses. Redirect responses should have almost no content.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-6">Cookie No HttpOnly Flag</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://websec-bodhi.duckdns.org:30001/</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/1004.html">CWE-1004</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP_2021_A05</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html">OWASP_2017_A06</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/06-Session_Management_Testing/02-Testing_for_Cookies_Attributes">WSTG-v42-SESS-02</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>A cookie has been set without the HttpOnly flag, which means that the cookie can be accessed by JavaScript. If a malicious script can be run on this page then the cookie will be accessible and can be transmitted to another site. If this is a session cookie then session hijacking may be possible.</p>
+ </td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (381 bytes)</summary>
+				
+				<pre><code>GET http://websec-bodhi.duckdns.org:30001/ HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Sec-GPC: 1
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (397 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+Date: Thu, 22 Jan 2026 12:11:36 GMT
+Server: Apache/2.4.62 (Debian)
+Set-Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Vary: Accept-Encoding
+Content-Length: 2873
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (2873 bytes)</summary>
+				
+				<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;title&gt;Bodhitree&lt;/title&gt;
+    &lt;meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;keywords&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;description&quot;&gt;
+
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class=&quot;carousel-item active&quot; style=&quot;min-height: 300px;&quot;&gt;
+        &lt;img class=&quot;position-relative w-100&quot; src=&quot;./bg1.jpg&quot; style=&quot;min-height: 300px; object-fit: cover;&quot;&gt;
+        &lt;div class=&quot;carousel-caption d-flex align-items-center justify-content-center&quot;&gt;
+            &lt;div class=&quot;p-5&quot; style=&quot;width: 100%; max-width: 900px;&quot;&gt;
+                &lt;h5 class=&quot;text-white text-uppercase mb-md-3&quot;&gt;Best Online Courses&lt;/h5&gt;
+                &lt;h1 class=&quot;display-3 text-white mb-md-4&quot;&gt;Best Education From Your Home&lt;/h1&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;colm-form&quot;&gt;
+            &lt;div class=&quot;form-container&quot;&gt;
+                &lt;form method=&quot;post&quot; action=&quot;index.php&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;username&quot; placeholder=&quot;Username&quot; required&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required&gt;
+                    &lt;button type=&quot;submit&quot; class=&quot;btn-login&quot;&gt;Login&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;floating-button-div&quot;&gt;
+            &lt;button class=&quot;fb&quot; onclick=&quot;confirmReset()&quot;&gt;Reset Activity&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        function confirmReset() {
+            // Display a confirmation dialog
+            var confirmation = confirm(&quot;Are you sure you want to reset the entire activity? NOTE: This will also delete any and all progress you have made, and a new flag will be generated!&quot;);
+            // If user confirms, reset the form
+            console.log(confirmation);
+            if (confirmation) {
+                // Send AJAX request to reset.php using Fetch API
+                fetch(&#39;reset.php&#39;, {
+                    method: &#39;POST&#39;,
+                    headers: {
+                        &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+                    }
+                })
+                .then(response =&gt; {
+                    if (response.ok) {
+                        // Redirect to the login page
+                        window.location.href = &#39;index.php&#39;;
+                    } else {
+                        console.error(&#39;Reset request failed&#39;);
+                    }
+                })
+                .catch(error =&gt; {
+                    console.error(&#39;Error:&#39;, error);
+                });
+            }
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>PHPSESSID</code></pre></td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Evidence</th>
+		<td><pre><code>Set-Cookie: PHPSESSID</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Ensure that the HttpOnly flag is set for all cookies.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-7">Cookie without SameSite Attribute</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://websec-bodhi.duckdns.org:30001/</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP_2021_A01</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html">OWASP_2017_A05</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/06-Session_Management_Testing/02-Testing_for_Cookies_Attributes">WSTG-v42-SESS-02</a></span> 
+				</li>
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/1275.html">CWE-1275</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>A cookie has been set without the SameSite attribute, which means that the cookie can be sent as a result of a &#39;cross-site&#39; request. The SameSite attribute is an effective counter measure to cross-site request forgery, cross-site script inclusion, and timing attacks.</p>
+ </td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (381 bytes)</summary>
+				
+				<pre><code>GET http://websec-bodhi.duckdns.org:30001/ HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Sec-GPC: 1
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (397 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+Date: Thu, 22 Jan 2026 12:11:36 GMT
+Server: Apache/2.4.62 (Debian)
+Set-Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Vary: Accept-Encoding
+Content-Length: 2873
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (2873 bytes)</summary>
+				
+				<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;title&gt;Bodhitree&lt;/title&gt;
+    &lt;meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;keywords&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;description&quot;&gt;
+
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class=&quot;carousel-item active&quot; style=&quot;min-height: 300px;&quot;&gt;
+        &lt;img class=&quot;position-relative w-100&quot; src=&quot;./bg1.jpg&quot; style=&quot;min-height: 300px; object-fit: cover;&quot;&gt;
+        &lt;div class=&quot;carousel-caption d-flex align-items-center justify-content-center&quot;&gt;
+            &lt;div class=&quot;p-5&quot; style=&quot;width: 100%; max-width: 900px;&quot;&gt;
+                &lt;h5 class=&quot;text-white text-uppercase mb-md-3&quot;&gt;Best Online Courses&lt;/h5&gt;
+                &lt;h1 class=&quot;display-3 text-white mb-md-4&quot;&gt;Best Education From Your Home&lt;/h1&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;colm-form&quot;&gt;
+            &lt;div class=&quot;form-container&quot;&gt;
+                &lt;form method=&quot;post&quot; action=&quot;index.php&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;username&quot; placeholder=&quot;Username&quot; required&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required&gt;
+                    &lt;button type=&quot;submit&quot; class=&quot;btn-login&quot;&gt;Login&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;floating-button-div&quot;&gt;
+            &lt;button class=&quot;fb&quot; onclick=&quot;confirmReset()&quot;&gt;Reset Activity&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        function confirmReset() {
+            // Display a confirmation dialog
+            var confirmation = confirm(&quot;Are you sure you want to reset the entire activity? NOTE: This will also delete any and all progress you have made, and a new flag will be generated!&quot;);
+            // If user confirms, reset the form
+            console.log(confirmation);
+            if (confirmation) {
+                // Send AJAX request to reset.php using Fetch API
+                fetch(&#39;reset.php&#39;, {
+                    method: &#39;POST&#39;,
+                    headers: {
+                        &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+                    }
+                })
+                .then(response =&gt; {
+                    if (response.ok) {
+                        // Redirect to the login page
+                        window.location.href = &#39;index.php&#39;;
+                    } else {
+                        console.error(&#39;Reset request failed&#39;);
+                    }
+                })
+                .catch(error =&gt; {
+                    console.error(&#39;Error:&#39;, error);
+                });
+            }
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>PHPSESSID</code></pre></td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Evidence</th>
+		<td><pre><code>Set-Cookie: PHPSESSID</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Ensure that the SameSite attribute is set to either &#39;lax&#39; or ideally &#39;strict&#39; for all cookies.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-9">X-Content-Type-Options Header Missing</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://websec-bodhi.duckdns.org:30001/style.css</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/693.html">CWE-693</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">OWASP_2021_A05</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html">OWASP_2017_A06</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>The Anti-MIME-Sniffing header X-Content-Type-Options was not set to &#39;nosniff&#39;. This allows older versions of Internet Explorer and Chrome to perform MIME-sniffing on the response body, potentially causing the response body to be interpreted and displayed as a content type other than the declared content type. Current (early 2014) and legacy versions of Firefox will use the declared content type (if one is set), rather than performing MIME-sniffing.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>This issue still applies to error type pages (401, 403, 500, etc.) as those pages are often still affected by injection issues, in which case there is still concern for browsers sniffing pages away from their actual content type.</p>
+
+<p>At &quot;High&quot; threshold this scan rule will not alert on client or server error responses.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (407 bytes)</summary>
+				
+				<pre><code>GET http://websec-bodhi.duckdns.org:30001/style.css HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/css,*/*;q=0.1
+Accept-Language: en-US,en;q=0.5
+Sec-GPC: 1
+Connection: keep-alive
+Referer: http://websec-bodhi.duckdns.org:30001/
+Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj
+Priority: u=2
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (307 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+Date: Thu, 22 Jan 2026 12:11:36 GMT
+Server: Apache/2.4.62 (Debian)
+Last-Modified: Thu, 22 Jan 2026 12:10:28 GMT
+ETag: &quot;f66-648f8ed343840&quot;
+Accept-Ranges: bytes
+Content-Length: 3942
+Vary: Accept-Encoding
+Keep-Alive: timeout=5, max=99
+Connection: Keep-Alive
+Content-Type: text/css
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (3942 bytes)</summary>
+				
+				<pre><code>body {
+  margin: 0;
+  font-family: &quot;Poppins&quot;, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #6C6A74;
+  text-align: left;
+  background-color: #fff;
+}
+.vertical-space {
+  height: 50px; /* Adjust as needed */
+}
+
+/* Style for the floating button */
+.floating-button-div {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  }
+
+
+  .fb {
+  background-color: #04b8fa;
+  color: white;
+  border: none;
+  border-radius: 20%;
+  padding: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+  }
+
+  /* Hover effect */
+  .fb:hover {
+      background-color: red;
+      color: #fff;
+      box-shadow: 0 0 20px red;
+  }
+
+h1,h5,.h1,.h5 ,h6 ,.h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #44425A;
+}
+
+h1, .h1 {
+  font-size: 2.5rem;
+}
+h5, .h5 {
+  font-size: 1.25rem;
+}
+h6, .h6 {
+  font-size: 1rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  border-style: none;
+} 
+
+
+.display-3 {
+  font-size: 4.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+
+.carousel-item {
+  position: relative;
+  display: none;
+  float: left;
+  width: 100%;
+  margin-right: -100%;
+  backface-visibility: hidden;
+  transition: transform 0.6s ease-in-out;
+}
+
+.carousel-item.active,
+.carousel-item-next,
+.carousel-item-prev {
+  display: block;
+}
+
+.carousel-caption {
+  position: absolute;
+  right: 15%;
+  bottom: 20px;
+  left: 15%;
+  z-index: 10;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #fff;
+  text-align: center;
+}
+.carousel-caption {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1; 
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.text-white {
+  color: #fff !important;
+}
+
+
+h1,
+.font-weight-bold {
+  font-weight: 700 !important;
+}
+
+h5,
+.font-weight-medium {
+  font-weight: 500 !important;
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  position: absolute;
+  left: 50%;
+  top: 85%;
+  transform: translate(-50%, -50%);
+}
+
+.colm-form .form-container {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  padding: 20px;
+  max-width: 400px;
+}
+
+.colm-form .form-container input, .colm-form .form-container .btn-login {
+  width: 100%;
+  margin: 5px 0;
+  height: 45px;
+  vertical-align: middle;
+  font-size: 16px;
+}
+
+.colm-form .form-container input {
+  border: 1px solid #dddfe2;
+  color: #1d2129;
+  padding: 0 8px;
+  outline: none;
+}
+
+.colm-form .form-container input:focus {
+  border-color: #1877f2;
+  box-shadow: 0 0 0 2px #e7f3ff;
+}
+
+.colm-form .form-container .btn-login {
+  background-color: #1877f2;
+  border: none;
+  border-radius: 6px;
+  font-size: 20px;
+  padding: 0 16px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.colm-form .form-container a {
+  display: block;
+  color: #1877f2;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 10px 0 20px;
+  border-bottom: 1px solid #dadde1;
+}
+
+.colm-form .form-container a:hover {
+  text-decoration: underline;
+}
+
+.colm-form .form-container .btn-new {
+  background-color: #42b72a;
+  border: none;
+  border-radius: 6px;
+  font-size: 17px;
+  line-height: 48px;
+  padding: 0 16px;
+  color: #ffffff;
+  font-weight: 700;
+  margin-top: 20px; 
+}
+
+.colm-form p {
+  font-size: 14px;
+}
+
+.colm-form p a {
+  text-decoration: none;
+  color: #1c1e21;
+  font-weight: 600;
+}
+
+.colm-form p a:hover {
+  text-decoration: underline;
+}
+
+/* ---------------------------------- */
+
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* Global styles */
+.container-fluid
+ {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>x-content-type-options</code></pre></td>
+	</tr>
+	
+	
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to &#39;nosniff&#39; for all web pages.</p>
+
+<p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				
+				  
+				 
+				
+				
+				<li id="alerts--risk-0-confidence-3">
+					<h3>
+						<span>Risk</span>=<span
+							class="risk-level">Informational</span>, <span>Confidence</span>=<span
+							class="confidence-level">High</span> <span>(1)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://websec-bodhi.duckdns.org:30001</span> <span>(1)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-13">Session Management Response Identified</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://websec-bodhi.duckdns.org:30001/</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>The given response has been identified as containing a session management token. The &#39;Other Info&#39; field contains a set of header tokens that can be used in the Header Based Session Management Method. If the request is in a context which has a Session Management Method set to &quot;Auto-Detect&quot; then this rule will change the session management to use the tokens identified.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>cookie:PHPSESSID</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (407 bytes)</summary>
+				
+				<pre><code>GET http://websec-bodhi.duckdns.org:30001/style.css HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/css,*/*;q=0.1
+Accept-Language: en-US,en;q=0.5
+Sec-GPC: 1
+Connection: keep-alive
+Referer: http://websec-bodhi.duckdns.org:30001/
+Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj
+Priority: u=2
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (307 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+Date: Thu, 22 Jan 2026 12:11:36 GMT
+Server: Apache/2.4.62 (Debian)
+Last-Modified: Thu, 22 Jan 2026 12:10:28 GMT
+ETag: &quot;f66-648f8ed343840&quot;
+Accept-Ranges: bytes
+Content-Length: 3942
+Vary: Accept-Encoding
+Keep-Alive: timeout=5, max=99
+Connection: Keep-Alive
+Content-Type: text/css
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (3942 bytes)</summary>
+				
+				<pre><code>body {
+  margin: 0;
+  font-family: &quot;Poppins&quot;, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #6C6A74;
+  text-align: left;
+  background-color: #fff;
+}
+.vertical-space {
+  height: 50px; /* Adjust as needed */
+}
+
+/* Style for the floating button */
+.floating-button-div {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  }
+
+
+  .fb {
+  background-color: #04b8fa;
+  color: white;
+  border: none;
+  border-radius: 20%;
+  padding: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+  }
+
+  /* Hover effect */
+  .fb:hover {
+      background-color: red;
+      color: #fff;
+      box-shadow: 0 0 20px red;
+  }
+
+h1,h5,.h1,.h5 ,h6 ,.h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #44425A;
+}
+
+h1, .h1 {
+  font-size: 2.5rem;
+}
+h5, .h5 {
+  font-size: 1.25rem;
+}
+h6, .h6 {
+  font-size: 1rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  border-style: none;
+} 
+
+
+.display-3 {
+  font-size: 4.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+
+.carousel-item {
+  position: relative;
+  display: none;
+  float: left;
+  width: 100%;
+  margin-right: -100%;
+  backface-visibility: hidden;
+  transition: transform 0.6s ease-in-out;
+}
+
+.carousel-item.active,
+.carousel-item-next,
+.carousel-item-prev {
+  display: block;
+}
+
+.carousel-caption {
+  position: absolute;
+  right: 15%;
+  bottom: 20px;
+  left: 15%;
+  z-index: 10;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #fff;
+  text-align: center;
+}
+.carousel-caption {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1; 
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.text-white {
+  color: #fff !important;
+}
+
+
+h1,
+.font-weight-bold {
+  font-weight: 700 !important;
+}
+
+h5,
+.font-weight-medium {
+  font-weight: 500 !important;
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  position: absolute;
+  left: 50%;
+  top: 85%;
+  transform: translate(-50%, -50%);
+}
+
+.colm-form .form-container {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  padding: 20px;
+  max-width: 400px;
+}
+
+.colm-form .form-container input, .colm-form .form-container .btn-login {
+  width: 100%;
+  margin: 5px 0;
+  height: 45px;
+  vertical-align: middle;
+  font-size: 16px;
+}
+
+.colm-form .form-container input {
+  border: 1px solid #dddfe2;
+  color: #1d2129;
+  padding: 0 8px;
+  outline: none;
+}
+
+.colm-form .form-container input:focus {
+  border-color: #1877f2;
+  box-shadow: 0 0 0 2px #e7f3ff;
+}
+
+.colm-form .form-container .btn-login {
+  background-color: #1877f2;
+  border: none;
+  border-radius: 6px;
+  font-size: 20px;
+  padding: 0 16px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.colm-form .form-container a {
+  display: block;
+  color: #1877f2;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 10px 0 20px;
+  border-bottom: 1px solid #dadde1;
+}
+
+.colm-form .form-container a:hover {
+  text-decoration: underline;
+}
+
+.colm-form .form-container .btn-new {
+  background-color: #42b72a;
+  border: none;
+  border-radius: 6px;
+  font-size: 17px;
+  line-height: 48px;
+  padding: 0 16px;
+  color: #ffffff;
+  font-weight: 700;
+  margin-top: 20px; 
+}
+
+.colm-form p {
+  font-size: 14px;
+}
+
+.colm-form p a {
+  text-decoration: none;
+  color: #1c1e21;
+  font-weight: 600;
+}
+
+.colm-form p a:hover {
+  text-decoration: underline;
+}
+
+/* ---------------------------------- */
+
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* Global styles */
+.container-fluid
+ {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>PHPSESSID</code></pre></td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Evidence</th>
+		<td><pre><code>0prfspdl5f1j3fmin0t1pjbrmj</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>This is an informational alert rather than a vulnerability and so there is nothing to fix.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				<li id="alerts--risk-0-confidence-2">
+					<h3>
+						<span>Risk</span>=<span
+							class="risk-level">Informational</span>, <span>Confidence</span>=<span
+							class="confidence-level">Medium</span> <span>(1)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://websec-bodhi.duckdns.org:30001</span> <span>(1)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-12">Modern Web Application</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://websec-bodhi.duckdns.org:30001/</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>The application appears to be a modern web application. If you need to explore it automatically then the Ajax Spider may well be more effective than the standard one.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>No links have been found while there are scripts, which is an indication that this is a modern web application.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (381 bytes)</summary>
+				
+				<pre><code>GET http://websec-bodhi.duckdns.org:30001/ HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Sec-GPC: 1
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (397 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+Date: Thu, 22 Jan 2026 12:11:36 GMT
+Server: Apache/2.4.62 (Debian)
+Set-Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Vary: Accept-Encoding
+Content-Length: 2873
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (2873 bytes)</summary>
+				
+				<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;title&gt;Bodhitree&lt;/title&gt;
+    &lt;meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;keywords&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;description&quot;&gt;
+
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class=&quot;carousel-item active&quot; style=&quot;min-height: 300px;&quot;&gt;
+        &lt;img class=&quot;position-relative w-100&quot; src=&quot;./bg1.jpg&quot; style=&quot;min-height: 300px; object-fit: cover;&quot;&gt;
+        &lt;div class=&quot;carousel-caption d-flex align-items-center justify-content-center&quot;&gt;
+            &lt;div class=&quot;p-5&quot; style=&quot;width: 100%; max-width: 900px;&quot;&gt;
+                &lt;h5 class=&quot;text-white text-uppercase mb-md-3&quot;&gt;Best Online Courses&lt;/h5&gt;
+                &lt;h1 class=&quot;display-3 text-white mb-md-4&quot;&gt;Best Education From Your Home&lt;/h1&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;colm-form&quot;&gt;
+            &lt;div class=&quot;form-container&quot;&gt;
+                &lt;form method=&quot;post&quot; action=&quot;index.php&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;username&quot; placeholder=&quot;Username&quot; required&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required&gt;
+                    &lt;button type=&quot;submit&quot; class=&quot;btn-login&quot;&gt;Login&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;floating-button-div&quot;&gt;
+            &lt;button class=&quot;fb&quot; onclick=&quot;confirmReset()&quot;&gt;Reset Activity&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        function confirmReset() {
+            // Display a confirmation dialog
+            var confirmation = confirm(&quot;Are you sure you want to reset the entire activity? NOTE: This will also delete any and all progress you have made, and a new flag will be generated!&quot;);
+            // If user confirms, reset the form
+            console.log(confirmation);
+            if (confirmation) {
+                // Send AJAX request to reset.php using Fetch API
+                fetch(&#39;reset.php&#39;, {
+                    method: &#39;POST&#39;,
+                    headers: {
+                        &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+                    }
+                })
+                .then(response =&gt; {
+                    if (response.ok) {
+                        // Redirect to the login page
+                        window.location.href = &#39;index.php&#39;;
+                    } else {
+                        console.error(&#39;Reset request failed&#39;);
+                    }
+                })
+                .catch(error =&gt; {
+                    console.error(&#39;Error:&#39;, error);
+                });
+            }
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	
+	
+	<tr>
+		<th scope="row">Evidence</th>
+		<td><pre><code>&lt;script&gt;
+        function confirmReset() {
+            // Display a confirmation dialog
+            var confirmation = confirm(&quot;Are you sure you want to reset the entire activity? NOTE: This will also delete any and all progress you have made, and a new flag will be generated!&quot;);
+            // If user confirms, reset the form
+            console.log(confirmation);
+            if (confirmation) {
+                // Send AJAX request to reset.php using Fetch API
+                fetch(&#39;reset.php&#39;, {
+                    method: &#39;POST&#39;,
+                    headers: {
+                        &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+                    }
+                })
+                .then(response =&gt; {
+                    if (response.ok) {
+                        // Redirect to the login page
+                        window.location.href = &#39;index.php&#39;;
+                    } else {
+                        console.error(&#39;Reset request failed&#39;);
+                    }
+                })
+                .catch(error =&gt; {
+                    console.error(&#39;Error:&#39;, error);
+                });
+            }
+        }
+    &lt;/script&gt;</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>This is an informational alert and so no changes are required.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				
+				<li id="alerts--risk-0-confidence-1">
+					<h3>
+						<span>Risk</span>=<span
+							class="risk-level">Informational</span>, <span>Confidence</span>=<span
+							class="confidence-level">Low</span> <span>(2)</span>
+					</h3>
+					<ol>
+						
+						<li class="alerts--site-li">
+							<h4>
+								<span class="site">http://websec-bodhi.duckdns.org:30001</span> <span>(2)</span>
+							</h4>
+							<ol>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-10">Authentication Request Identified</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">POST http://websec-bodhi.duckdns.org:30001/index.php</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>The given request has been identified as an authentication request. The &#39;Other Info&#39; field contains a set of key=value lines which identify any relevant fields. If the request is in a context which has an Authentication Method set to &quot;Auto-Detect&quot; then this rule will change the authentication to match the request identified.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>userParam=username</p>
+
+<p>userValue=Laksh</p>
+
+<p>passwordParam=password</p>
+
+<p>referer=http://websec-bodhi.duckdns.org:30001/</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (602 bytes)</summary>
+				
+				<pre><code>POST http://websec-bodhi.duckdns.org:30001/index.php HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 36
+Origin: http://websec-bodhi.duckdns.org:30001
+Sec-GPC: 1
+Connection: keep-alive
+Referer: http://websec-bodhi.duckdns.org:30001/
+Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (36 bytes)</summary>
+				
+				<pre><code>username=Laksh&amp;password=SecretPwd%21</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (339 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 302 Found
+Date: Thu, 22 Jan 2026 12:35:13 GMT
+Server: Apache/2.4.62 (Debian)
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Location: user.php
+Content-Length: 2873
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (2873 bytes)</summary>
+				
+				<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;title&gt;Bodhitree&lt;/title&gt;
+    &lt;meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;keywords&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;description&quot;&gt;
+
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class=&quot;carousel-item active&quot; style=&quot;min-height: 300px;&quot;&gt;
+        &lt;img class=&quot;position-relative w-100&quot; src=&quot;./bg1.jpg&quot; style=&quot;min-height: 300px; object-fit: cover;&quot;&gt;
+        &lt;div class=&quot;carousel-caption d-flex align-items-center justify-content-center&quot;&gt;
+            &lt;div class=&quot;p-5&quot; style=&quot;width: 100%; max-width: 900px;&quot;&gt;
+                &lt;h5 class=&quot;text-white text-uppercase mb-md-3&quot;&gt;Best Online Courses&lt;/h5&gt;
+                &lt;h1 class=&quot;display-3 text-white mb-md-4&quot;&gt;Best Education From Your Home&lt;/h1&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;colm-form&quot;&gt;
+            &lt;div class=&quot;form-container&quot;&gt;
+                &lt;form method=&quot;post&quot; action=&quot;index.php&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;username&quot; placeholder=&quot;Username&quot; required&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required&gt;
+                    &lt;button type=&quot;submit&quot; class=&quot;btn-login&quot;&gt;Login&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;floating-button-div&quot;&gt;
+            &lt;button class=&quot;fb&quot; onclick=&quot;confirmReset()&quot;&gt;Reset Activity&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        function confirmReset() {
+            // Display a confirmation dialog
+            var confirmation = confirm(&quot;Are you sure you want to reset the entire activity? NOTE: This will also delete any and all progress you have made, and a new flag will be generated!&quot;);
+            // If user confirms, reset the form
+            console.log(confirmation);
+            if (confirmation) {
+                // Send AJAX request to reset.php using Fetch API
+                fetch(&#39;reset.php&#39;, {
+                    method: &#39;POST&#39;,
+                    headers: {
+                        &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+                    }
+                })
+                .then(response =&gt; {
+                    if (response.ok) {
+                        // Redirect to the login page
+                        window.location.href = &#39;index.php&#39;;
+                    } else {
+                        console.error(&#39;Reset request failed&#39;);
+                    }
+                })
+                .catch(error =&gt; {
+                    console.error(&#39;Error:&#39;, error);
+                });
+            }
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Parameter</th>
+		<td><pre><code>username</code></pre></td>
+	</tr>
+	
+	<tr>
+		<th scope="row">Evidence</th>
+		<td><pre><code>password</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>This is an informational alert rather than a vulnerability and so there is nothing to fix.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+								<li>
+									<h5>
+										<a
+											href="#alert-type-11">Information Disclosure - Suspicious Comments</a> <span>(1)</span>
+									</h5>
+									<ol>
+										<li><details>
+												<summary>
+													<span class="request-method-n-url">GET http://websec-bodhi.duckdns.org:30001/</span>
+												</summary>
+												
+<table class="alerts-table">
+	<tr>
+		<th scope="row">Alert tags</th>
+		<td>
+			<ul class="alert-tags-list">
+				<li>
+					<span><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP_2021_A01</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/01-Information_Gathering/05-Review_Webpage_Content_for_Information_Leakage">WSTG-v42-INFO-05</a></span> 
+				</li>
+				<li>
+					<span><a href="https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure.html">OWASP_2017_A03</a></span> 
+				</li>
+				<li>
+					<span><a href="https://cwe.mitre.org/data/definitions/200.html">CWE-200</a></span> 
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<th scope="row">Alert description</th>
+		<td> 
+<p>The response appears to contain suspicious comments which may help an attacker. Note: Matches made within script blocks or files are against the entire content not only comments.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Other info</th>
+		<td> 
+<p>The following pattern was used: \bUSER\b and was detected in the element starting with: &quot;&lt;script&gt;</p>
+
+<p>        function confirmReset() {</p>
+
+<p>            // Display a confirmation dialog</p>
+
+<p>            var confirmation = confir&quot;, see evidence field for the suspicious comment/snippet.</p>
+ </td>
+	</tr>
+	<tr>
+		<th scope="row">Request</th>
+		<td><details open="open">
+				<summary>Request line and header section (381 bytes)</summary>
+				
+				<pre><code>GET http://websec-bodhi.duckdns.org:30001/ HTTP/1.1
+host: websec-bodhi.duckdns.org:30001
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Sec-GPC: 1
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i
+
+</code></pre>
+				
+				
+			</details> <details class="request-body" open="open">
+				<summary>Request body (0 bytes)</summary>
+				
+				<pre><code></code></pre>
+				
+				
+			</details></td>
+	</tr>
+	<tr>
+		<th scope="row">Response</th>
+		<td><details open="open">
+				<summary>Status line and header section (397 bytes)</summary>
+				
+				<pre><code>HTTP/1.1 200 OK
+Date: Thu, 22 Jan 2026 12:11:36 GMT
+Server: Apache/2.4.62 (Debian)
+Set-Cookie: PHPSESSID=0prfspdl5f1j3fmin0t1pjbrmj; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Vary: Accept-Encoding
+Content-Length: 2873
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+</code></pre>
+				
+				
+			</details> <details class="response-body">
+				<summary>Response body (2873 bytes)</summary>
+				
+				<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;title&gt;Bodhitree&lt;/title&gt;
+    &lt;meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;keywords&quot;&gt;
+    &lt;meta content=&quot;Free HTML Templates&quot; name=&quot;description&quot;&gt;
+
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class=&quot;carousel-item active&quot; style=&quot;min-height: 300px;&quot;&gt;
+        &lt;img class=&quot;position-relative w-100&quot; src=&quot;./bg1.jpg&quot; style=&quot;min-height: 300px; object-fit: cover;&quot;&gt;
+        &lt;div class=&quot;carousel-caption d-flex align-items-center justify-content-center&quot;&gt;
+            &lt;div class=&quot;p-5&quot; style=&quot;width: 100%; max-width: 900px;&quot;&gt;
+                &lt;h5 class=&quot;text-white text-uppercase mb-md-3&quot;&gt;Best Online Courses&lt;/h5&gt;
+                &lt;h1 class=&quot;display-3 text-white mb-md-4&quot;&gt;Best Education From Your Home&lt;/h1&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;colm-form&quot;&gt;
+            &lt;div class=&quot;form-container&quot;&gt;
+                &lt;form method=&quot;post&quot; action=&quot;index.php&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;username&quot; placeholder=&quot;Username&quot; required&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required&gt;
+                    &lt;button type=&quot;submit&quot; class=&quot;btn-login&quot;&gt;Login&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;floating-button-div&quot;&gt;
+            &lt;button class=&quot;fb&quot; onclick=&quot;confirmReset()&quot;&gt;Reset Activity&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        function confirmReset() {
+            // Display a confirmation dialog
+            var confirmation = confirm(&quot;Are you sure you want to reset the entire activity? NOTE: This will also delete any and all progress you have made, and a new flag will be generated!&quot;);
+            // If user confirms, reset the form
+            console.log(confirmation);
+            if (confirmation) {
+                // Send AJAX request to reset.php using Fetch API
+                fetch(&#39;reset.php&#39;, {
+                    method: &#39;POST&#39;,
+                    headers: {
+                        &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+                    }
+                })
+                .then(response =&gt; {
+                    if (response.ok) {
+                        // Redirect to the login page
+                        window.location.href = &#39;index.php&#39;;
+                    } else {
+                        console.error(&#39;Reset request failed&#39;);
+                    }
+                })
+                .catch(error =&gt; {
+                    console.error(&#39;Error:&#39;, error);
+                });
+            }
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;./style.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+				
+				
+			</details></td>
+	</tr>
+	
+	
+	<tr>
+		<th scope="row">Evidence</th>
+		<td><pre><code>user</code></pre></td>
+	</tr>
+	<tr>
+		<th scope="row">Solution</th>
+		<td> 
+<p>Remove all comments that return information that may help an attacker and fix any underlying problems they refer to.</p>
+ </td>
+	</tr>
+</table>
+
+											</details></li>
+									</ol>
+								</li>
+								
+							</ol>
+						</li>
+						
+					</ol>
+				</li>
+				  
+			</ol>
+		</section>
+
+		<section id="appendix" class="appendix">
+			<h2>Appendix</h2>
+
+			<section id="alert-types" class="alert-types">
+				<h3>Alert types</h3>
+				<p class="alert-types-intro">This section contains additional information on the types of alerts in the report.</p>
+				<ol>
+					<li
+						id="alert-type-0">
+						<h4>Cross Site Scripting (Reflected)</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by an active scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/40012/">Cross Site Scripting (Reflected)</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/79.html">79</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>8</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://owasp.org/www-community/attacks/xss/">https://owasp.org/www-community/attacks/xss/</a></li>
+										<li><a
+											href="https://cwe.mitre.org/data/definitions/79.html">https://cwe.mitre.org/data/definitions/79.html</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li
+						id="alert-type-1">
+						<h4>SQL Injection</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by an active scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/40018/">SQL Injection</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/89.html">89</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>19</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html">https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li
+						id="alert-type-2">
+						<h4>Absence of Anti-CSRF Tokens</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10202/">Absence of Anti-CSRF Tokens</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/352.html">352</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>9</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html">https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html</a></li>
+										<li><a
+											href="https://cwe.mitre.org/data/definitions/352.html">https://cwe.mitre.org/data/definitions/352.html</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li
+						id="alert-type-3">
+						<h4>Content Security Policy (CSP) Header Not Set</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10038/">Content Security Policy (CSP) Header Not Set</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/693.html">693</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>15</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Introducing_Content_Security_Policy">https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Introducing_Content_Security_Policy</a></li>
+										<li><a
+											href="https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html">https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html</a></li>
+										<li><a
+											href="https://www.w3.org/TR/CSP/">https://www.w3.org/TR/CSP/</a></li>
+										<li><a
+											href="https://w3c.github.io/webappsec-csp/">https://w3c.github.io/webappsec-csp/</a></li>
+										<li><a
+											href="https://web.dev/articles/csp">https://web.dev/articles/csp</a></li>
+										<li><a
+											href="https://caniuse.com/#feat=contentsecuritypolicy">https://caniuse.com/#feat=contentsecuritypolicy</a></li>
+										<li><a
+											href="https://content-security-policy.com/">https://content-security-policy.com/</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li
+						id="alert-type-4">
+						<h4>Missing Anti-clickjacking Header</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10020/">Anti-clickjacking Header</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/1021.html">1021</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>15</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li
+						id="alert-type-5">
+						<h4>Big Redirect Detected (Potential Sensitive Information Leak)</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10044/">Big Redirect Detected (Potential Sensitive Information Leak)</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/201.html">201</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>13</td>
+							</tr>
+							
+						</table>
+					</li>
+					<li
+						id="alert-type-6">
+						<h4>Cookie No HttpOnly Flag</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10010/">Cookie No HttpOnly Flag</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/1004.html">1004</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>13</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://owasp.org/www-community/HttpOnly">https://owasp.org/www-community/HttpOnly</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li
+						id="alert-type-7">
+						<h4>Cookie without SameSite Attribute</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10054/">Cookie without SameSite Attribute</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/1275.html">1275</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>13</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site">https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li
+						id="alert-type-8">
+						<h4>Server Leaks Version Information via &quot;Server&quot; HTTP Response Header Field</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10036/">HTTP Server Response Header</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/200.html">200</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>13</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://httpd.apache.org/docs/current/mod/core.html#servertokens">https://httpd.apache.org/docs/current/mod/core.html#servertokens</a></li>
+										<li><a
+											href="https://learn.microsoft.com/en-us/previous-versions/msp-n-p/ff648552(v=pandp.10)">https://learn.microsoft.com/en-us/previous-versions/msp-n-p/ff648552(v=pandp.10)</a></li>
+										<li><a
+											href="https://www.troyhunt.com/shhh-dont-let-your-response-headers/">https://www.troyhunt.com/shhh-dont-let-your-response-headers/</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li
+						id="alert-type-9">
+						<h4>X-Content-Type-Options Header Missing</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10021/">X-Content-Type-Options Header Missing</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/693.html">693</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>15</td>
+							</tr>
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/compatibility/gg622941(v=vs.85)">https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/compatibility/gg622941(v=vs.85)</a></li>
+										<li><a
+											href="https://owasp.org/www-community/Security_Headers">https://owasp.org/www-community/Security_Headers</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li
+						id="alert-type-10">
+						<h4>Authentication Request Identified</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10111/">Authentication Request Identified</a>)
+									</span>   
+								</td>
+							</tr>
+							
+							
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://www.zaproxy.org/docs/desktop/addons/authentication-helper/auth-req-id/">https://www.zaproxy.org/docs/desktop/addons/authentication-helper/auth-req-id/</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+					<li
+						id="alert-type-11">
+						<h4>Information Disclosure - Suspicious Comments</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10027/">Information Disclosure - Suspicious Comments</a>)
+									</span>   
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">CWE ID</th>
+								<td><a
+									href="https://cwe.mitre.org/data/definitions/200.html">200</a></td>
+							</tr>
+							<tr>
+								<th scope="row">WASC ID</th>
+								<td>13</td>
+							</tr>
+							
+						</table>
+					</li>
+					<li
+						id="alert-type-12">
+						<h4>Modern Web Application</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10109/">Modern Web Application</a>)
+									</span>   
+								</td>
+							</tr>
+							
+							
+							
+						</table>
+					</li>
+					<li
+						id="alert-type-13">
+						<h4>Session Management Response Identified</h4>
+						<table class="alert-types-table">
+							<tr>
+								<th scope="row">Source</th>
+								<td>
+									
+									   <span>raised by a passive scanner</span> <span>(<a
+										href="https://www.zaproxy.org/docs/alerts/10112/">Session Management Response Identified</a>)
+									</span>   
+								</td>
+							</tr>
+							
+							
+							<tr>
+								<th scope="row">Reference</th>
+								<td>
+									<ol>
+										<li><a
+											href="https://www.zaproxy.org/docs/desktop/addons/authentication-helper/session-mgmt-id">https://www.zaproxy.org/docs/desktop/addons/authentication-helper/session-mgmt-id</a></li>
+									</ol>
+								</td>
+							</tr>
+						</table>
+					</li>
+				</ol>
+			</section>
+		</section>
+		 
+	</main>
+</body>
+</html>
+
+
+

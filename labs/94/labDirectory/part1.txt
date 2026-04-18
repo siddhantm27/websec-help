@@ -1,0 +1,1 @@
+/participants/?courseid=3&search=<script>alert("hacked")</script>

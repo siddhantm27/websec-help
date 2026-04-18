@@ -1,0 +1,12 @@
+1) Firefox - 2
+2) Zap - 3
+3) Information disclosure - 3
+4) ssrf - 3
+5) file upload - 3
+6) path traversal - 2
+7) auth - 4
+8) access control - 3
+9) sqli - 3
+10) xss - 2
+11) csrf - 3
+12) cors - 2

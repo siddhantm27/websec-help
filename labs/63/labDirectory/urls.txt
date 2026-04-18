@@ -1,0 +1,5 @@
+http://localhost:30000/index.php
+http://localhost:30000/course.php?courseid=3
+http://localhost:30000/style.css
+http://localhost:30000/js/script.js
+http://localhost:30000/robots.txt

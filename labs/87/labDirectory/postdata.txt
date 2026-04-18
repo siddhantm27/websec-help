@@ -1,0 +1,2 @@
+Cookie: sessionid=0s0sj6pu1fr5b4qdwe4wupqv5nh9seme; role=admin
+Postdata: courseid=2&username=Laksh&quiz1=91&quiz2=82&midsem=85&endsem=100

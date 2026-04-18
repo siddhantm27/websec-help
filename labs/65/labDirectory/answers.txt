@@ -1,0 +1,3 @@
+What is the URL where you found list of possible backup directories?: http://websec-bodhi.duckdns.org:30000/robots.txt
+What is the table name where detailed course information and the syllabus is stored(case-insensitive)?: coursedetails
+What is the name of the file where you found admin password(case-insensitive)?: courses.sql
