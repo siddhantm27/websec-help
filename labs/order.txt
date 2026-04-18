@@ -1,5 +1,5 @@
-1) Firefox - 2
-2) Zap - 3
+1) Zap - 3
+2) Firefox - 2
 3) Information disclosure - 3
 4) ssrf - 3
 5) file upload - 3
